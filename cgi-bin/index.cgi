@@ -41,8 +41,6 @@ cat << EOS
 					
 	                <option value="random">random</option>
 					
-	                <option value="shuffle">shuffle</option>
-	
 	                <option value="single">single</option>
 	
 	                <option value="clear">clear</option>
@@ -81,7 +79,7 @@ cat << EOS
 				</span>
 	        </form>
             </select>
-			 $(echo $QUERY_STRING | awk -F'[=&]' '{print $2,$4}' | xargs mpc | tr "\n" "," | sed "s/,/<br>/g" > /dev/null)
+			 $(echo $QUERY_STRING | grep args && echo $QUERY_STRING | awk -F'[=&]' '{print $2,$4}' | xargs mpc | tr "\n" "," | sed "s/,/<br>/g" > /dev/null)
 			 
         </form>
 
