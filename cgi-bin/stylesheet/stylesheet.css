@@ -59,8 +59,12 @@ p{
     text-align:left
 }
 
-footer{
-    color: var(--letter-color);
-    font-size: 13px;
-    text-align: start;
+/*折りたたみ*/
+details {
+    color: var(--main-bg-color);
 }
+
+summary {
+    font-size: 15px;
+}
+
