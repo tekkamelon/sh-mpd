@@ -48,27 +48,26 @@ cat << EOS
 			<p>$(echo $QUERY_STRING | cut -f 2 -d\= | xargs mpc | tr "\n" "," | sed "s/,/<br>/g" > /dev/null)</p>
         </form>
 
-		<form name="FORM" method="POST" >
-		<span style="color: rgb(0, 255, 10); ">
-            select command:
-		</span>
-            <select name="args">
-
-                <option value="searchplay">searchplay</option>
-
-                <option value="volume">volume</option>
-				
-			<form action="$" method="POST">
+		<form name="sp_and_vol" method="POST" >
+			<span style="color: rgb(0, 255, 10); ">
+	            select command:
+			</span>
+	            <select name="args">
+	
+	                <option value="searchplay">searchplay</option>
+	
+	                <option value="volume">volume</option>
+					
+			</form>
+			<form method="POST">
 					<p>
 						<span style="color: rgb(0, 255, 10); ">
-							<input type="text" name="name">
+							<input type="text" name="search">
 						</span>
 					</p>
-				</span>
-	        </form>
-            </select>
-				$(cat | awk -F'[=&]' '{print $2,$4}' | xargs mpc > /dev/null)
-        </form>
+		    </form>
+	            </select>
+					<p>debug_info: $(cat | awk -F'[=&]' '{print $2,$4}' | xargs mpc)</p>
 
 	<details>
 		<summary>playlist</summary>
