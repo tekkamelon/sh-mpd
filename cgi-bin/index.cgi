@@ -17,8 +17,8 @@ cat << EOS
 
     <body>
 		<h1>sh-MPD</h1>
-		<h3>hostname:$(hostname) cgi_version:$(echo $GATEWAY_INTERFACE)</h3>
-		<l2>used RAM:$(free -h | sed -n 2p | awk -F" " '{print $3}')</l2>
+		<h3>hostname: $(hostname) cgi_version: $(echo $GATEWAY_INTERFACE)</h3>
+		<l2>used RAM: $(free -h | sed -n 2p | awk -F" " '{print $3}')</l2>
 		<br></br>
 
 		<form name="FORM" method="GET" >
@@ -50,24 +50,24 @@ cat << EOS
 
 		<form name="sp_and_vol" method="POST" >
 			<span style="color: rgb(0, 255, 10); ">
-	            select command:
+	            select command_and word_or_volume:
 			</span>
 	            <select name="args">
 	
 	                <option value="searchplay">searchplay</option>
 	
 	                <option value="volume">volume</option>
-					
-			</form>
-			<form method="POST">
-					<p>
-						<span style="color: rgb(0, 255, 10); ">
-							<input type="text" name="search">
-						</span>
-					</p>
-		    </form>
+							
+					</form>
+					<form method="POST">
+						<p>
+							<span style="color: rgb(0, 255, 10); ">
+								<input type="text" name="search">
+							</span>
+						</p>
+						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | xargs mpc | tr "\n" "," | sed "s/,/<br>/g" > /dev/null)</p>
+				    </form>
 	            </select>
-					<p>debug_info: $(cat | awk -F'[=&]' '{print $2,$4}' | xargs mpc)</p>
 
 	<details>
 		<summary>playlist</summary>
