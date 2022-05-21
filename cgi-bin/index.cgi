@@ -71,7 +71,7 @@ cat << EOS
 
 	<details>
 		<summary>playlist</summary>
-		<p>$(mpc playlist | tr "\n" "," | sed "s/,/<br>/g")</p>
+		<p>$(mpc playlist | sed -e "s;^;<summary><h3>;g" -e "s; - ;</h3>\n</summary><p>;g" -e "s;$;</p>;g" | awk  '!a[$0]++')</p>
 	</details>
 
 		<h3>mpd status</h3>
