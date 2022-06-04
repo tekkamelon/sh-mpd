@@ -56,7 +56,7 @@ cat << EOS
 	
 	                <option value="searchplay">searchplay</option>
 	
-	                <option value="search title">search</option>
+	                <option value="search">search "format" "keywords"</option>
 
 	                <option value="volume">volume</option>
 							
