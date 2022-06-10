@@ -3,7 +3,7 @@
 /* 見出しの色 */
 :root{
     --main-bg-color: rgb(0, 255, 10);
-    --letter-color: rgb(240, 240, 240);
+    --letter-color: rgb(35, 35, 35);
 }
 
 /* リンクの文字色 */
@@ -64,15 +64,29 @@ p{
     text-align:left
 }
 
+select{
+	color: var(--main-bg-color);
+	background-color: rgb(35,35,35);
+	border: 1px solid yellow;
+	border-radius: 12px;
+
+}
+
 /*折りたたみ*/
-details {
+details{
     color: var(--main-bg-color);
 }
 
-summary {
+summary{
     font-size: 15px;
 }
 
+input{
+	color: var(--main-bg-color);
+	background-color: rgb(35,35,35);
+	border: 1px solid yellow;
+}
+	
 
 /*table*/
 table{
