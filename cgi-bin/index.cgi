@@ -22,29 +22,48 @@ cat << EOS
 		<br></br>
 
 		<form name="FORM" method="GET" >
-			<span style="color: rgb(0, 255, 10); ">
-	            select command:
-			</span>
-	            <select name="cmd">
-	                <option value="status">status</option>
-					
-	                <option value="toggle">play/pause</option>
-					
-	                <option value="stop">stop</option>
-					
-	                <option value="previous">prev</option>
-					
-	                <option value="next">next</option>
-					
-	                <option value="repeat">repeat</option>
-					
-	                <option value="random">random</option>
-					
-	                <option value="single">single</option>
-	
-	                <option value="clear">clear</option>
-	            </select>
-	             <input type="submit" value="Enter" />
+			<!-- 音楽の操作ボタンをtableでレイアウト -->
+			<table>
+				<!-- 1行目 -->
+				<tr>
+					<td>
+				 		<button name="button" value="status">status</button>
+					</td>
+				</tr>	
+
+				<!-- 2行目 -->
+				<tr>
+					<td>
+						<button name="button" value="previous">previous</button>
+					</td>
+					<td>
+				 		<button name="button" value="toggle">play/pause</button>
+					</td>
+					<td>
+				 		<button name="button" value="stop">stop</button>
+					</td>
+					<td>
+				 		<button name="button" value="next">next</button>
+					</td>
+				</tr>
+				 
+				<!-- 3行目 -->
+				<tr>
+					<td>
+				 		<button name="button" value="repeat">repeat</button>
+					</td>
+					<td>
+				 		<button name="button" value="random">random</button>
+					</td>
+					<td>
+				 		<button name="button" value="single">single</button>
+					</td>
+					<td>
+				 		<button name="button" value="clear">clear</button>
+					</td>
+				</tr>
+			</table>				 
+				
 			<p>$(echo $QUERY_STRING | cut -f 2 -d\= | xargs mpc | tr "\n" "," | sed "s/,/<br>/g" > /dev/null)</p>
         </form>
 
