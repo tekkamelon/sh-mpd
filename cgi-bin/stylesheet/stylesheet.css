@@ -42,6 +42,11 @@ h3{
     text-align:left
 }
 
+h4{
+    color: teal;
+    text-align:left
+}
+
 l1{
     color:white ;
     text-align:left
@@ -68,3 +73,26 @@ summary {
     font-size: 15px;
 }
 
+
+/*table*/
+table{
+	background-color: rgb(15,15,15);
+	border-radius: 5%;
+}
+
+/*button*/
+button{
+	padding: 10px 20px;
+	color: var(--main-bg-color);
+	background-color: rgb(35,35,35);
+	border: 1px solid yellow;
+	border-radius: 12px;
+}
+
+button:hover{
+	padding: 10px 20px;
+	color: white;
+	background-color: green;
+	border: 1px solid teal;
+	border-radius: 12px;
+}
