@@ -94,7 +94,7 @@ MPD UI using shellscript and CGI
 								<input type="text" name="search">
 							</span>
 						</p>
-						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | tr "\+" " " | xargs mpc | tr "\n" "," | sed "s/,/<br>/g" > /dev/null)</p>
+						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | tr "\+" " " | xargs mpc -q | tr "\n" "," | sed "s/,/<br>/g")</p>
 				    </form>
 	            </select>
 
