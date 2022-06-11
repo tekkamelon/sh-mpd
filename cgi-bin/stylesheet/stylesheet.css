@@ -6,6 +6,12 @@
     --letter-color: rgb(35, 35, 35);
 }
 
+/* アスキーアート */
+pre{
+	color: var(--main-bg-color);
+    text-align:left
+}
+
 /* リンクの文字色 */
 a{
     color: var(--main-bg-color);
@@ -68,8 +74,8 @@ select{
 	color: var(--main-bg-color);
 	background-color: rgb(35,35,35);
 	border: 1px solid yellow;
-	border-radius: 12px;
-
+	border-radius: 6px;
+    text-align:center
 }
 
 /*折りたたみ*/

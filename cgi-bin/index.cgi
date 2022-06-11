@@ -16,14 +16,14 @@ cat << EOS
     </head>
 
     <body>
-		<!-- <h1>sh-MPD</h1> -->
 		<pre> 
-				     __          __  _______  ____ 
-			   _____/ /_        /  |/  / __ \/ __ \
-			  / ___/ __ \______/ /|_/ / /_/ / / / /
-			 (__  ) / / /_____/ /  / / ____/ /_/ / 
-			/____/_/ /_/     /_/  /_/_/   /_____/  
-		
+         __          __  _______  ____ 
+   _____/ /_        /  |/  / __ \\/ __ \\
+  / ___/ __ \______/ /|_/ / /_/ / / / /
+ (__  ) / / /_____/ /  / / ____/ /_/ / 
+/____/_/ /_/     /_/  /_/_/   /_____/  
+
+MPD UI using shellscript and CGI
 	    </pre>
 		<h3>hostname: $(hostname) cgi_version: $(echo $GATEWAY_INTERFACE)</h3>
 		<l2>used RAM: $(free -h | sed -n 2p | awk -F" " '{print $3}')</l2>
@@ -99,14 +99,11 @@ cat << EOS
 	            </select>
 
 		<h3>mpd status</h3>
-			<!-- <p>$(mpc | tr "\n" "," | sed "s/,/<br>/g") -->
-			<pre>
-				$(mpc)
-			</pre>
+			<p>$(mpc | tr "\n" "," | sed "s/,/<br>/g")
 
 	<details>
 		<summary>playlist</summary>
-		<p>$(mpc playlist | sed -e "s;^;<summary><h4>;g" -e "s; - ;</h4>\n</summary><p>;g" -e "s;$;</p>;g" | awk  '!a[$0]++')</p>
+		<p>$(mpc playlist | sed -e "s;^;<summary><h4>;g" -e "s; - ;</h4></summary>\n<p>;g" -e "s;$;</p>;g" | awk  '!a[$0]++')</p>
 	</details>
 
 		<h3>next song</h3>
@@ -114,7 +111,6 @@ cat << EOS
 
 		<h4>debug info</h4>
 			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
-			<p>QUERY_STRING_cut: $(echo "$QUERY_STRING" | cut -f 2 -d\=)</p>
     </body>
 </html>
 EOS
