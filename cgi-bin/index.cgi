@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 
 echo "Content-type: text/html"
 echo ""
@@ -16,7 +16,15 @@ cat << EOS
     </head>
 
     <body>
-		<h1>sh-MPD</h1>
+		<!-- <h1>sh-MPD</h1> -->
+		<pre> 
+				     __          __  _______  ____ 
+			   _____/ /_        /  |/  / __ \/ __ \
+			  / ___/ __ \______/ /|_/ / /_/ / / / /
+			 (__  ) / / /_____/ /  / / ____/ /_/ / 
+			/____/_/ /_/     /_/  /_/_/   /_____/  
+		
+	    </pre>
 		<h3>hostname: $(hostname) cgi_version: $(echo $GATEWAY_INTERFACE)</h3>
 		<l2>used RAM: $(free -h | sed -n 2p | awk -F" " '{print $3}')</l2>
 		<br></br>
@@ -91,7 +99,10 @@ cat << EOS
 	            </select>
 
 		<h3>mpd status</h3>
-			<p>$(mpc | tr "\n" "," | sed "s/,/<br>/g")
+			<!-- <p>$(mpc | tr "\n" "," | sed "s/,/<br>/g") -->
+			<pre>
+				$(mpc)
+			</pre>
 
 	<details>
 		<summary>playlist</summary>
