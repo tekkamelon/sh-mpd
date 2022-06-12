@@ -101,10 +101,7 @@ MPD UI using shellscript and CGI
 		<h3>mpd status</h3>
 			<p>$(mpc | tr "\n" "," | sed "s/,/<br>/g")
 
-	<details>
-		<summary>playlist</summary>
-		<p>$(mpc playlist | sed -e "s;^;<summary><h4>;g" -e "s; - ;</h4></summary>\n<p>;g" -e "s;$;</p>;g" | awk  '!a[$0]++')</p>
-	</details>
+		<h3><a href="playlist/playlist.cgi">playlist</a></h3>
 
 		<h3>next song</h3>
 			<p>$(mpc queued)</p>
