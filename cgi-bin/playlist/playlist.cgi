@@ -17,6 +17,7 @@ cat << EOS
 
     <body>
 		<p>$(mpc playlist | sed -e "s;^;<summary><h4>;g" -e "s; - ;</h4></summary>\n<p>;g" -e "s;$;</p>;g" | awk  '!a[$0]++')</p>
+		<button type="button" onclick="history.back()">back</button>
 	</body>
 </html>
 EOS
