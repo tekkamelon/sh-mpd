@@ -94,26 +94,19 @@ input{
 }
 	
 
-/*table*/
-table{
-	background-color: rgb(15,15,15);
-	border-radius: 12px;
-	border: 1px solid orange;
-}
-
 /*button*/
 button{
-	padding: 10px 20px;
-	color: var(--main-bg-color);
+	padding: 10px 15px;
+	color: white;
 	background-color: rgb(35,35,35);
-	border: 1px solid orange;
+	border: 1px solid white;
 	border-radius: 12px;
 }
 
 button:hover{
-	padding: 10px 20px;
-	color: white;
-	background-color: var(--main-bg-color);
-	border: 1px solid teal;
+	padding: 10px 15px;
+	color: var(--main-bg-color);
+	background-color: rgb(35,35,35);
+	border: 1px solid orange;
 	border-radius: 12px;
 }
