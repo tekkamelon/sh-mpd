@@ -93,6 +93,11 @@ input{
 	border: 1px solid orange;
 }
 	
+/* table */
+table td{
+	color: white;
+	background-color: rgb(35,35,35);
+}
 
 /*button*/
 button{
