@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -eux
 
 echo "Content-type: text/html"
 echo ""
@@ -72,7 +72,7 @@ MPD UI using shellscript and CGI
 				</tr>
 			</table>				 
 				
-			<p>$(echo $QUERY_STRING | cut -f 2 -d\= | xargs mpc | tr "\n" "," | sed "s/,/<br>/g" > /dev/null)</p>
+			$(echo $QUERY_STRING | cut -f 2 -d\= | xargs mpc -q > /dev/null)
         </form>
 
 		<form name="sp_and_vol" method="POST" >
