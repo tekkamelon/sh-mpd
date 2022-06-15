@@ -96,15 +96,14 @@ input{
 /* table */
 table td{
 	color: white;
-	background-color: rgb(35,35,35);
 }
 
 /*button*/
 button{
 	padding: 10px 15px;
 	color: white;
-	background-color: rgb(35,35,35);
-	border: 1px solid white;
+	background-color: black;
+	border: 1px solid grey;
 	border-radius: 12px;
 }
 
