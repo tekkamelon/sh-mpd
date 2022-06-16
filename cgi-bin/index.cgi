@@ -20,18 +20,18 @@ cat << EOS
     </head>
 
     <body>
-		<pre> 
+		<pre style="color: rgb(0, 255, 10)"> 
          __          __  _______  ____ 
    _____/ /_        /  |/  / __ \\/ __ \\
   / ___/ __ \______/ /|_/ / /_/ / / / /
  (__  ) / / /_____/ /  / / ____/ /_/ / 
 /____/_/ /_/     /_/  /_/_/   /_____/  
-
-MPD UI using shellscript and CGI
+<span style="color: orange">
+MPD UI using shellscript and CGi
+</span>
 	    </pre>
 		<h3>hostname: $(hostname) cgi_version: $(echo $GATEWAY_INTERFACE)</h3>
 		<l2>used RAM: $(free -h | sed -n 2p | awk -F" " '{print $3}')</l2>
-		<br></br>
 
 		<form name="FORM" method="GET" >
 			<!-- 音楽の操作ボタンをtableでレイアウト -->
