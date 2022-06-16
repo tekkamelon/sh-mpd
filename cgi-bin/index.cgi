@@ -1,5 +1,9 @@
 #!/bin/sh -eux
 
+# e 返り値が0以外で停止
+# u 未定義の変数参照で停止
+# x デバッグ情報の出力
+
 echo "Content-type: text/html"
 echo ""
 
