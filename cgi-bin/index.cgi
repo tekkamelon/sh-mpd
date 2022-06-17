@@ -19,7 +19,7 @@ cat << EOS
         <title>sh-MPD</title>
     </head>
 
-    <body>
+	<header>
 		<pre style="color: rgb(0, 255, 10)"> 
          __          __  _______  ____ 
    _____/ /_        /  |/  / __ \\/ __ \\
@@ -29,7 +29,10 @@ cat << EOS
 <span style="color: orange">
 MPD UI using shellscript and CGi
 </span>
+	</header>
+
 	    </pre>
+    <body>
 		<h3>hostname: $(hostname) cgi_version: $(echo $GATEWAY_INTERFACE)</h3>
 		<l2>used RAM: $(free -h | sed -n 2p | awk -F" " '{print $3}')</l2>
 
@@ -113,6 +116,11 @@ MPD UI using shellscript and CGi
 
 		<h4>debug info</h4>
 			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
+
+		<footer>
+			<a href="https://github.com/tekkamelon/sh-mpd">git repository</a>
+		</footer>
+
     </body>
 </html>
 EOS
