@@ -44,6 +44,12 @@ MPD UI using shellscript and CGi
 					<td>
 				 		<button name="button" value="status">status</button>
 					</td>
+					<td>
+				 		<button name="button" value="volume +10">vol +10</button>
+					</td>
+					<td>
+				 		<button name="button" value="volume -10">vol -10</button>
+					</td>
 				</tr>	
 
 				<!-- 2行目 -->
@@ -79,7 +85,7 @@ MPD UI using shellscript and CGi
 				</tr>
 			</table>				 
 				
-			$(echo $QUERY_STRING | cut -f 2 -d\= | xargs mpc -q > /dev/null)
+			$(echo $QUERY_STRING | cut -f 2 -d\= | sed -e "s/\+\%2B/ \+/g" -e "s/\+\-/ -/g" | xargs mpc -q > /dev/null)
         </form>
 
 		<form name="sp_and_vol" method="POST" >
@@ -102,7 +108,7 @@ MPD UI using shellscript and CGi
 							</span>
 						</p>
 						<!-- POSTを取得,awkとtrで加工後,mpcに渡し,標準エラー出力ごとtrとsedでhtml形式に加工 -->
-						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | sed -e "s; ; \";g" -e "s;$;\";g" | xargs mpc searchplay >&1 | tr "\n" "," | sed "s/,/<br>/g")</p>
+						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | sed -e "s; ; \";g" -e "s;$;\";g" | xargs mpc -q searchplay >&1 | tr "\n" "," | sed "s/,/<br>/g")</p>
 				    </form>
 	            </select>
 
