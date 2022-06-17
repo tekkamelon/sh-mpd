@@ -84,15 +84,15 @@ MPD UI using shellscript and CGi
 
 		<form name="sp_and_vol" method="POST" >
 			<span style="color: rgb(0, 255, 10); ">
-	            select command_and word_or_volume:
+	            select formar and enter keywords > 
 			</span>
 	            <select name="args">
 	
-	                <option value="searchplay">searchplay</option>
-	
-	                <option value="search">search "format" "keywords"</option>
+	                <option value="title">title</option>
 
-	                <option value="volume">volume</option>
+	                <option value="artist">artist</option>
+
+	                <option value="album">album</option>
 							
 					</form>
 					<form method="POST">
@@ -102,7 +102,7 @@ MPD UI using shellscript and CGi
 							</span>
 						</p>
 						<!-- POSTを取得,awkとtrで加工後,mpcに渡し,標準エラー出力ごとtrとsedでhtml形式に加工 -->
-						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | tr "\+" " " | xargs mpc -q 2>&1 | tr "\n" "," | sed "s/,/<br>/g")</p>
+						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | sed -e "s; ; \";g" -e "s;$;\";g" | xargs mpc searchplay >&1 | tr "\n" "," | sed "s/,/<br>/g")</p>
 				    </form>
 	            </select>
 
