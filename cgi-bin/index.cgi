@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -26,14 +26,15 @@ cat << EOS
   / ___/ __ \______/ /|_/ / /_/ / / / /
  (__  ) / / /_____/ /  / / ____/ /_/ / 
 /____/_/ /_/     /_/  /_/_/   /_____/  
-<span style="color: orange">
+<span style="color: green">
 MPD UI using shellscript and CGi
 </span>
 	</header>
 
 	    </pre>
     <body>
-		<h3>hostname: $(hostname) cgi_version: $(echo $GATEWAY_INTERFACE)</h3>
+		<h3>hostname: $(hostname)</h3>
+		<h3>cgi_version: $(echo $GATEWAY_INTERFACE)</h3>
 		<l2>used RAM: $(free -h | sed -n 2p | awk -F" " '{print $3}')</l2>
 
 		<form name="FORM" method="GET" >
@@ -58,7 +59,7 @@ MPD UI using shellscript and CGi
 						<button name="button" value="previous">previous</button>
 					</td>
 					<td>
-				 		<button name="button" value="toggle">play/pause</button>
+				 		<button name="button" value="toggle >play/pause</button>
 					</td>
 					<td>
 				 		<button name="button" value="stop">stop</button>
@@ -90,7 +91,7 @@ MPD UI using shellscript and CGi
 
 		<form name="sp_and_vol" method="POST" >
 			<span style="color: rgb(0, 255, 10); ">
-	            select formar and enter keywords > 
+	            select format and enter keywords : 
 			</span>
 	            <select name="args">
 	
@@ -107,7 +108,7 @@ MPD UI using shellscript and CGi
 								<input type="text" name="search">
 							</span>
 						</p>
-						<!-- POSTを取得,awkとtrで加工後,mpcに渡し,標準エラー出力ごとtrとsedでhtml形式に加工 -->
+						<!-- POSTを取得,awkとsedで加工後,mpcに渡し,標準エラー出力ごとtrとsedでhtml形式に加工 -->
 						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | sed -e "s; ; \";g" -e "s;$;\";g" | xargs mpc -q searchplay >&1 | tr "\n" "," | sed "s/,/<br>/g")</p>
 				    </form>
 	            </select>
