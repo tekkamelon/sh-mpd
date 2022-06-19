@@ -100,10 +100,10 @@ table td{
 
 /*button*/
 button{
-	padding: 10px 15px;
+	padding: 8px 15px;
 	color: white;
 	background-color: black;
-	border: 1px solid grey;
+	border: 1px solid green;
 	border-radius: 12px;
 }
 
