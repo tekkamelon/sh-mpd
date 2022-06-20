@@ -33,3 +33,7 @@ webブラウザ上からmpdを操作できるCGIシェルスクリプト
 - yash ver. 2.50 ("+ xargs mpc -q"の文字列が表示される,シバンの"x"オプションの削除で非表示)
 
 - busybox ash ver. 1.30.1 ("シバンのオプションを指定しない場合のみ動作)
+
+## 引用元
+
+- urldecode:https://github.com/ShellShoccar-jpn/misc-tools
