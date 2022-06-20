@@ -59,7 +59,7 @@ MPD UI using shellscript and CGi
 						<button name="button" value="previous">previous</button>
 					</td>
 					<td>
-				 		<button name="button" value="toggle >play/pause</button>
+				 		<button name="button" value="toggle" >playpause</button>
 					</td>
 					<td>
 				 		<button name="button" value="stop">stop</button>
@@ -85,8 +85,9 @@ MPD UI using shellscript and CGi
 					</td>
 				</tr>
 			</table>				 
-				
-			$(echo $QUERY_STRING | cut -f 2 -d\= | sed -e "s/\+\%2B/ \+/g" -e "s/\+\-/ -/g" | xargs mpc -q > /dev/null)
+			<!-- クエリを取得,cutで"="以降を切り出しurldecodeで加工後mpcに渡す -->	
+			$(echo $QUERY_STRING | cut -f 2 -d"=" | urldecode | xargs mpc -q > /dev/null)
+
         </form>
 
 		<form name="sp_and_vol" method="POST" >
@@ -108,8 +109,8 @@ MPD UI using shellscript and CGi
 								<input type="text" name="search">
 							</span>
 						</p>
-						<!-- POSTを取得,awkとsedで加工後,mpcに渡し,標準エラー出力ごとtrとsedでhtml形式に加工 -->
-						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | sed -e "s; ; \";g" -e "s;$;\";g" | xargs mpc -q searchplay >&1 | tr "\n" "," | sed "s/,/<br>/g")</p>
+						<!-- POSTを取得,awkとurldecodeで加工後,mpcに渡し,標準エラー出力ごとtrとsedでhtml形式に加工 -->
+						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | urldecode | xargs mpc -q searchplay >&1 | tr "\n" "," | sed "s/,/<br>/g")</p>
 				    </form>
 	            </select>
 
@@ -126,6 +127,7 @@ MPD UI using shellscript and CGi
 
 		<footer>
 			<a href="https://github.com/tekkamelon/sh-mpd">git repository</a>
+			<a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode"reference source</a>
 		</footer>
 
     </body>
