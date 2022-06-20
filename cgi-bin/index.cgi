@@ -46,10 +46,10 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="status">status</button>
 					</td>
 					<td>
-				 		<button name="button" value="volume +10">vol +10</button>
+				 		<button name="button" value="volume +10">volume +10</button>
 					</td>
 					<td>
-				 		<button name="button" value="volume -10">vol -10</button>
+				 		<button name="button" value="volume -10">volume -10</button>
 					</td>
 				</tr>	
 
@@ -59,7 +59,7 @@ MPD UI using shellscript and CGi
 						<button name="button" value="previous">previous</button>
 					</td>
 					<td>
-				 		<button name="button" value="toggle" >playpause</button>
+				 		<button name="button" value="toggle" >play/pause</button>
 					</td>
 					<td>
 				 		<button name="button" value="stop">stop</button>
@@ -85,8 +85,8 @@ MPD UI using shellscript and CGi
 					</td>
 				</tr>
 			</table>				 
-			<!-- クエリを取得,cutで"="以降を切り出しurldecodeで加工後mpcに渡す -->	
-			$(echo $QUERY_STRING | cut -f 2 -d"=" | urldecode | xargs mpc -q > /dev/null)
+			<!-- クエリを取得,cutで"="以降を切り出し,sedでvolumeのurlをデコードしてmpcに渡す -->	
+			$(echo $QUERY_STRING | cut -f 2 -d"=" | sed -e "s/+\%2B/ +/g" -e "s/\+\-/ \-/g" | xargs mpc -q > /dev/null)
 
         </form>
 
@@ -126,8 +126,8 @@ MPD UI using shellscript and CGi
 			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
 
 		<footer>
-			<a href="https://github.com/tekkamelon/sh-mpd">git repository</a>
-			<a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode"reference source</a>
+			<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
+			<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode" reference source</a></p>
 		</footer>
 
     </body>
