@@ -2,7 +2,8 @@
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
-# x デバッグ情報の出力
+# x 実行されたコマンドの出力
+# v 変数の表示
 
 echo "Content-type: text/html"
 echo ""
@@ -56,7 +57,7 @@ MPD UI using shellscript and CGi
 				<!-- 2行目 -->
 				<tr>
 					<td>
-						<button name="button" value="previous">previous</button>
+						<button name="button" value="prev">previous</button>
 					</td>
 					<td>
 				 		<button name="button" value="toggle" >play/pause</button>
@@ -96,11 +97,13 @@ MPD UI using shellscript and CGi
 			</span>
 	            <select name="args">
 	
-	                <option value="title">title</option>
+	                <option value="searchplay">fuzzy</option>
 
-	                <option value="artist">artist</option>
+	                <option value="searchplay title">title</option>
 
-	                <option value="album">album</option>
+	                <option value="searchplay artist">artist</option>
+
+	                <option value="searchplay album">album</option>
 							
 					</form>
 					<form method="POST">
@@ -109,13 +112,13 @@ MPD UI using shellscript and CGi
 								<input type="text" name="search">
 							</span>
 						</p>
-						<!-- POSTを取得,awkとurldecodeで加工後,mpcに渡し,標準エラー出力ごとtrとsedでhtml形式に加工 -->
-						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | urldecode | xargs mpc -q searchplay >&1 | tr "\n" "," | sed "s/,/<br>/g")</p>
+						<!-- POSTを取得,awkとurldecodeで加工後,mpcに渡し,標準エラー出力ごと表示 -->
+						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | urldecode | xargs mpc -q 2>&1 )</p>
 				    </form>
 	            </select>
 
 		<h3>mpd status</h3>
-			<p>$(mpc | tr "\n" "," | sed "s/,/<br>/g")
+			<p>$(mpc | sed "s/$/<br>/g")</p>
 
 		<h3><a href="playlist/playlist.cgi">playlist</a></h3>
 
