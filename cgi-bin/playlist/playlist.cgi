@@ -1,4 +1,9 @@
-#!/bin/sh
+#!/bin/sh -eu
+
+# e 返り値が0以外で停止
+# u 未定義の変数参照で停止
+# x 実行されたコマンドの出力
+# v 変数の表示
 
 echo "Content-type: text/html"
 echo ""
@@ -17,7 +22,7 @@ cat << EOS
 
     <body>
 		<form name="music" method="POST" >
-			<h1>playlist</h1>
+			<h1>Playlist</h1>
 				<p>$(cat | urldecode | cut -d"=" -f 2 | sed -e "s/^/\'/g" -e "s/$/\'/g" | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
 
 				$(mpc playlist | 
