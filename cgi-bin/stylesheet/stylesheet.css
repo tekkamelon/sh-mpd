@@ -103,7 +103,7 @@ button{
 	padding: 8px 15px;
 	color: white;
 	background-color: black;
-	border: 1px solid green;
+	border: 1px solid teal;
 	border-radius: 12px;
 }
 
@@ -111,6 +111,6 @@ button:hover{
 	padding: 8px 15px;
 	color: var(--main-bg-color);
 	background-color: rgb(35,35,35);
-	border: 1px solid teal;
+	border: 1px solid orange;
 	border-radius: 12px;
 }
