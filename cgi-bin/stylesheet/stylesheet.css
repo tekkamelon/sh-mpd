@@ -73,7 +73,7 @@ p{
 select{
 	color: var(--main-bg-color);
 	background-color: rgb(35,35,35);
-	border: 1px solid orange;
+	border: 1px solid teal;
 	border-radius: 6px;
     text-align:center
 }
@@ -90,7 +90,7 @@ summary{
 input{
 	color: var(--main-bg-color);
 	background-color: rgb(35,35,35);
-	border: 1px solid orange;
+	border: 1px solid teal;
 }
 	
 /* table */
@@ -111,6 +111,6 @@ button:hover{
 	padding: 8px 15px;
 	color: var(--main-bg-color);
 	background-color: rgb(35,35,35);
-	border: 1px solid orange;
+	border: 1px solid teal;
 	border-radius: 12px;
 }

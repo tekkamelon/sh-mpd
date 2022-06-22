@@ -27,7 +27,7 @@ cat << EOS
   / ___/ __ \______/ /|_/ / /_/ / / / /
  (__  ) / / /_____/ /  / / ____/ /_/ / 
 /____/_/ /_/     /_/  /_/_/   /_____/  
-<span style="color: green">
+<span style="color: teal">
 MPD UI using shellscript and CGi
 </span>
 	</header>
@@ -87,7 +87,7 @@ MPD UI using shellscript and CGi
 				</tr>
 			</table>				 
 			<!-- クエリを取得,cutで"="以降を切り出し,sedでvolumeのurlをデコードしてmpcに渡す -->	
-			$(echo $QUERY_STRING | cut -f 2 -d"=" | sed -e "s/+\%2B/ +/g" -e "s/\+\-/ \-/g" | xargs mpc -q > /dev/null)
+			$(echo $QUERY_STRING | cut -d"=" -f 2 | sed -e "s/+\%2B/ +/g" -e "s/\+\-/ \-/g" | xargs mpc -q > /dev/null)
 
         </form>
 
