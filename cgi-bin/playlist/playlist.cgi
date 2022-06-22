@@ -16,9 +16,21 @@ cat << EOS
     </head>
 
     <body>
-		<h1>playlist</h1>
-		$(mpc playlist |  sed -e "s;^;<tr>\n<td>;g" -e "s; - ;</td>\n<td>;g" -e "s;$;</td>\n</tr>;g" -e "1i <DOCTYPE html>\n<html>\n<table border="1">" -e '$ a <\/table>\n<\/html>' )
-		<button type="button" onclick="history.back()">back</button>
+		<form name="music" method="POST" >
+			<h1>playlist</h1>
+				<p>$(cat | urldecode | cut -d"=" -f 2 | sed -e "s/^/\'/g" -e "s/$/\'/g" | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
+
+				$(mpc playlist | 
+					# awkで出力をボタン化,grepでデータ無しの行を削除
+					awk -F" - " '{
+						print "<p><button name=button value="$1">"$1"</button>",
+						"<button name=button value="$2">"$2"</button></p>"
+					}' |  
+					grep -v 'value=></button>' | sort | uniq)
+				
+				<!-- POSTを取得,デコードしてcutで加工後にxargsでmpcに渡す-->
+				<p><a href="/cgi-bin/index.cgi">HOME</a></p>
+		</form>
 	</body>
 </html>
 EOS
