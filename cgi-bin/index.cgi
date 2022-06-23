@@ -92,7 +92,7 @@ MPD UI using shellscript and CGi
         </form>
 
 		<form name="sp_and_vol" method="POST" >
-			<span style="color: rgb(0, 255, 10); ">
+			<span style="color: white; ">
 	            select format and enter keywords : 
 			</span>
 	            <select name="args">
