@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="160px"
+   height="160px"
+   viewBox="0 0 160 160"
+   version="1.1"
+   id="SVGRoot"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview210"
+     pagecolor="#6b6b6b"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="4"
+     inkscape:cx="87.125"
+     inkscape:cy="87.25"
+     inkscape:window-width="1148"
+     inkscape:window-height="1182"
+     inkscape:window-x="1920"
+     inkscape:window-y="16"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:snap-perpendicular="true"
+     inkscape:snap-tangential="true" />
+  <defs
+     id="defs205" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g2818"
+       transform="translate(-4.5907529,5.1948395)">
+      <g
+         id="g2319"
+         transform="translate(-5.4385592,-19.747675)">
+        <rect
+           style="fill:#00ff00;stroke:none"
+           id="rect526"
+           width="159.60681"
+           height="159.60681"
+           x="10.029312"
+           y="14.552835"
+           ry="36.34853" />
+        <rect
+           style="fill:#000000;stroke:none;stroke-width:0.914868"
+           id="rect526-6"
+           width="146.01917"
+           height="146.01917"
+           x="16.823135"
+           y="21.346659"
+           ry="33.254108" />
+      </g>
+      <g
+         style="opacity:1;fill:#00ff00"
+         id="g2525"
+         transform="matrix(0.17292202,0,0,0.17292202,10.480389,11.248839)">
+        <g
+           id="g2514"
+           style="fill:#00ff00">
+	<path
+   class="st0"
+   d="M 327.392,89.817 C 270.288,62.244 222.046,0 222.046,0 V 41.456 366.67 c -17.83,-6.55 -38.908,-8.486 -60.632,-4.292 -52.168,10.023 -88.075,51.179 -80.247,91.872 7.851,40.714 56.48,65.578 108.638,55.512 46.306,-8.915 79.741,-42.349 81.171,-78.257 h 0.29 V 148.513 C 421.081,166.816 396.475,272.862 386.108,303.952 472.464,207.23 427.556,138.158 327.392,89.817 Z"
+   style="fill:#00ff00"
+   data-darkreader-inline-fill=""
+   id="path2512" />
+
+</g>
+      </g>
+      <rect
+         style="fill:#00ff00;stroke:none"
+         id="rect2567"
+         width="78.431702"
+         height="10.798798"
+         x="45.178307"
+         y="112.54306"
+         ry="5.3993988" />
+    </g>
+  </g>
+  <style
+     type="text/css"
+     id="style2508">
+	.st0{fill:#4B4B4B;}
+</style>
+  <style
+     class="darkreader darkreader--sync"
+     media="screen"
+     id="style2510" />
+</svg>
