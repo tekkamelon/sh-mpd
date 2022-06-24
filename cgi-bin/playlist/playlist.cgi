@@ -22,19 +22,22 @@ cat << EOS
 
     <body>
 		<form name="music" method="POST" >
+
 			<h1>Playlist</h1>
 				<p>$(cat | urldecode | cut -d"=" -f 2 | sed -e "s/^/\'/g" -e "s/$/\'/g" | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
-
-				$(mpc playlist | 
+				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+				<!-- プレイリストの一覧を表示, sedでスラッシュをawkの区切り文字に置換 -->
+				$(mpc playlist | sed "s;/; - ;g" |  
 					# awkで出力をボタン化,grepでデータ無しの行を削除
 					awk -F" - " '{
 						print "<p><button name=button value="$1">"$1"</button>",
 						"<button name=button value="$2">"$2"</button></p>"
-					}' |  
-					grep -v 'value=></button>' | sort | uniq)
+					}' |
+					# sort uniq後,空白のボタンを削除
+					sort | uniq | sed "s;<button name=button value=></button></p>;;g" )
 				
 				<!-- POSTを取得,デコードしてcutで加工後にxargsでmpcに渡す-->
-				<p><a href="/cgi-bin/index.cgi">HOME</a></p>
+				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 		</form>
 	</body>
 </html>
