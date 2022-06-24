@@ -92,7 +92,7 @@ MPD UI using shellscript and CGi
         </form>
 
 		<form name="sp_and_vol" method="POST" >
-			<span style="color: white; ">
+			<span style="color: green; ">
 	            select format and enter keywords : 
 			</span>
 	            <select name="args">
@@ -120,7 +120,7 @@ MPD UI using shellscript and CGi
 		<h3>mpd status</h3>
 			<p>$(mpc | sed "s/$/<br>/g")</p>
 
-		<h3><a href="playlist/playlist.cgi">Playlist</a></h3>
+		<button><a href="playlist/playlist.cgi">Playlist</a></button>
 
 		<h3>next song</h3>
 			<p>$(mpc queued)</p>
