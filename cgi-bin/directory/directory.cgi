@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -23,17 +23,21 @@ cat << EOS
     <body>
 		<form name="music" method="POST" >
 			<h1>Directory</h1>
-				$(mkfifo mpcpipe)
-				<p>$(cat | urldecode | sed "s/button\=//g" >| mpcpipe && cat mpcpipe | mpc insert ; mpc | sed "s/$/<br>/g" 2>&1)</p>
+
+				<!-- POSTを取得,sedで一部を切り出しデコード,mpcに渡す-->
+				<p>$(cat | sed "s/button\=//g" | urldecode | mpc insert ; mpc queued | sed "s/$/<br>/g" 2>&1)</p>
+
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+				<button><a href="queued/queued.cgi">Queued</a></button>
+
 				<!-- "music_directory"以下の一覧を表示, sedでスラッシュをawkの区切り文字に置換 -->
-				$(mpc listall | 
+				$(mpc listall |  
 					# awkで出力をボタン化
 					awk '{ print "<p><button name=button value="$0">"$0"</button>"}' |
 					sort | uniq )
 				
-				<!-- POSTを取得,デコードしてcutで加工後にxargsでmpcに渡す-->
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+				<button><a href="queued/queued.cgi">Queued</a></button>
 		</form>
 	</body>
 </html>
