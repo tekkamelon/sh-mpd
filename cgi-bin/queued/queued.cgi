@@ -24,7 +24,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<h1>Queued</h1>
-				<p>$(cat | urldecode | cut -d"=" -f 2 | sed -e "s/^/\'/g" -e "s/$/\'/g" | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
+				<p>$(cat | sed "s/button\=//g" | urldecode | sed -e "s/^/\'/g" -e "s/$/\'/g" | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
