@@ -23,7 +23,7 @@ cat << EOS
     <body>
 		<form name="music" method="POST" >
 
-			<h1>Playlist</h1>
+			<h1>Queued</h1>
 				<p>$(cat | urldecode | cut -d"=" -f 2 | sed -e "s/^/\'/g" -e "s/$/\'/g" | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<!-- プレイリストの一覧を表示, sedでスラッシュをawkの区切り文字に置換 -->

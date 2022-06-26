@@ -120,7 +120,9 @@ MPD UI using shellscript and CGi
 		<h3>mpd status</h3>
 			<p>$(mpc | sed "s/$/<br>/g")</p>
 
-		<button><a href="playlist/playlist.cgi">Playlist</a></button>
+		<button><a href="queued/queued.cgi">Queued</a></button>
+
+		<button><a href="directory/directory.cgi">Directory</a></button>
 
 		<h3>next song</h3>
 			<p>$(mpc queued)</p>
