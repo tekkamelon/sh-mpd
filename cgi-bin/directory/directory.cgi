@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -19,13 +19,27 @@ cat << EOS
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
         <title>sh-MPD</title>
     </head>
+	
+	<header>
+		<h1>Directory</h1>
+	</header>
 
     <body>
-		<form name="music" method="POST" >
-			<h1>Directory</h1>
+		<p>$(mpc queued)</p>
+		<!-- mpc nextボタン -->
+		<form name="FORM" method="GET" >
 
-				<!-- POSTを取得,sedで一部を切り出しデコード,mpcに渡す-->
-				<p>$(cat | sed "s/button\=//g" | urldecode | mpc insert ; mpc queued | sed "s/$/<br>/g" 2>&1)</p>
+			<button name="button" value="next">next</button>
+			<!-- クエリを取得,cutで"="以降を切り出し,xargsでmpcに渡す -->	
+			$(echo $QUERY_STRING | cut -d"=" -f 2 | xargs mpc -q > /dev/null)
+		</form>
+	
+		<!-- mpd.confで設定されたディレクトリ配下を表示 --> 
+		<form name="music" method="POST" >
+
+				<!-- POSTを取得,sedで一部を切り出しデコード,sedで行頭,行末にシングルクォートをつけてmpcに渡す-->
+				<p>$(cat | sed "s/button\=//g" | urldecode | sed -e "s/^/\'/g" -e "s/$/\'/g" | 
+					mpc insert | sed "s/$/<br>/g" 2>&1)</p>
 
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
@@ -36,8 +50,10 @@ cat << EOS
 					awk '{ print "<p><button name=button value="$0">"$0"</button>"}' |
 					sort | uniq )
 				
+			<footer>
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
+			</footer>
 		</form>
 	</body>
 </html>
