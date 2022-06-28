@@ -30,8 +30,8 @@ cat << EOS
 		<form name="FORM" method="GET" >
 
 			<button name="button" value="next">next</button>
-			<!-- クエリを取得,cutで"="以降を切り出し,xargsでmpcに渡す -->	
-			$(echo $QUERY_STRING | cut -d"=" -f 2 | xargs mpc -q > /dev/null)
+			<!-- sedでクエリを加工,xargsでmpcに渡す -->
+			$(echo $QUERY_STRING | sed "s/button\=//g" | xargs mpc -q > /dev/null)
 		</form>
 	
 		<!-- mpd.confで設定されたディレクトリ配下を表示 --> 
@@ -51,11 +51,11 @@ cat << EOS
 					sort | uniq )
 		</form>
 	</body>
-	
-			<footer>
-				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
-			</footer>
+
+	<footer>
+		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+		<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
+	</footer>
 
 </html>
 EOS
