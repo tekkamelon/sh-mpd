@@ -20,10 +20,13 @@ cat << EOS
         <title>sh-MPD</title>
     </head>
 
+	<header>
+		<h1>Queued</h1>
+	</header>
+
     <body>
 		<form name="music" method="POST" >
 
-			<h1>Queued</h1>
 				<p>$(cat | sed "s/button\=//g" | urldecode | sed -e "s/^/\'/g" -e "s/$/\'/g" | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
@@ -37,10 +40,13 @@ cat << EOS
 					}' |
 					# sort uniq後,空白のボタンを削除
 					sort | uniq | sed "s;<button name=button value=></button></p>;;g" )
-				
-				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 		</form>
 	</body>
+
+	<footer>	
+		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+		<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
+	</footer>	
+
 </html>
 EOS

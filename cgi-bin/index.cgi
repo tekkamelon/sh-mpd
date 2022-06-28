@@ -86,8 +86,8 @@ MPD UI using shellscript and CGi
 					</td>
 				</tr>
 			</table>				 
-			<!-- クエリを取得,cutで"="以降を切り出し,sedでvolumeのurlをデコードしてmpcに渡す -->	
-			$(echo $QUERY_STRING | cut -d"=" -f 2 | sed -e "s/+\%2B/ +/g" -e "s/\+\-/ \-/g" | xargs mpc -q > /dev/null)
+			<!-- sedでクエリを加工,xargsでmpcに渡す -->
+			$(echo $QUERY_STRING | sed -e "s/button\=//g" -e "s/+\%2B/ +/g" -e "s/\+\-/ \-/g" | xargs mpc -q > /dev/null)
 
         </form>
 
@@ -113,7 +113,7 @@ MPD UI using shellscript and CGi
 							</span>
 						</p>
 						<!-- POSTを取得,awkとurldecodeで加工後,mpcに渡し,標準エラー出力ごと表示 -->
-						<p>$(cat | awk -F'[=&]' '{print $2,$4}' | urldecode | xargs mpc -q 2>&1 )</p>
+						<p>$(cat | awk -F'[=&]' '{print $2,"\047"$4"\047"}' | urldecode | xargs mpc -q 2>&1 )</p>
 				    </form>
 	            </select>
 
@@ -122,7 +122,7 @@ MPD UI using shellscript and CGi
 
 		<button><a href="queued/queued.cgi">Queued</a></button>
 
-		<button><a href="directory/directory.cgi">Directory</a></button>
+		<button><a href="directory/directory.cgi">Directoty</a></button>
 
 		<h3>next song</h3>
 			<p>$(mpc queued)</p>
@@ -130,12 +130,13 @@ MPD UI using shellscript and CGi
 		<h4>debug info</h4>
 			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
 
-		<footer>
-			<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
-			<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode" reference source</a></p>
-		</footer>
-
     </body>
+
+	<footer>
+		<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
+		<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode" reference source</a></p>
+	</footer>
+
 </html>
 EOS
 

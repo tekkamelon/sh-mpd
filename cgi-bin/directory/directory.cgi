@@ -49,12 +49,13 @@ cat << EOS
 					# awkで出力をボタン化
 					awk '{ print "<p><button name=button value="$0">"$0"</button>"}' |
 					sort | uniq )
-				
+		</form>
+	</body>
+	
 			<footer>
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
 			</footer>
-		</form>
-	</body>
+
 </html>
 EOS
