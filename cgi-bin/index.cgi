@@ -124,6 +124,8 @@ MPD UI using shellscript and CGi
 
 		<button><a href="directory/directory.cgi">Directoty</a></button>
 
+		<button><a href="playlist/playlist.cgi">Playlist</a></button>
+
 		<h3>next song</h3>
 			<p>$(mpc queued)</p>
 
