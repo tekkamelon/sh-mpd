@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -euxv
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -38,7 +38,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<!-- POSTを取得,sedで一部を切り出しデコード,sedで行頭,行末にシングルクォートをつけてmpcに渡す-->
-				<p>$(cat | sed "s/button\=//g" | urldecode | sed -e "s/^/\'/g" -e "s/$/\'/g" | 
+				<p>$(cat | sed "s/button\=//g" | urldecode | 
 					mpc load | sed "s/$/<br>/g" 2>&1)</p>
 
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
