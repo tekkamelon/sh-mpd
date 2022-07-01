@@ -47,10 +47,10 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="status">status</button>
 					</td>
 					<td>
-				 		<button name="button" value="volume +10">volume +10</button>
+				 		<button name="button" value="volume +5">volume +5</button>
 					</td>
 					<td>
-				 		<button name="button" value="volume -10">volume -10</button>
+				 		<button name="button" value="volume -5">volume -5</button>
 					</td>
 				</tr>	
 
