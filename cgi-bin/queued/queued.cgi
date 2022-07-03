@@ -26,8 +26,14 @@ cat << EOS
 
     <body>
 		<form name="FORM" method="GET" >
-			<p>$(echo $QUERY_STRING | sed "s/button\=//g" | xargs -I{} mpc {} $(date | tr " " "_"))</p>
+			<p>$(echo $QUERY_STRING | sed -e "s/button\=//g" -e "s/\&playlist_name\=/ /g" | xargs mpc)</p>
+			<p>debug:$(echo $QUERY_STRING)</p>
 			<button name="button" value="save">save</button>
+				<p>
+					<span style="color: rgb(0, 255, 10); ">
+						playlist name:<input type="text" name="playlist_name">
+					</span>
+				</p>
 		</form>
 		<form name="music" method="POST" >
 
