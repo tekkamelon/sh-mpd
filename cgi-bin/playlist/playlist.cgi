@@ -41,8 +41,9 @@ cat << EOS
 				<p>$(cat | sed "s/button\=//g" | urldecode | 
 					mpc load | sed "s/$/<br>/g" 2>&1)</p>
 
-				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+				<!-- リンク -->
 				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
+				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
 				<!-- "music_directory"以下の一覧を表示, sedでスラッシュをawkの区切り文字に置換 -->
@@ -54,8 +55,9 @@ cat << EOS
 	</body>
 
 	<footer>
-		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+		<!-- リンク -->
 		<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
+		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 		<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 	</footer>
 
