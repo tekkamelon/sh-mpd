@@ -43,6 +43,7 @@ cat << EOS
 
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
+				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 				<!-- "music_directory"以下の一覧を表示, sedでスラッシュをawkの区切り文字に置換 -->
 				$(mpc listall |  
@@ -55,6 +56,7 @@ cat << EOS
 	<footer>
 		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 		<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
+		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 	</footer>
 
 </html>

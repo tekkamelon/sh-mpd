@@ -25,12 +25,18 @@ cat << EOS
 	</header>
 
     <body>
+		<form name="FORM" method="GET" >
+			<p>$(echo $QUERY_STRING | sed "s/button\=//g" | xargs -I{} mpc {} $(date | tr " " "_") && echo "save queued song")</p>
+			<button name="button" value="save">save</button>
+		</form>
 		<form name="music" method="POST" >
 
 				<p>$(cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
+
+				<!-- リンク -->
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
-				<button><a href="playlist/playlist.cgi">Playlist</a></button>
+				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 				<!-- プレイリストの一覧を表示, sedでスラッシュをawkの区切り文字に置換 -->
 				$(mpc playlist | sed "s;/; - ;g" |  
@@ -47,7 +53,7 @@ cat << EOS
 	<footer>	
 		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 		<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
-		<button><a href="playlist/playlist.cgi">Playlist</a></button>
+		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 	</footer>	
 
 </html>
