@@ -45,11 +45,7 @@ MPD UI using shellscript and CGi
 				<tr>
 					<td>
 				 		<button name="button" value="status">status</button>
-					</td>
-					<td>
 				 		<button name="button" value="volume +5">volume +5</button>
-					</td>
-					<td>
 				 		<button name="button" value="volume -5">volume -5</button>
 					</td>
 				</tr>	
@@ -58,14 +54,8 @@ MPD UI using shellscript and CGi
 				<tr>
 					<td>
 						<button name="button" value="prev">previous</button>
-					</td>
-					<td>
 				 		<button name="button" value="toggle" >play/pause</button>
-					</td>
-					<td>
 				 		<button name="button" value="stop">stop</button>
-					</td>
-					<td>
 				 		<button name="button" value="next">next</button>
 					</td>
 				</tr>
@@ -74,25 +64,20 @@ MPD UI using shellscript and CGi
 				<tr>
 					<td>
 				 		<button name="button" value="repeat">repeat</button>
-					</td>
-					<td>
 				 		<button name="button" value="random">random</button>
-					</td>
-					<td>
 				 		<button name="button" value="single">single</button>
-					</td>
-					<td>
 				 		<button name="button" value="clear">clear</button>
 					</td>
 				</tr>
 			</table>				 
+
 			<!-- sedでクエリを加工,xargsでmpcに渡す -->
 			$(echo $QUERY_STRING | sed -e "s/button\=//g" -e "s/+\%2B/ +/g" -e "s/\+\-/ \-/g" | xargs mpc -q > /dev/null)
 
         </form>
 
 		<form name="sp_and_vol" method="POST" >
-			<span style="color: green; ">
+			<span style="color: teal; ">
 	            select format and enter keywords : 
 			</span>
 	            <select name="args">
