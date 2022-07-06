@@ -39,12 +39,15 @@ MPD UI using shellscript and CGi
 		<form name="FORM" method="GET" >
 			<!-- 音楽の操作ボタンをtableでレイアウト -->
 
-			<table border=1>
-			<thead>
-			<tr>
-			<th colspan=4>control button</th>
-			</tr>
-			</thead>
+			<table border=1 bordercolor="green">
+
+				<!-- ヘッダ -->
+				<thead>
+					<tr>
+						<th colspan=4>control button</th>
+					</tr>
+				</thead>
+
 				<!-- 1行目 -->
 				<tr>
 					<td>
@@ -60,6 +63,7 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="volume -100">mute</button>
 					</td>
 				</tr>	
+
 				<!-- 2行目 -->
 				<tr>
 					<td>
