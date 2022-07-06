@@ -95,6 +95,11 @@ input{
 }
 	
 /* table */
+table th{
+	color: white;
+	text-align: center
+}
+
 table td{
 	color: white;
 	text-align: center
@@ -102,17 +107,19 @@ table td{
 
 /*button*/
 button{
-	padding: 8px 15px;
+	padding: 7px 14px;
 	color: white;
 	background-color: black;
 	border: 1px solid teal;
 	border-radius: 12px;
+	text-align: center;
 }
 
 button:hover{
-	padding: 8px 15px;
+	padding: 7px 14px;
 	color: var(--main-bg-color);
 	background-color: black;
 	border: 1px solid orange;
 	border-radius: 12px;
+	text-align: center;
 }
