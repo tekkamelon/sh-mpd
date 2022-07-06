@@ -97,6 +97,7 @@ input{
 /* table */
 table td{
 	color: white;
+	text-align: center
 }
 
 /*button*/

@@ -34,28 +34,44 @@ MPD UI using shellscript and CGi
 
 	    </pre>
     <body>
-		<h3>hostname: $(hostname)</h3>
-		<h3>cgi_version: $(echo $GATEWAY_INTERFACE)</h3>
 		<l2>used RAM: $(free -h | sed -n 2p | awk -F" " '{print $3}')</l2>
 
 		<form name="FORM" method="GET" >
 			<!-- 音楽の操作ボタンをtableでレイアウト -->
-			<table>
+
+			<table border=1>
+			<thead>
+			<tr>
+			<th colspan=4>control button</th>
+			</tr>
+			</thead>
 				<!-- 1行目 -->
 				<tr>
 					<td>
 				 		<button name="button" value="status">status</button>
+					</td>
+					<td>
 				 		<button name="button" value="volume +5">volume +5</button>
+					</td>
+					<td>
 				 		<button name="button" value="volume -5">volume -5</button>
 					</td>
+					<td>
+				 		<button name="button" value="volume -100">mute</button>
+					</td>
 				</tr>	
-
 				<!-- 2行目 -->
 				<tr>
 					<td>
 						<button name="button" value="prev">previous</button>
+					</td>
+					<td>
 				 		<button name="button" value="toggle" >play/pause</button>
+					</td>
+					<td>
 				 		<button name="button" value="stop">stop</button>
+					</td>
+					<td>
 				 		<button name="button" value="next">next</button>
 					</td>
 				</tr>
@@ -64,12 +80,18 @@ MPD UI using shellscript and CGi
 				<tr>
 					<td>
 				 		<button name="button" value="repeat">repeat</button>
+					</td>
+					<td>
 				 		<button name="button" value="random">random</button>
+					</td>
+					<td>
 				 		<button name="button" value="single">single</button>
+					</td>
+					<td>
 				 		<button name="button" value="clear">clear</button>
 					</td>
 				</tr>
-			</table>				 
+			</table>
 
 			<!-- sedでクエリを加工,xargsでmpcに渡す -->
 			$(echo $QUERY_STRING | sed -e "s/button\=//g" -e "s/+\%2B/ +/g" -e "s/\+\-/ \-/g" | xargs mpc -q > /dev/null)
@@ -102,6 +124,10 @@ MPD UI using shellscript and CGi
 				    </form>
 	            </select>
 
+
+		<h3>next song</h3>
+			<p>$(mpc queued)</p>
+
 		<h3>mpd status</h3>
 			<p>$(mpc | sed "s/$/<br>/g")</p>
 
@@ -109,17 +135,17 @@ MPD UI using shellscript and CGi
 		<button><a href="directory/directory.cgi">Directoty</a></button>
 		<button><a href="playlist/playlist.cgi">Playlist</a></button>
 
-		<h3>next song</h3>
-			<p>$(mpc queued)</p>
-
-		<h4>debug info</h4>
-			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
-
     </body>
 
 	<footer>
+		<h4>source code</h4>
 		<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
 		<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode" reference source</a></p>
+
+		<h4>debug info</h4>
+			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
+			<p>hostname: $(hostname)</p>
+			<p>cgi_version: $(echo $GATEWAY_INTERFACE)</p>
 	</footer>
 
 </html>
