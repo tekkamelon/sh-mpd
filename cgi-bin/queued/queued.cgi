@@ -49,10 +49,12 @@ cat << EOS
 					# awkで出力をボタン化
 					awk -F" - " '{
 						print "<p><button name=button value="$1">"$1"</button>",
-						"<button name=button value="$2">"$2"</button></p>"
+						"<button name=button value="$NF">"$NF"</button></p>"
 					}' |
-					# sort uniq後,空白のボタンを削除
-					sort | uniq | sed "s;<button name=button value=></button></p>;;g" )
+					# awkで重複行を削除
+					awk '!a[$0]++{print}' |
+					# 空白のボタンを削除
+					sed "s;<button name=button value=></button></p>;;g" )
 		</form>
 	</body>
 
