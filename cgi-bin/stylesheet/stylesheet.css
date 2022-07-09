@@ -94,13 +94,11 @@ input{
 	border-radius: 6px;
 }
 
-/*table*/
 table {
 	border-collapse:collapse;
-	border=1;
-	border-color="green";
 }
 
+/* table */
 table th{
 	color: white;
 	text-align: center
