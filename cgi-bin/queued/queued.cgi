@@ -52,9 +52,8 @@ cat << EOS
 						"<button name=button value="$NF">"$NF"</button></p>"
 					}' |
 					# awkで重複行を削除
-					awk '!a[$0]++{print}' |
-					# 空白のボタンを削除
-					sed "s;<button name=button value=></button></p>;;g" )
+					awk '!a[$0]++{print}'
+					)
 		</form>
 	</body>
 
