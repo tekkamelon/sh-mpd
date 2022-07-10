@@ -34,12 +34,12 @@ MPD UI using shellscript and CGi
 
 	    </pre>
     <body>
-		<l2>used RAM: $(free -h | sed -n 2p | awk -F" " '{print $3}')</l2>
+		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}')</p>
 
 		<form name="FORM" method="GET" >
 			<!-- 音楽の操作ボタンをtableでレイアウト -->
 
-			<table border=1 bordercolor="green" border-collapse:collapse>
+			<table border=1 bordercolor="green" border-collapse:collapse cellspacing="6">
 
 				<!-- ヘッダ -->
 				<thead>
@@ -102,7 +102,7 @@ MPD UI using shellscript and CGi
 
         </form>
 
-		<form name="sp_and_vol" method="POST" >
+		<form name="format" method="POST" >
 			<span style="color: teal; ">
 	            select format and enter keywords : 
 			</span>
@@ -128,12 +128,11 @@ MPD UI using shellscript and CGi
 				    </form>
 	            </select>
 
+		<h3>current song</h3>
+			<p>$(mpc | sed "s/$/<br>/g")</p>
 
 		<h3>next song</h3>
 			<p>$(mpc queued)</p>
-
-		<h3>mpd status</h3>
-			<p>$(mpc | sed "s/$/<br>/g")</p>
 
 		<button><a href="queued/queued.cgi">Queued</a></button>
 		<button><a href="directory/directory.cgi">Directoty</a></button>
@@ -149,7 +148,6 @@ MPD UI using shellscript and CGi
 		<h4>debug info</h4>
 			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
 			<p>hostname: $(hostname)</p>
-			<p>cgi_version: $(echo $GATEWAY_INTERFACE)</p>
 	</footer>
 
 </html>
