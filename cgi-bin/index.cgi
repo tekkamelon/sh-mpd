@@ -54,13 +54,13 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="status">status</button>
 					</td>
 					<td>
-				 		<button name="button" value="volume +5">volume +5</button>
+				 		<button name="button" value="volume -100">mute</button>
 					</td>
 					<td>
 				 		<button name="button" value="volume -5">volume -5</button>
 					</td>
 					<td>
-				 		<button name="button" value="volume -100">mute</button>
+				 		<button name="button" value="volume +5">volume +5</button>
 					</td>
 				</tr>	
 
@@ -92,19 +92,35 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="single">single</button>
 					</td>
 					<td>
+				 		<button name="button" value="shuffle">shuffle</button>
+					</td>
+				</tr>
+
+				<!-- 4行目 -->
+				<tr>
+					<td>
 				 		<button name="button" value="clear">clear</button>
+					</td>
+					<td>
+				 		<button name="button" value="update">update</button>
+					</td>
+					<td>
+				 		<button name="button" value="seek +5%">seek +5%</button>
+					</td>
+					<td>
+				 		<button name="button" value="seek -5%">seek -5%</button>
 					</td>
 				</tr>
 			</table>
 
-			<!-- sedでクエリを加工,xargsでmpcに渡す -->
-			$(echo $QUERY_STRING | sed -e "s/button\=//g" -e "s/+\%2B/ +/g" -e "s/\+\-/ \-/g" | xargs mpc -q > /dev/null)
+			<!-- sedでクエリを加工,デコードしxargsでmpcに渡す -->
+			$(echo $QUERY_STRING | sed "s/button\=//g" | urldecode | xargs mpc -q > /dev/null)
 
         </form>
 
 		<form name="format" method="POST" >
 			<span style="color: teal; ">
-	            select format and enter keywords : 
+				searchplay queued song :
 			</span>
 	            <select name="args">
 	
@@ -127,6 +143,7 @@ MPD UI using shellscript and CGi
 						<p>$(cat | awk -F'[=&]' '{print $2,"\047"$4"\047"}' | urldecode | xargs mpc -q 2>&1 )</p>
 				    </form>
 	            </select>
+	            select format and enter keywords : 
 
 		<h3>current song</h3>
 			<p>$(mpc | sed "s/$/<br>/g")</p>
