@@ -30,7 +30,8 @@ cat << EOS
 		<form name="FORM" method="GET" >
 
 			<button name="button" value="next">next</button>
-			<!-- クエリを取得,cutで"="以降を切り出し,xargsでmpcに渡す -->	
+			<!-- sedでクエリを加工,xargsでmpcに渡す -->
+
 			$(echo $QUERY_STRING | sed "s/button\=//g" | xargs mpc -q > /dev/null)
 		</form>
 	
@@ -46,11 +47,8 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
-				<!-- "music_directory"以下の一覧を表示, sedでスラッシュをawkの区切り文字に置換 -->
-				$(mpc lsplaylist |  
-					# awkで出力をボタン化
-					awk '{ print "<p><button name=button value="$0">"$0"</button>"}' |
-					sort | uniq )
+				<!-- mpc管理下のプレイリストを再帰的に表示,awkで出力をボタン化 -->
+				$(mpc lsplaylist | awk '{ print "<p><button name=button value="$0">"$0"</button>"}')
 		</form>
 	</body>
 
