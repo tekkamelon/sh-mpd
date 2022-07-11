@@ -46,11 +46,9 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
-				<!-- "music_directory"以下の一覧を表示, sedでスラッシュをawkの区切り文字に置換 -->
-				$(mpc listall |  
-					# awkで出力をボタン化
-					awk '{ print "<p><button name=button value="$0">"$0"</button>"}' |
-					sort | uniq )
+				<!-- awkで出力をボタン化 -->
+				$(mpc listall | awk '{ print "<p><button name=button value="$0">"$0"</button>"}')
+
 		</form>
 	</body>
 
