@@ -25,11 +25,13 @@ cat << EOS
 	</header>
 
     <body>
+		<!-- playlistの処理 -->
 		<form name="FORM" method="GET" >
 			<p>$(echo $QUERY_STRING | sed -e "s/button\=//g" -e "s/\&playlist_name\=/ /g" | xargs mpc)</p>
 			<p>debug:$(echo $QUERY_STRING)</p>
 			<button name="button" value="save">save</button>
 				<p>
+					<!-- playlistの名前の入力欄 -->
 					<span style="color: rgb(0, 255, 10); ">
 						playlist name:<input type="text" name="playlist_name">
 					</span>
