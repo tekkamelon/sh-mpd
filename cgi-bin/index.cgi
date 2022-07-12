@@ -39,7 +39,7 @@ MPD UI using shellscript and CGi
 		<form name="FORM" method="GET" >
 			<!-- 音楽の操作ボタンをtableでレイアウト -->
 
-			<table border=1 bordercolor="green" border-collapse:collapse cellspacing="6">
+			<table border=1 bordercolor="green" border-collapse:collapse cellspacing="5">
 
 				<!-- ヘッダ -->
 				<thead>
@@ -143,7 +143,6 @@ MPD UI using shellscript and CGi
 						<p>$(cat | awk -F'[=&]' '{print $2,"\047"$4"\047"}' | urldecode | xargs mpc -q 2>&1 )</p>
 				    </form>
 	            </select>
-	            select format and enter keywords : 
 
 		<h3>current song</h3>
 			<p>$(mpc | sed "s/$/<br>/g")</p>
@@ -151,6 +150,7 @@ MPD UI using shellscript and CGi
 		<h3>next song</h3>
 			<p>$(mpc queued)</p>
 
+		<!-- リンク -->
 		<button><a href="queued/queued.cgi">Queued</a></button>
 		<button><a href="directory/directory.cgi">Directoty</a></button>
 		<button><a href="playlist/playlist.cgi">Playlist</a></button>

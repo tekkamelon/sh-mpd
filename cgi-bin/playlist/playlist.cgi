@@ -25,7 +25,9 @@ cat << EOS
 	</header>
 
     <body>
+		<!-- 次の曲 -->
 		<p>$(mpc queued)</p>
+
 		<!-- mpc nextボタン -->
 		<form name="FORM" method="GET" >
 
