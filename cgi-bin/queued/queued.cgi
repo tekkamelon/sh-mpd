@@ -46,10 +46,10 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
-				<!-- プレイリストの一覧を表示, sedでスラッシュをawkの区切り文字に置換 -->
-				$(mpc playlist | sed "s;/; - ;g" |  
-					# awkで出力をボタン化
-					awk -F" - " '{
+				<!-- プレイリストの一覧を表示 -->
+				$(mpc playlist | 
+					# "/"と" - "を区切り文字に指定
+					awk -F'/| - ' '{
 						print "<p><button name=button value="$1">"$1"</button>",
 						"<button name=button value="$NF">"$NF"</button></p>"
 					}' |

@@ -46,7 +46,7 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
-				<!-- awkで出力をボタン化 -->
+				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
 				$(mpc listall | awk '{ print "<p><button name=button value="$0">"$0"</button>"}')
 
 		</form>
