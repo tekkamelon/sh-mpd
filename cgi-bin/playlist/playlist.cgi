@@ -33,8 +33,8 @@ cat << EOS
 
 			<button name="button" value="next">next</button>
 
-			<!-- sedでクエリを加工,xargsでmpcに渡す -->
-			$(echo $QUERY_STRING | sed "s/button\=//g" | xargs mpc -q > /dev/null)
+			<!-- 変数展開でクエリを加工,xargsでmpcに渡す -->
+			$(echo ${QUERY_STRING#button\=} | xargs mpc -q > /dev/null)
 		</form>
 	
 		<!-- mpd.confで設定されたプレイリスト一覧を表示 --> 
@@ -50,7 +50,7 @@ cat << EOS
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
 				<!-- mpc管理下のプレイリストを再帰的に表示,awkで出力をボタン化 -->
-				$(mpc lsplaylist | awk '{ print "<p><button name=button value="$0">"$0"</button>"}')
+				$(mpc lsplaylist | awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}')
 		</form>
 	</body>
 
