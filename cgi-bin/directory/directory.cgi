@@ -30,8 +30,8 @@ cat << EOS
 		<form name="FORM" method="GET" >
 
 			<button name="button" value="next">next</button>
-			<!-- sedでクエリを加工,xargsでmpcに渡す -->
-			$(echo $QUERY_STRING | sed "s/button\=//g" | xargs mpc -q > /dev/null)
+			<!-- 変数展開でクエリを加工,xargsでmpcに渡す -->
+			$(echo ${QUERY_STRING#button\=} | xargs mpc -q > /dev/null)
 		</form>
 	
 		<!-- mpd.confで設定されたディレクトリ配下を表示 --> 

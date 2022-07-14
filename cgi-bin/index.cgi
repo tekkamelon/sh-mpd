@@ -105,16 +105,16 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="update">update</button>
 					</td>
 					<td>
-				 		<button name="button" value="seek +5%">seek +5%</button>
+				 		<button name="button" value="seek -5%">seek -5%</button>
 					</td>
 					<td>
-				 		<button name="button" value="seek -5%">seek -5%</button>
+				 		<button name="button" value="seek +5%">seek +5%</button>
 					</td>
 				</tr>
 			</table>
 
-			<!-- sedでクエリを加工,デコードしxargsでmpcに渡す -->
-			$(echo $QUERY_STRING | sed "s/button\=//g" | urldecode | xargs mpc -q > /dev/null)
+			<!-- 変数展開ででクエリを加工,デコードしxargsでmpcに渡す -->
+			$(echo ${QUERY_STRING#button\=} | urldecode | xargs mpc -q > /dev/null)
 
         </form>
 
