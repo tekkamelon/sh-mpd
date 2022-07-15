@@ -25,8 +25,8 @@ cat << EOS
 	</header>
 
     <body>
-		<!-- 次の曲 -->
-		<p>$(mpc queued)</p>
+		<!-- 再生中の曲 -->
+		<p>$(mpc status | sed "s/$/<br>/g")</p>
 
 		<!-- mpc nextボタン -->
 		<form name="FORM" method="GET" >

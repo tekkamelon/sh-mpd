@@ -145,7 +145,7 @@ MPD UI using shellscript and CGi
 	            </select>
 
 		<h3>current song</h3>
-			<p>$(mpc | sed "s/$/<br>/g")</p>
+			<p>$(mpc status | sed "s/$/<br>/g")</p>
 
 		<h3>next song</h3>
 			<p>$(mpc queued)</p>
