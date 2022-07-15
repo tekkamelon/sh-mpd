@@ -25,7 +25,7 @@ cat << EOS
 	</header>
 
     <body>
-		<p>$(mpc queued)</p>
+		<p>$(mpc status | sed "s/$/<br>/g")</p>
 		<!-- mpc nextボタン -->
 		<form name="FORM" method="GET" >
 
