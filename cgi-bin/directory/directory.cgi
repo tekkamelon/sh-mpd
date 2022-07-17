@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -25,21 +25,25 @@ cat << EOS
 	</header>
 
     <body>
+		<!-- ステータスの表示 -->
 		<p>$(mpc status | sed "s/$/<br>/g")</p>
-		<!-- mpc nextボタン -->
 		<form name="FORM" method="GET" >
 
-			<button name="button" value="next">next</button>
-			<!-- 変数展開でクエリを加工,xargsでmpcに渡す -->
-			$(echo ${QUERY_STRING#button\=} | xargs mpc -q > /dev/null)
+			debug_info:$(echo ${QUERY_STRING})
+				<p>
+					<!-- 検索ワードの入力欄 -->
+					<span style="color: rgb(0, 255, 10); ">
+						search_word:<input type="text" name="search_word">
+					</span>
+				</p>
 		</form>
 	
 		<!-- mpd.confで設定されたディレクトリ配下を表示 --> 
 		<form name="music" method="POST" >
 
-				<!-- POSTを取得,sedで一部を切り出しデコード,sedで行頭,行末にシングルクォートをつけてmpcに渡す-->
-				<p>$(cat | sed "s/button\=//g" | urldecode | 
-					mpc insert | sed "s/$/<br>/g" 2>&1)</p>
+				<p>$(#POSTを取得,sedで一部を切り出しデコード,sedで行頭,行末にシングルクォートをつけてmpcに渡す
+				cat  | sed "s/button\=//g" | urldecode | mpc insert | sed "s/$/<br>/g" 2>&1
+				)</p>
 
 				<!-- リンク -->
 				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
@@ -47,7 +51,21 @@ cat << EOS
 				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
-				$(mpc listall | awk '{ print "<p><button name=button value="$0">"$0"</button>"}')
+				$(# クエリを変数展開で加工,空でない場合に真,空の場合に偽
+				if [ -n "${QUERY_STRING#search_word\=}" ]; then
+
+					# 真の場合はクエリを変数展開で加工,デコード
+					search_var=$(echo ${QUERY_STRING#search_word\=} | urldecode)
+					
+				else
+				
+					# 偽の場合は"."で全てにマッチングする行を表示
+					search_var="." 
+
+				fi 
+				mpc listall | grep -i ${search_var} |
+				awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}'
+				)
 
 		</form>
 	</body>
