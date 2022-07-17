@@ -35,13 +35,14 @@ MPD UI using shellscript and CGi
 	    </pre>
     <body>
 		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}')</p>
-
+		
+		<!-- 入力フォーム -->
 		<form name="FORM" method="GET" >
-			<!-- 音楽の操作ボタンをtableでレイアウト -->
 
+			<!-- 音楽の操作ボタンをtableでレイアウト -->
 			<table border=1 bordercolor="green" border-collapse:collapse cellspacing="5">
 
-				<!-- ヘッダ -->
+				<!-- ヘッダ行 -->
 				<thead>
 					<tr>
 						<th colspan=4>control button</th>
@@ -113,7 +114,7 @@ MPD UI using shellscript and CGi
 				</tr>
 			</table>
 
-			<!-- 変数展開ででクエリを加工,デコードしxargsでmpcに渡す -->
+			<!-- 変数展開でクエリを加工,デコードしxargsでmpcに渡す -->
 			$(echo ${QUERY_STRING#button\=} | urldecode | xargs mpc -q > /dev/null)
 
         </form>
