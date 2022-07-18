@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -32,9 +32,9 @@ cat << EOS
 			debug_info:$(echo ${QUERY_STRING})
 				<p>
 					<!-- 検索ワードの入力欄 -->
-					<span style="color: rgb(0, 255, 10); ">
+					<!-- <span style="color: rgb(0, 255, 10); "> -->
 						search_word:<input type="text" name="search_word">
-					</span>
+					<!-- </span> -->
 				</p>
 		</form>
 	
@@ -50,19 +50,15 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
-				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
 				$(# クエリを変数展開で加工,空でない場合に真,空の場合に偽
-				if [ -n "${QUERY_STRING#search_word\=}" ]; then
+				test -n "${QUERY_STRING#search_word\=}" ] &&
 
 					# 真の場合はクエリを変数展開で加工,デコード
-					search_var=$(echo ${QUERY_STRING#search_word\=} | urldecode)
+					search_var=$(echo ${QUERY_STRING#search_word\=} | urldecode) ||
 					
-				else
-				
 					# 偽の場合は"."で全てにマッチングする行を表示
 					search_var="." 
 
-				fi 
 				mpc listall | grep -i ${search_var} |
 				awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}'
 				)
