@@ -29,13 +29,11 @@ cat << EOS
 		<p>$(mpc status | sed "s/$/<br>/g")</p>
 		<form name="FORM" method="GET" >
 
-			debug_info:$(echo ${QUERY_STRING})
-				<p>
+			debug_info:$(echo ${QUERY_STRING} | urldecode)
+				
 					<!-- 検索ワードの入力欄 -->
-					<span style="color: rgb(0, 255, 10); ">
-						search_word:<input type="text" name="search_word">
-					</span>
-				</p>
+						<p>search_word:<input type="text" name="search_word"></p>
+				
 		</form>
 	
 		<!-- mpd.confで設定されたディレクトリ配下を表示 --> 
@@ -52,17 +50,15 @@ cat << EOS
 
 				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
 				$(# クエリを変数展開で加工,空でない場合に真,空の場合に偽
-				if [ -n "${QUERY_STRING#search_word\=}" ]; then
+				[ -n "${QUERY_STRING#search_word\=}" ] &&
 
 					# 真の場合はクエリを変数展開で加工,デコード
-					search_var=$(echo ${QUERY_STRING#search_word\=} | urldecode)
+					search_var=$(echo ${QUERY_STRING#search_word\=} | urldecode) ||
 					
-				else
 				
 					# 偽の場合は"."で全てにマッチングする行を表示
 					search_var="." 
 
-				fi 
 				mpc listall | grep -i ${search_var} |
 				awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}'
 				)
