@@ -39,8 +39,8 @@ cat << EOS
 		</form>
 		<form name="music" method="POST" >
 
-				<!-- sedでクエリを加工,デコードしてmpcに渡す
-				<p>$(cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
+				<p>$(# sedでクエリを加工,デコードしてmpcに渡す
+				cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
 
 				<!-- リンク -->
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>

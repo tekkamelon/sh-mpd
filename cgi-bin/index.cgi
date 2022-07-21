@@ -114,8 +114,8 @@ MPD UI using shellscript and CGi
 				</tr>
 			</table>
 
-			<!-- 変数展開でクエリを加工,デコードしxargsでmpcに渡す -->
-			$(echo ${QUERY_STRING#button\=} | urldecode | xargs mpc -q > /dev/null)
+			$(# 変数展開でクエリを加工,デコードしxargsでmpcに渡す
+			echo ${QUERY_STRING#button\=} | urldecode | xargs mpc -q > /dev/null)
 
         </form>
 
@@ -140,8 +140,9 @@ MPD UI using shellscript and CGi
 								<input type="text" name="search">
 							</span>
 						</p>
-						<!-- POSTを取得,awkとurldecodeで加工後,mpcに渡し,標準エラー出力ごと表示 -->
-						<p>$(cat | awk -F'[=&]' '{print $2,"\047"$4"\047"}' | urldecode | xargs mpc -q 2>&1 )</p>
+						<p>$(# POSTを取得,awkとurldecodeで加工後,mpcに渡し,標準エラー出力ごと表示
+						cat | awk -F'[=&]' '{print $2,"\047"$4"\047"}' | urldecode | xargs mpc -q 2>&1 )</p>
+
 				    </form>
 	            </select>
 
@@ -164,8 +165,10 @@ MPD UI using shellscript and CGi
 		<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode" reference source</a></p>
 
 		<h4>debug info</h4>
+
 			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
 			<p>hostname: $(hostname)</p>
+
 	</footer>
 
 </html>
