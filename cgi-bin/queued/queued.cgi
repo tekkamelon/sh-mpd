@@ -30,6 +30,7 @@ cat << EOS
 			<p>$(echo ${QUERY_STRING#button\=} | sed "s/\&playlist_name\=/ /g" | xargs mpc)</p>
 			<p>debug:$(echo $QUERY_STRING)</p>
 			<button name="button" value="save">save playlist</button>
+			<button name="button" value="clear">clear</button>
 				<p>
 					<!-- playlistの名前の入力欄 -->
 					<span style="color: rgb(0, 255, 10); ">
@@ -39,7 +40,7 @@ cat << EOS
 		</form>
 		<form name="music" method="POST" >
 
-				<p>$(# sedでクエリを加工,デコードしてmpcに渡す
+				<p>$(# sedでPOSTを加工,デコードしてmpcに渡す
 				cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
 
 				<!-- リンク -->
