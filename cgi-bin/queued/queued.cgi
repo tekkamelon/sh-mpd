@@ -31,6 +31,7 @@ cat << EOS
 			<p>debug:$(echo $QUERY_STRING)</p>
 			<button name="button" value="save">save playlist</button>
 			<button name="button" value="clear">clear</button>
+			<button name="button" value="match">match</button>
 				<p>
 					<!-- playlistの名前の入力欄 -->
 					<span style="color: rgb(0, 255, 10); ">
@@ -41,7 +42,8 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<p>$(# sedでPOSTを加工,デコードしてmpcに渡す
-				cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1)</p>
+				cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1
+				)</p>
 
 				<!-- リンク -->
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
@@ -49,15 +51,24 @@ cat << EOS
 				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 				<!-- プレイリストの一覧を表示 -->
-				$(mpc playlist | 
-					# "/"と" - "を区切り文字に指定
-					awk -F'/| - ' '{
-						print "<p><button name=button value="$1">"$1"</button>",
-						"<button name=button value="$NF">"$NF"</button></p>"
-					}' |
-					# awkで重複行を削除
-					awk '!a[$0]++{print}'
-					)
+				$(# クエリ内に"match"がある場合は真,無い場合は偽
+				[ $(echo $QUERY_STRING | grep 'match') ] &&
+
+					# 真の場合はクエリを変数展開で加工,デコード
+					search_var=$(echo ${QUERY_STRING#button\=*&playlist_name\=} | urldecode) ||
+
+					# 偽の場合は"."で全てにマッチングする行を表示
+					search_var="."
+
+				mpc playlist | grep -i ${search_var} |
+				# "/"と" - "を区切り文字に指定
+				awk -F'/| - ' '{
+					print "<p><button name=button value="$1">"$1"</button>",
+					"<button name=button value="$NF">"$NF"</button></p>"
+				}' |
+				# awkで重複行を削除
+				awk '!a[$0]++{print}'
+				)
 		</form>
 	</body>
 
