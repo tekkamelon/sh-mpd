@@ -34,7 +34,8 @@ cat << EOS
 			<button name="button" value="next">next</button>
 
 			$(# 変数展開でクエリを加工,xargsでmpcに渡す
-			echo ${QUERY_STRING#button\=} | xargs mpc -q > /dev/null)
+			echo ${QUERY_STRING#button\=} | xargs mpc -q > /dev/null
+			)
 
 		</form>
 	
@@ -42,7 +43,8 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<p>$(# POSTを取得,sedで一部を切り出しデコード,sedで行頭,行末にシングルクォートをつけてmpcに渡す
-				cat | sed "s/button\=//g" | urldecode | mpc load | sed "s/$/<br>/g" 2>&1)</p>
+				cat | sed "s/button\=//g" | urldecode | mpc load | sed "s/$/<br>/g" 2>&1
+				)</p>
 
 				<!-- リンク -->
 				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
