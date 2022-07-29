@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -26,13 +26,22 @@ cat << EOS
 
     <body>
 		<form name="setting" method="POST" >
-		<h3>host</h3>
+		<h3>host:$(echo $MPD_HOST)</h3>
 			<span style="color: rgb(0, 255, 10); ">
-				<p>hosname:<input type="text" name="input_string"></p>
+				<p>hosname:<input type="text" name="MPD_HOST"></p>
 			</span>
 
 		<h3>ountput devices list</h3>
-		$(mpc outputs | grep -E "enable|disable" | awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}')
+		$(# mpc outputsの出力結果から出力先デバイスの情報のみを表示,POSTで出力先デバイスの番号のみを渡す
+		mpc outputs | 
+
+		# "enable"又は"disable"を含む行を抽出,ボタン化し出力
+		awk '/enable/ || /disable/{print "<p><button name=toggleoutput value="$2">"$0"</button></p>"}'
+		)
+
+		$(# POSTから受け取ったデータをmpcに渡す
+		cat | awk -F'[=&]' '{print $3,$4}' | xargs mpc
+		)
 
 		</form>
     </body>
