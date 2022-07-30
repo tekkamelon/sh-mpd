@@ -36,8 +36,8 @@ cat << EOS
 				<p>
 					<!-- ドロップダウンリスト -->
 	             	<select name="button">
-						<option value="save">save playlist</option>
 						<option value="match">match</option>
+						<option value="save">save playlist</option>
 		            </select>
 
 					<!-- playlistの名前,検索ワードの入力欄 -->
@@ -69,11 +69,13 @@ cat << EOS
 				search_var="."
 
 			mpc playlist | grep -i ${search_var} |
+
 			# "/"と" - "を区切り文字に指定
 			awk -F'/| - ' '{
 				print "<p><button name=button value="$1">"$1"</button>",
 				"<button name=button value="$NF">"$NF"</button></p>"
 			}' |
+
 			# awkで重複行を削除
 			awk '!a[$0]++{print}'
 			)

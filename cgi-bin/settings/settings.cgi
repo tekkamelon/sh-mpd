@@ -39,9 +39,9 @@ cat << EOS
 		awk '/enable/ || /disable/{print "<p><button name=toggleoutput value="$2">"$0"</button></p>"}'
 		)
 
-		$(# POSTから受け取ったデータをmpcに渡す
+		<p>$(# POSTから受け取ったデータをmpcに渡す
 		cat | awk -F'[=&]' '{print $3,$4}' | xargs mpc
-		)
+		)</p>
 
 		</form>
     </body>
