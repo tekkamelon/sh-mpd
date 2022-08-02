@@ -51,12 +51,15 @@ cat << EOS
 			<p>$(# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
 
-				# 変数展開で加工,trで置換しgrepの終了ステータスでhostかどうか判断
-				echo "${cat_post#host\=}" | tr "&" " " | grep "export" ||
+				# host名の変更
+				# ,変数展開で加工,teeで保存しgrepの終了ステータスでhostかどうか判断
+				echo ${cat_post#host\=} | tee hostname | grep export ||
+				#| tr "&" " " | grep "export" ||
 
+				# 出力先の変更
 				# 変数にexportがない場合に実行
-				echo $cat_post | awk -F'[=&]' '{print $3,$4}' | xargs mpc 2>&1 | sed "s/$/<br>/g" | grep "Output" 
-			)</p>
+				echo $cat_post | awk -F'[=&]' '{print $3,$4}' | xargs mpc 2>&1 | awk '/Output/{print $0"<br>"}'
+				)</p>
 	
 		</form>
     </body>
