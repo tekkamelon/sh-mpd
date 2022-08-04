@@ -1,9 +1,12 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
 # x 実行されたコマンドの出力
 # v 変数の表示
+
+# 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
+export MPD_HOST=$(cat ../hostname | cut -d"=" -f2 | grep . || echo $(hostname).local)
 
 echo "Content-type: text/html"
 echo ""
@@ -53,7 +56,7 @@ cat << EOS
 
 				# host名の変更
 				# ,変数展開で加工,teeで保存しgrepの終了ステータスでhostかどうか判断
-				echo ${cat_post#host\=} | tee hostname | grep export ||
+				echo ${cat_post#host\=} | tee ../hostname | grep export ||
 				#| tr "&" " " | grep "export" ||
 
 				# 出力先の変更

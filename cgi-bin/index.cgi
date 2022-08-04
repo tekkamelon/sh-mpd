@@ -5,6 +5,9 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
+# 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
+export MPD_HOST=$(cat hostname | cut -d"=" -f2 | grep . || echo $(hostname).local)
+
 echo "Content-type: text/html"
 echo ""
 
