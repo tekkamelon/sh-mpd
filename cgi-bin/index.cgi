@@ -171,7 +171,7 @@ MPD UI using shellscript and CGi
 		<h4>debug info</h4>
 
 			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
-			<p>hostname: $(hostname)</p>
+			<p>hostname: $(export MPD_HOST)</p>
 
 	</footer>
 
