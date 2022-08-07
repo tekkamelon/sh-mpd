@@ -41,6 +41,7 @@ MPD UI using shellscript and CGi
 
 	    </pre>
     <body>
+		<h4>hostname: $(echo $MPD_HOST)</h4>
 		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}')</p>
 		
 		<!-- 入力フォーム -->
@@ -175,7 +176,6 @@ MPD UI using shellscript and CGi
 		<h4>debug info</h4>
 
 			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
-			<p>hostname: $(export MPD_HOST)</p>
 
 	</footer>
 

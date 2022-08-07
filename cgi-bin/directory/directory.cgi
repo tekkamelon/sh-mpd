@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -6,8 +6,6 @@
 # v 変数の表示
 
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
-# export MPD_HOST=$(cat ../hostname | cut -d"=" -f2 | grep . || echo localhost)
-
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../hostname)
 	# 変数展開で加工
@@ -34,6 +32,7 @@ cat << EOS
 	</header>
 
     <body>
+		<h4>hostname: $(echo $MPD_HOST)</h4>
 		<!-- ステータスの表示 -->
 		<p>$(mpc status | sed "s/$/<br>/g")</p>
 		<form name="FORM" method="GET" >
