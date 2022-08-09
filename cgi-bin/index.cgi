@@ -149,7 +149,8 @@ MPD UI using shellscript and CGi
 							</span>
 						</p>
 						<p>$(# POSTを取得,awkとurldecodeで加工後,mpcに渡し,標準エラー出力ごと表示
-						cat | awk -F'[=&]' '{print $2,"\047"$4"\047"}' | urldecode | xargs mpc -q 2>&1 )</p>
+						cat | awk -F'[=&]' '{print $2,"\047"$4"\047"}' | urldecode | xargs mpc -q 2>&1 
+						)</p>
 
 				    </form>
 	            </select>
