@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -67,11 +67,11 @@ cat << EOS
 			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 			<!-- プレイリストの一覧を表示 -->
-			$(# クエリ内に"match"がある場合は真,無い場合は偽
-			[ $(echo $QUERY_STRING | grep 'match') ] &&
+			$(# クエリ内に"match"があるかどうかを判断
+			echo $QUERY_STRING | grep 'match' &&
 
-				# 真の場合はクエリを変数展開で加工,デコード
-				search_var=$(echo ${QUERY_STRING#button\=*&input_string\=} | urldecode) ||
+				# クエリを変数展開で加工,デコードしgrepの終了ステータスで文字列があるかどうかを判断
+				search_var=$(echo ${QUERY_STRING#button\=*&input_string\=} | urldecode | grep .) ||
 
 				# 偽の場合は"."で全てにマッチングする行を表示
 				search_var="."
