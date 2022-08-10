@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -8,9 +8,10 @@
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../hostname)
+
 	# 変数展開で加工
 	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
-) 
+	) 
 
 echo "Content-type: text/html"
 echo ""
@@ -37,7 +38,7 @@ cat << EOS
 		<form name="FORM" method="GET" >
 			
 			<p>$(# playlistのセーブ
-			echo ${QUERY_STRING#button\=} | sed "s/\&input_string\=/ /g" | urldecode | xargs mpc
+			echo ${QUERY_STRING#button\=} | sed "s/\&input_string\=/ /g" | urldecode | xargs mpc > /dev/null
 			)</p>
 
 			<p>debug:$(echo $QUERY_STRING)</p>
@@ -58,7 +59,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<p>$(# sedでPOSTを加工,デコードしてmpcに渡す
-			cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1
+			cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 > /dev/null
 			)</p>
 
 			<!-- リンク -->
@@ -68,13 +69,12 @@ cat << EOS
 
 			<!-- プレイリストの一覧を表示 -->
 			$(# クエリ内に"match"があるかどうかを判断
-			echo $QUERY_STRING | grep 'match' &&
 
-				# クエリを変数展開で加工,デコードしgrepの終了ステータスで文字列があるかどうかを判断
-				search_var=$(echo ${QUERY_STRING#button\=*&input_string\=} | urldecode | grep .) ||
+			# クエリを変数展開で加工,デコードしgrepの終了ステータスで文字列があるかどうかを判断
+			search_var=$(echo ${QUERY_STRING#button\=*&input_string\=} | urldecode | grep .) ||
 
-				# 偽の場合は"."で全てにマッチングする行を表示
-				search_var="."
+			# 偽の場合は"."で全てにマッチングする行を表示
+			search_var="."
 
 			mpc playlist | grep -i ${search_var} |
 
@@ -100,3 +100,4 @@ cat << EOS
 
 </html>
 EOS
+
