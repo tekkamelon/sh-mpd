@@ -32,10 +32,11 @@ cat << EOS
 	</header>
 
     <body>
-		<h4>hostname: $(echo $MPD_HOST)</h4>
+		<!-- ホスト名の設定 -->
+		<h3>hostname: $(echo $MPD_HOST)</h4>
 		<form name="setting" method="POST" >
 
-			<h3>host</h3>
+			<h3>HOST</h3>
 				<span style="color: rgb(0, 255, 10); ">
 					<p>
 						<button name=host value="export">
@@ -44,7 +45,8 @@ cat << EOS
 					</p>
 							<input type="text" name="MPD_HOST">
 				</span>
-	
+			
+			<!-- 出力先デバイスの設定 -->
 			<h3>ountput devices list</h3>
 			$(# mpc outputsの出力結果から出力先デバイスの情報のみを表示,POSTで出力先デバイスの番号のみを渡す
 			mpc outputs | 
@@ -62,10 +64,21 @@ cat << EOS
 				# host名の変更,変数展開で加工,teeで保存しgrepの終了ステータスでhostかどうか判断
 				echo ${cat_post#host\=} | tee ../hostname | grep export ||
 
-				# 出力先の変更,変数にexportがない場合に実行
+				# 出力先の変更,変数に"export"がない場合に実行
 				echo $cat_post | awk -F'[=&]' '{print $3,$4}' | xargs mpc 2>&1 | awk '/Output/{print $0"<br>"}'
-				)</p>
-	
+			)</p>
+			
+			<!-- CSSの設定 -->
+			<h3>CSS setting</h3>
+			$(# css一覧を表示
+			ls ../stylesheet/ |
+			
+			# ボタン化
+			awk '{
+				print "<p><button name=css value="$2">"$0"</button></p>"
+			}' 
+			)
+
 		</form>
     </body>
 
