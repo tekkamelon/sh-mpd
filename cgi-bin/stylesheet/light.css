@@ -1,0 +1,129 @@
+@charset "UTF-8";
+
+/* 見出しの色 */
+:root{
+    --main-bg-color: rgb(50, 50, 50);
+    --letter-color: rgb(160, 160, 160);
+}
+
+/* アスキーアート */
+pre{
+	color: var(--main-bg-color);
+    text-align:left
+}
+
+/* リンクの文字色 */
+a{
+    color: var(--main-bg-color);
+}
+
+/* ヘッダー */
+header{
+    color: var(--main-bg-color);
+    text-align:left
+}
+
+/* 背景色 */
+body{
+    background-color: rgb(255, 255, 255);
+    text-align:left
+}
+
+/*大見出し*/
+h1{
+    color: var(--main-bg-color);
+    font-size: 35px;
+    text-align:left
+}
+
+/*中見出し*/
+h2{
+    color: var(--main-bg-color);
+    text-align:left
+}
+
+/*小見出し*/
+h3{
+    color: var(--main-bg-color);
+    text-align:left
+}
+
+h4{
+    color: teal;
+    text-align:left
+}
+
+l1{
+    color:black ;
+    text-align:left
+}
+
+l2{
+    color:black ;
+    text-align:left
+}
+
+/*本文*/
+p{
+    color: black;
+    font-size: 15px;
+    text-align:left
+}
+
+select{
+	color: var(--main-bg-color);
+	background-color: white;
+	border: 1px solid teal;
+	border-radius: 6px;
+    text-align:center
+}
+
+/*折りたたみ*/
+details{
+    color: var(--main-bg-color);
+}
+
+summary{
+    font-size: 15px;
+}
+
+input{
+	color: var(--main-bg-color);
+	background-color: white;
+	border: 1px solid teal;
+	border-radius: 6px;
+}
+
+table {
+	border-collapse:collapse;
+}
+
+/* table */
+table th{
+	color: black;
+	text-align: center
+}
+
+table td{
+	color: black;
+	text-align: center
+}
+
+/*button*/
+button{
+	padding: 7px 14px;
+	color: black;
+	background-color: white;
+	border: 1px solid teal;
+	border-radius: 12px;
+	text-align: center;
+}
+
+button:hover{
+	padding: 7px 14px;
+	color: var(--main-bg-color);
+	background-color: rgb(190,225,235);
+	border: 1px solid orange;
+	border-radius: 12px;
+	text-align: center;
+}
