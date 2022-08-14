@@ -22,7 +22,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf  | grep . || echo "stylesheet.css")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf | grep . || echo "stylesheet.css")">
 		<link rel="icon" ref="image/favicon_ios.ico">
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
         <title>sh-MPD</title>
@@ -38,7 +38,7 @@ cat << EOS
 		<form name="FORM" method="GET" >
 			
 			<p>$(# playlistのセーブ
-			echo ${QUERY_STRING#button\=} | sed "s/\&input_string\=/ /g" | urldecode | xargs mpc > /dev/null
+			echo ${QUERY_STRING#*\=} | sed "s/\&input_string\=/ /g" | urldecode | xargs mpc > /dev/null
 			)</p>
 
 			<p>debug:$(echo $QUERY_STRING)</p>

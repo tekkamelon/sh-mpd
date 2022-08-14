@@ -46,7 +46,7 @@ cat << EOS
 			cat_post=$(cat)
 				
 				# 設定ファイルへの書き込み
-				echo ${cat_post#*=} >| ../css_conf
+				echo ${cat_post#*\=} >| ../css_conf
 			)
 
  

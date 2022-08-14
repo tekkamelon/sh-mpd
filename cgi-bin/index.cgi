@@ -123,7 +123,7 @@ MPD UI using shellscript and CGi
 			</table>
 
 			$(# 変数展開でクエリを加工,デコードしxargsでmpcに渡す
-			echo ${QUERY_STRING#button\=} | urldecode | xargs mpc -q > /dev/null)
+			echo ${QUERY_STRING#*\=} | urldecode | xargs mpc -q > /dev/null)
 
         </form>
 

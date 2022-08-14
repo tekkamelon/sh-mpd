@@ -51,7 +51,7 @@ cat << EOS
 			cat_post=$(cat)
 
 				# host名の変更,変数展開で加工,teeで保存しgrepの終了ステータスでhostかどうか判断
-				echo ${cat_post#host\=} | tee ../hostname | grep export ||
+				echo ${cat_post#*\=} | tee ../hostname | grep export ||
 
 				# 出力先の変更,変数に"export"がない場合に実行
 				echo $cat_post | awk -F'[=&]' '{print $3,$4}' | xargs mpc 2>&1 | awk '/Output/{print $0"<br>"}'
