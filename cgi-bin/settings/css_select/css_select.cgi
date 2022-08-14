@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -21,7 +21,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/stylesheet.css">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf || echo "stylesheet.css")">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
@@ -38,10 +38,18 @@ cat << EOS
 			
 			# ボタン化
 			awk '{
-				print "<p><button name=css value="$2">"$0"</button></p>"
+				print "<p><button name=css value="$0">"$0"</button></p>"
 			}' 
 			)
 
+			$(# POSTで受け取った文字列を変数に代入
+			cat_post=$(cat)
+				
+				# 設定ファイルへの書き込み
+				echo ${cat_post#*=} >| ../css_conf
+			)
+
+ 
 		</form>
     </body>
 

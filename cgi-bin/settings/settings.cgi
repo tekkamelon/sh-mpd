@@ -5,13 +5,6 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
-export MPD_HOST=$(# hostnameを変数に代入
-	hostname_var=$(cat ../hostname)
-	# 変数展開で加工
-	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
-) 
-
 echo "Content-type: text/html"
 echo ""
 
@@ -21,7 +14,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/stylesheet.css">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf || echo "stylesheet.css")">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
