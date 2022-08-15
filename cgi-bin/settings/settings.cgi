@@ -26,7 +26,9 @@ cat << EOS
 
     <body>
 		<!-- ホスト名の設定 -->
-		<h3>hostname: $(echo $MPD_HOST)</h3>
+		<h3>hostname: $(# "hostname"を表示,ファイルが空の場合は"localhost"を表示
+		cat hostname | grep . || echo "localhost"
+		)</h3>
 		<button><a href="/cgi-bin/settings/host/host.cgi">change_host</a></button>
 			
 		<!-- 出力先デバイスの設定 -->
