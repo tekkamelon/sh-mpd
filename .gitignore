@@ -1,0 +1,3 @@
+# cssのテスト用のhtmlを除外
+
+cgi-bin/css_test.html
