@@ -25,7 +25,7 @@ header{
 
 /* 背景色 */
 body{
-    background-color: rgb(20, 40, 115);
+    background-color: rgb(0, 50, 140);
     text-align:left
 }
 
@@ -123,7 +123,7 @@ button:hover{
 	padding: 7px 14px;
 	color: aqua;
 	background-color: rgb(50, 50, 100);
-	border: 1px solid aqua;
+	border: 1px solid blue;
 	border-radius: 12px;
 	text-align: center;
 }
