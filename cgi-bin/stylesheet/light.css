@@ -29,20 +29,20 @@ body{
     text-align:left
 }
 
-/*大見出し*/
+/* 大見出し */
 h1{
     color: var(--main-bg-color);
     font-size: 35px;
     text-align:left
 }
 
-/*中見出し*/
+/* 中見出し */
 h2{
     color: var(--main-bg-color);
     text-align:left
 }
 
-/*小見出し*/
+/* 小見出し */
 h3{
     color: var(--main-bg-color);
     text-align:left
@@ -63,7 +63,7 @@ l2{
     text-align:left
 }
 
-/*本文*/
+/* 本文 */
 p{
     color: black;
     font-size: 15px;
@@ -78,7 +78,7 @@ select{
     text-align:center
 }
 
-/*折りたたみ*/
+/* 折りたたみ */
 details{
     color: var(--main-bg-color);
 }
@@ -110,7 +110,7 @@ table td{
 	text-align: center
 }
 
-/*button*/
+/* button */
 button{
 	margin: 3px;
 	padding: 7px 14px;
@@ -129,4 +129,9 @@ button:hover{
 	border: 1px solid orange;
 	border-radius: 12px;
 	text-align: center;
+}
+
+/* div class */
+.link{
+	margin-top: 15px;
 }

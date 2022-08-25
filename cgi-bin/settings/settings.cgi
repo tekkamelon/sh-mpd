@@ -35,19 +35,21 @@ cat << EOS
 		<h3>ountput devices list</h3>
 		<button><a href="/cgi-bin/settings/outputs/outputs.cgi">select_output_device</a></button>
 		
-		<!-- CSSの設定 -->
-		<h3>CSS setting</h3>
-		<button><a href="/cgi-bin/settings/css_select/css_select.cgi">select_css</a></button>
+			<!-- CSSの設定 -->
+			<h3>CSS setting</h3>
+			<button><a href="/cgi-bin/settings/css_select/css_select.cgi">select_css</a></button>
 
     </body>
 
-	<footer>	
-		<!-- リンク -->
-		<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
-		<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
-		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
-	</footer>	
+	<div class="link">
+		<footer>	
+			<!-- リンク -->
+			<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
+			<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
+			<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
+		</footer>	
+	</dev>
 
 </html>
 EOS

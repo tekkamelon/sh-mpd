@@ -1,3 +1,4 @@
 # cssのテスト用のhtmlを除外
 
 cgi-bin/css_test.html
+cgi-bin/setting_test.html
