@@ -2,6 +2,35 @@
 
 webブラウザ上からmpdを操作できるCGIシェルスクリプト
 
+## インストール 
+
+- 各種cgiを実行可能なwebサーバーをセットアップ
+
+```sh
+# 必要なソフトのインストールのインストール
+
+# debian系
+$ sudo apt install mpc mpd
+
+# arch系
+$ sudo pacman -S mpc mpd
+
+# githubよりclone
+$ git clone https://github.com/tekkamelon/sh-mpc
+
+# スクリプトのあるディレクトリへ移動
+$ cd sh-mpc
+
+# "urldecode"コマンドの設定
+$ chmod 755 urldecode
+
+# "urldecode"をパスの通ったディレクトリに配置
+$ sudo cp /usr/local/bin # ※一例
+
+#  各cgiファイルに実行権限を付与
+$ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
+```
+
 ## 開発の目標
 
 ### 高い移植性
