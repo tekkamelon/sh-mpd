@@ -4,7 +4,7 @@ webブラウザ上からmpdを操作できるCGIシェルスクリプト
 
 ## インストール 
 
-- 各種cgiを実行可能なwebサーバーをセットアップ
+- 各種cgiを実行可能なwebサーバーをセットアップ(ここでは割愛)
 
 ```sh
 # 必要なソフトのインストールのインストール
@@ -21,7 +21,7 @@ $ git clone https://github.com/tekkamelon/sh-mpc
 # スクリプトのあるディレクトリへ移動
 $ cd sh-mpc
 
-# "urldecode"コマンドの設定
+# "urldecode"コマンドに実行権限を付与
 $ chmod 755 urldecode
 
 # "urldecode"をパスの通ったディレクトリに配置
