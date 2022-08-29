@@ -9,8 +9,13 @@
 
 /* アスキーアート */
 pre{
-	color: var(--main-bg-color);
+	color: rgb(40, 230, 230);
     text-align:left
+}
+
+/* サブタイトル */
+span{
+	color: orange;
 }
 
 /* リンクの文字色 */
@@ -20,37 +25,38 @@ a{
 
 /* ヘッダー */
 header{
-    color: var(--main-bg-color);
+	color: rgb(40, 230, 230);
     text-align:left
 }
 
 /* 背景色 */
 body{
     background-color: rgb(255, 255, 255);
+	color: rgb(40, 230, 230);
     text-align:left
 }
 
 /* 大見出し */
 h1{
-    color: var(--main-bg-color);
+	color: rgb(40, 230, 230);
     font-size: 35px;
     text-align:left
 }
 
 /* 中見出し */
 h2{
-    color: var(--main-bg-color);
+	color: rgb(40, 230, 230);
     text-align:left
 }
 
 /* 小見出し */
 h3{
-    color: var(--main-bg-color);
+	color: rgb(40, 230, 230);
     text-align:left
 }
 
 h4{
-    color: teal;
+	color: rgb(40, 230, 230);
     text-align:left
 }
 
@@ -117,7 +123,7 @@ button{
 	padding: 7px 14px;
 	color: black;
 	background-color: white;
-	border: 1px solid teal;
+	border: 1px solid orange;
 	border-radius: 12px;
 	text-align: center;
 }
@@ -125,8 +131,8 @@ button{
 button:hover{
 	margin: 3px;
 	padding: 7px 14px;
-	color: var(--main-bg-color);
-	background-color: rgb(190,225,235);
+	color: white;
+	background-color: rgb(40, 230, 230);
 	border: 1px solid orange;
 	border-radius: 12px;
 	text-align: center;

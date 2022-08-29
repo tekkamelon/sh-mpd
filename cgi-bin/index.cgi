@@ -28,18 +28,19 @@ cat << EOS
     </head>
 
 	<header>
-		<pre style="color: rgb(0, 255, 10)"> 
+		<pre> 
          __          __  _______  ____ 
    _____/ /_        /  |/  / __ \\/ __ \\
   / ___/ __ \______/ /|_/ / /_/ / / / /
  (__  ) / / /_____/ /  / / ____/ /_/ / 
 /____/_/ /_/     /_/  /_/_/   /_____/  
-<span style="color: teal">
+<span>
 MPD UI using shellscript and CGi
 </span>
+	    </pre>
+
 	</header>
 
-	    </pre>
     <body>
 		<h4>hostname: $(echo $MPD_HOST)</h4>
 		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}')</p>
