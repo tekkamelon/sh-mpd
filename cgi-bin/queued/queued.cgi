@@ -79,8 +79,11 @@ cat << EOS
 			mpc playlist | grep -i ${search_var} |
 
 			# "/"と" - "を区切り文字に指定
-			awk -F'/| - ' '{
+			awk -F'/| - ' '
+			{
+				# １番目のフィールドをボタン化
 				print "<p><button name=button value="$1">"$1"</button>",
+				# 最終フィールドをボタン化
 				"<button name=button value="$NF">"$NF"</button></p>"
 			}' |
 
