@@ -9,13 +9,13 @@
 
 /* アスキーアート */
 pre{
-	color: black;
+	color: white;
     text-align:left
 }
 
 /* サブタイトル */
 span{
-	color: black;
+	color: white;
 }
 
 /* リンクの文字色 */
@@ -25,13 +25,13 @@ a{
 
 /* ヘッダー */
 header{
-	color: black;
+	color: white;
     text-align:left
 }
 
 /* 背景色 */
 body{
-    background-color: grey;
+    background-color: rgb(95, 95, 95);
 	color: rgb(0, 0, 0);
     text-align:left
 }
@@ -61,18 +61,18 @@ h4{
 }
 
 l1{
-    color:black ;
+    color:white ;
     text-align:left
 }
 
 l2{
-    color:black ;
+    color:white ;
     text-align:left
 }
 
 /* 本文 */
 p{
-    color: black;
+    color: white;
     font-size: 15px;
     text-align:left
 }
@@ -80,7 +80,7 @@ p{
 select{
 	color: var(--main-bg-color);
 	background-color: rgb(160, 160, 160);
-	border: 1px solid black;
+	border: 1px solid white;
 	border-radius: 6px;
     text-align:center
 }
@@ -108,12 +108,12 @@ table {
 
 /* table */
 table th{
-	color: black;
+	color: white;
 	text-align: center
 }
 
 table td{
-	color: black;
+	color: white;
 	text-align: center
 }
 
@@ -131,7 +131,7 @@ button{
 button:hover{
 	margin: 3px;
 	padding: 7px 14px;
-	color: black;
+	color: white;
 	background-color: rgb(200, 200, 200);
 	border: 1px solid white;
 	border-radius: 12px;
