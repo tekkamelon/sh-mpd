@@ -9,13 +9,13 @@
 
 /* アスキーアート */
 pre{
-	color: white;
+	color: rgb(185, 185, 185);
     text-align:left
 }
 
 /* サブタイトル */
 span{
-	color: white;
+	color: rgb(185, 185, 185);
 }
 
 /* リンクの文字色 */
@@ -25,13 +25,13 @@ a{
 
 /* ヘッダー */
 header{
-	color: white;
+	color: rgb(185, 185, 185);
     text-align:left
 }
 
 /* 背景色 */
 body{
-    background-color: rgb(95, 95, 95);
+    background-color: rgb(85, 95, 95);
 	color: rgb(0, 0, 0);
     text-align:left
 }
@@ -61,18 +61,18 @@ h4{
 }
 
 l1{
-    color:white ;
+    color:rgb(185, 185, 185) ;
     text-align:left
 }
 
 l2{
-    color:white ;
+    color:rgb(185, 185, 185) ;
     text-align:left
 }
 
 /* 本文 */
 p{
-    color: white;
+    color: rgb(185, 185, 185);
     font-size: 15px;
     text-align:left
 }
@@ -80,7 +80,7 @@ p{
 select{
 	color: var(--main-bg-color);
 	background-color: rgb(160, 160, 160);
-	border: 1px solid white;
+	border: 1px solid rgb(60, 60, 60);
 	border-radius: 6px;
     text-align:center
 }
@@ -108,12 +108,12 @@ table {
 
 /* table */
 table th{
-	color: white;
+	color: rgb(185, 185, 185);
 	text-align: center
 }
 
 table td{
-	color: white;
+	color: rgb(185, 185, 185);
 	text-align: center
 }
 
@@ -121,9 +121,9 @@ table td{
 button{
 	margin: 3px;
 	padding: 7px 14px;
-	color: black;
+	color: rgb(60, 60, 60);
 	background-color: rgb(160, 160, 160);
-	border: 1px solid black;
+	border: 1px solid rgb(60, 60, 60);
 	border-radius: 12px;
 	text-align: center;
 }
@@ -131,9 +131,9 @@ button{
 button:hover{
 	margin: 3px;
 	padding: 7px 14px;
-	color: white;
+	color: rgb(185, 185, 185);
 	background-color: rgb(200, 200, 200);
-	border: 1px solid white;
+	border: 1px solid rgb(185, 185, 185);
 	border-radius: 12px;
 	text-align: center;
 }
