@@ -57,8 +57,8 @@ cat << EOS
 		</form>
 
 		<form name="music" method="POST" >
-
-			<p>$(# sedでPOSTを加工,デコードしてmpcに渡す
+			
+			<p>$(# ボタンから受け取った文字列の処理,sedでPOSTを加工,デコードしてmpcに渡す
 			cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 > /dev/null
 			)</p>
 
@@ -71,24 +71,32 @@ cat << EOS
 			$(# クエリ内に"match"があるかどうかを判断
 
 			# クエリを変数展開で加工,デコードしgrepの終了ステータスで文字列があるかどうかを判断
-			search_var=$(echo ${QUERY_STRING#button\=*&input_string\=} | urldecode | grep .) ||
+			search_var=$(echo ${QUERY_STRING#*\=*&input_string\=} | urldecode | grep .) ||
 
 			# 偽の場合は"."で全てにマッチングする行を表示
 			search_var="."
 
+			# キューされた曲の表示
 			mpc playlist | grep -i ${search_var} |
 
-			# "/"と" - "を区切り文字に指定
-			awk -F'/| - ' '
-			{
+			# "/"と" - "を区切り文字に指定,"http"にマッチしない文字列をボタン化
+			awk -F'/| - ' '!/http/{
+				# "/"と"-"を区切り文字に指定
 				# １番目のフィールドをボタン化
 				print "<p><button name=button value="$1">"$1"</button>",
 				# 最終フィールドをボタン化
 				"<button name=button value="$NF">"$NF"</button></p>"
+			}
+
+			# "http"にマッチする文字列をボタン化
+			/http/{
+				print "<p><button name=button value="$0">"$0"</button></p>"
 			}' |
 
-			# awkで重複行を削除
-			awk '!a[$0]++{print}'
+			# 重複行を削除
+			awk '!a[$0]++{
+				print $0
+			}'
 			)
 
 		</form>
