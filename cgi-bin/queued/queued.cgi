@@ -8,8 +8,7 @@
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../settings/hostname)
-
-	# 変数展開で加工
+	# 変数展開で加工,文字列がない場合は"localhost"を環境変数に代入
 	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
 	) 
 
@@ -81,7 +80,6 @@ cat << EOS
 
 			# "/"と" - "を区切り文字に指定,"http"にマッチしない文字列をボタン化
 			awk -F'/| - ' '!/http/{
-				# "/"と"-"を区切り文字に指定
 				# １番目のフィールドをボタン化
 				print "<p><button name=button value="$1">"$1"</button>",
 				# 最終フィールドをボタン化

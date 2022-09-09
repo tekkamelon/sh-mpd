@@ -58,10 +58,10 @@ cat << EOS
 
 				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
 				$(# クエリを変数展開で加工,空でない場合に真,空の場合に偽
-				[ -n "${QUERY_STRING#search_word\=}" ] &&
+				[ -n "${QUERY_STRING#*\=}" ] &&
 
 					# 真の場合はクエリを変数展開で加工,デコード
-					search_var=$(echo ${QUERY_STRING#search_word\=} | urldecode) ||
+					search_var=$(echo ${QUERY_STRING#*\=} | urldecode) ||
 					
 				
 					# 偽の場合は"."で全てにマッチングする行を表示

@@ -42,7 +42,7 @@ cat << EOS
 			<button name="button" value="next">next</button>
 
 			$(# 変数展開でクエリを加工,xargsでmpcに渡す
-			echo ${QUERY_STRING#button\=} | xargs mpc -q > /dev/null
+			echo ${QUERY_STRING#*\=} | xargs mpc -q > /dev/null
 			)
 
 		</form>
