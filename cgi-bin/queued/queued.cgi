@@ -70,7 +70,7 @@ cat << EOS
 			$(# クエリ内に"match"があるかどうかを判断
 
 			# クエリを変数展開で加工,デコードしgrepの終了ステータスで文字列があるかどうかを判断
-			search_var=$(echo ${QUERY_STRING#*\=*&input_string\=} | urldecode | grep .) ||
+			search_var=$(echo ${QUERY_STRING#*\=match&input_string\=} | urldecode | grep .) ||
 
 			# 偽の場合は"."で全てにマッチングする行を表示
 			search_var="."
