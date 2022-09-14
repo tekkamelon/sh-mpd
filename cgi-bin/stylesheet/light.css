@@ -104,6 +104,7 @@ input{
 
 table {
 	border-collapse:collapse;
+	border-color: teal;
 }
 
 /* table */

@@ -49,7 +49,7 @@ MPD UI using shellscript and CGi
 		<form name="FORM" method="GET" >
 
 			<!-- 音楽の操作ボタンをtableでレイアウト -->
-			<table border=1 bordercolor="green" cellspacing="7">
+			<table border="1" cellspacing="5">
 
 				<!-- ヘッダ行 -->
 				<thead>
