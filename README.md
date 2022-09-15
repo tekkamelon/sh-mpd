@@ -31,6 +31,14 @@ $ sudo cp /usr/local/bin # ※一例
 $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
 ```
 
+### cssの変更が出来ない場合(apache2)
+
+```sh
+$ cd sh-mpc/cgi-bin/
+
+$ sudo chwon www-data settings/
+```
+
 ## 開発の目標
 
 ### 高い移植性
