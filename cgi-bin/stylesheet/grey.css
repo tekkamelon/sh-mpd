@@ -109,11 +109,13 @@ table {
 
 /* table */
 table th{
+	border-color: rgb(160, 160, 160);
 	color: rgb(185, 185, 185);
 	text-align: center
 }
 
 table td{
+	border-color: rgb(160, 160, 160);
 	color: rgb(185, 185, 185);
 	text-align: center
 }

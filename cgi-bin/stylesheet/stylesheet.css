@@ -108,11 +108,17 @@ table {
 
 /* table */
 table th{
+	border-color: green;
 	color: white;
 	text-align: center
 }
 
+tr {
+	border-color: green;
+}
+	 
 table td{
+	border-color: green;
 	color: white;
 	text-align: center
 }
