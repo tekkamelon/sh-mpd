@@ -36,19 +36,34 @@ cat << EOS
 			
 			<!-- 出力先デバイスの設定 -->
 			<h3>ountput devices list</h3>
-			$(# mpc outputsの出力結果から出力先デバイスの情報のみを表示,POSTで出力先デバイスの番号のみを渡す
-			mpc outputs | 
-	
-			# "Output"を含む行を抽出,ボタン化し出力
-			awk '/Output/{
-				print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
-			}' 
-			)
-			
-			<!-- 実行結果を表示 -->
-			<p>$(# POSTで受け取った文字列を変数に代入
-				# 出力先の変更,変数に"export"がない場合に実行
-				cat | tr "=" " " | xargs mpc 2>&1 | awk '/Output/{print $0"<br>"}'
+			<p>$(# POSTで受け取った文字列が空かどうかを判定し処理を分岐
+
+			# POSTで受け取った文字列を変数に代入
+			cat_post=$(cat)
+
+			# 変数に代入された文字列が空かどうかを判定
+			if [ -z $cat_post ]; then
+
+			# 空の場合
+				mpc outputs |
+
+				# "Output"を含む行を抽出,ボタン化し出力
+				awk '/Output/{
+					print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
+				}'  
+
+			# 空でない場合
+			else
+
+				# 変数に代入された文字列から"="を置換しmpcに渡す
+				echo $cat_post | tr "=" " " | xargs mpc | 
+
+				# "Output"を含む行を抽出,ボタン化し出力
+	 			awk '/Output/{
+	 				print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
+	 			}' 
+
+			fi
 			)</p>
 
 		</form>
