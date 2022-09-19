@@ -36,7 +36,7 @@ cat << EOS
 			
 			<!-- 出力先デバイスの設定 -->
 			<h3>ountput devices list</h3>
-			<p>$(# POSTで受け取った文字列が空かどうかを判定し処理を分岐
+			$(# POSTで受け取った文字列が空かどうかを判定し処理を分岐
 
 			# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
@@ -56,7 +56,7 @@ cat << EOS
 			else
 
 				# 変数に代入された文字列から"="を置換しmpcに渡す
-				echo $cat_post | tr "=" " " | xargs mpc | 
+				echo ${cat_post#*\=} | xargs mpc toggleoutput | 
 
 				# "Output"を含む行を抽出,ボタン化し出力
 	 			awk '/Output/{
@@ -64,7 +64,7 @@ cat << EOS
 	 			}' 
 
 			fi
-			)</p>
+			)
 
 		</form>
     </body>
