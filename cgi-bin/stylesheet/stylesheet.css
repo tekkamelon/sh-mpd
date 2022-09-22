@@ -15,7 +15,7 @@ pre{
 
 /* サブタイトル */
 span{
-	color: teal;
+	color: var(--main-bg-color);
 }
 
 /* リンクの文字色 */

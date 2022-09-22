@@ -13,6 +13,11 @@ pre{
     text-align:left
 }
 
+/* サブタイトル */
+span{
+    color: var(--main-bg-color);
+}
+
 /* リンクの文字色 */
 a{
     color: var(--main-bg-color);

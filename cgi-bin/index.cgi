@@ -129,7 +129,7 @@ MPD UI using shellscript and CGi
         </form>
 
 		<form name="format" method="POST" >
-			<span style="color: teal; ">
+			<span>
 				searchplay queued song :
 			</span>
 	            <select name="args">
