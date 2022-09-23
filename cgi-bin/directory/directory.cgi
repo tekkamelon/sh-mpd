@@ -47,8 +47,11 @@ cat << EOS
 		<!-- mpd.confで設定されたディレクトリ配下を表示 --> 
 		<form name="music" method="POST" >
 
-				<p>$(#POSTを取得,sedで一部を切り出しデコード,sedで行頭,行末にシングルクォートをつけてmpcに渡す
-				cat  | sed "s/button\=//g" | urldecode | mpc insert | sed "s/$/<br>/g" 2>&1
+				<p>$(# POSTで受け取った文字列を変数に代入
+				cat_post=$(cat)
+
+				# POSTを変数展開で加工,デコードしmpcに渡す
+				echo ${cat_post#*\=} | urldecode | mpc insert | sed "s/$/<br>/g" 2>&1
 				)</p>
 
 				<!-- リンク -->

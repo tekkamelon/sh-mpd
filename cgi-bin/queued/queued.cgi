@@ -57,8 +57,11 @@ cat << EOS
 
 		<form name="music" method="POST" >
 			
-			<p>$(# ボタンから受け取った文字列の処理,sedでPOSTを加工,デコードしてmpcに渡す
-			cat | sed "s/button\=//g" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 > /dev/null
+			<p>$(# POSTで受け取った文字列を変数に代入
+			cat_post=$(cat)
+
+				# POSTを変数展開で加工,デコードしてmpcに渡す
+				echo ${cat_post#*\=} | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 > /dev/null
 			)</p>
 
 			<!-- リンク -->
