@@ -37,14 +37,20 @@ cat << EOS
 		<form name="FORM" method="GET" >
 			
 			<p>$(# playlistのセーブ
+
 			echo ${QUERY_STRING#*\=} | sed "s/\&input_string\=/ /g" | urldecode | xargs mpc > /dev/null
 			)</p>
 
+			<!-- クエリの表示 -->
 			<p>debug:$(echo $QUERY_STRING)</p>
 				<p>
 					<!-- ドロップダウンリスト -->
 	             	<select name="button">
+						
+						<!-- 検索 -->
 						<option value="match">match</option>
+
+						<!-- 保存 -->
 						<option value="save">save playlist</option>
 		            </select>
 
@@ -57,7 +63,9 @@ cat << EOS
 
 		<form name="music" method="POST" >
 			
-			<p>$(# POSTで受け取った文字列を変数に代入
+			<p>$(# 曲の再生部分
+
+			# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
 
 				# POSTを変数展開で加工,デコードしてmpcに渡す

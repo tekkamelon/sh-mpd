@@ -50,8 +50,7 @@ cat << EOS
 		<!-- mpd.confで設定されたプレイリスト一覧を表示 --> 
 		<form name="music" method="POST" >
 
-				<p>$(# POSTを取得,sedで一部を切り出しデコード,sedで行頭,行末にシングルクォートをつけてmpcに渡す
-				# POSTで受け取った文字列を変数に代入
+				<p>$(# POSTで受け取った文字列を変数に代入
 				cat_post=$(cat)
 
 					# POSTを変数展開で加工,デコードしmpcに渡す
