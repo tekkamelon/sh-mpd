@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -euxv
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -50,8 +50,18 @@ cat << EOS
 				<p>$(# POSTで受け取った文字列を変数に代入
 				cat_post=$(cat)
 
-				# POSTを変数展開で加工,デコードしmpcに渡す
-				echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
+				# POSTを変数展開で加工,デコードしxargsでmpcに渡す
+				# xargsを使用しないと文字列が空の場合,全ての曲がキューに追加されるため
+				echo ${cat_post#*\=} | urldecode | xargs mpc insert &&
+
+				# 上記コマンドの正常終了時のみ,POSTが空かどうかを判定
+				echo ${cat_post#*\=} | grep -q . && 
+
+					# 空でないの場合,次の曲を再生
+					mpc next | sed "s/$/<br>/g" 2>&1
+
+					# 空の場合は何もしない
+					:
 				)</p>
 
 				<!-- リンク -->
