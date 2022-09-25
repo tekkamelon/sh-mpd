@@ -68,8 +68,18 @@ cat << EOS
 			# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
 
-				# POSTを変数展開で加工,デコードしてmpcに渡す
-				echo ${cat_post#*\=} | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 > /dev/null
+			# POSTに"http"が含まれていれば真,なければ偽
+			if echo "${cat_post#*\=}" | urldecode | grep -q "http" ; then
+
+				# 真の場合,POSTを変数展開で加工,デコードして"mpc insert"に渡して再生
+				echo ${cat_post#*\=} | urldecode | mpc insert && mpc next -q | sed "s/$/<br>/g" 
+			
+			else
+
+				# 偽の場合,POSTを変数展開で加工,デコードしてmpcに渡す
+				echo ${cat_post#*\=} | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
+
+			fi
 			)</p>
 
 			<!-- リンク -->
