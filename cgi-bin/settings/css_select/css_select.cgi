@@ -9,7 +9,7 @@
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../hostname)
 	# 変数展開で加工,文字列がない場合は"localhost"を環境変数に代入
-	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
+	echo ${hostname_var#export\&MPD_HOST\=} | grep -q . || echo "localhost"
 ) 
 
 echo "Content-type: text/html"
@@ -23,7 +23,7 @@ cat << EOS
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/
 		$(# "css.conf"の中身を表示,空であれば"stylesheet.css"を指定
-		cat ../css_conf | grep . || echo "stylesheet.css"
+		cat ../css_conf | grep -q . || echo "stylesheet.css"
 		)">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->

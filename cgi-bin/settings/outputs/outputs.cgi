@@ -9,7 +9,7 @@
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../hostname)
 	# 変数展開で加工
-	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
+	echo ${hostname_var#export\&MPD_HOST\=} | grep -q . || echo "localhost"
 ) 
 
 echo "Content-type: text/html"
@@ -21,7 +21,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf | grep . || echo "stylesheet.css")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf | grep -q . || echo "stylesheet.css")">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>

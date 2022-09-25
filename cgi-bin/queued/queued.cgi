@@ -9,7 +9,7 @@
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../settings/hostname)
 	# 変数展開で加工,文字列がない場合は"localhost"を環境変数に代入
-	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
+	echo ${hostname_var#export\&MPD_HOST\=} | grep -q . || echo "localhost"
 	) 
 
 echo "Content-type: text/html"
@@ -21,7 +21,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf | grep . || echo "stylesheet.css")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf | grep -q . || echo "stylesheet.css")">
 		<link rel="icon" ref="image/favicon_ios.ico">
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
         <title>sh-MPD</title>
@@ -91,7 +91,7 @@ cat << EOS
 			$(# クエリ内に"match"があるかどうかを判断
 
 			# クエリを変数展開で加工,デコードしgrepの終了ステータスで文字列があるかどうかを判断
-			search_var=$(echo ${QUERY_STRING#*\=match&input_string\=} | urldecode | grep .) ||
+			search_var=$(echo ${QUERY_STRING#*\=match&input_string\=} | urldecode | grep -q .) ||
 
 			# 偽の場合は"."で全てにマッチングする行を表示
 			search_var="."
