@@ -51,7 +51,7 @@ cat << EOS
 				cat_post=$(cat)
 
 				# POSTを変数展開で加工,デコードしmpcに渡す
-				echo ${cat_post#*\=} | urldecode | mpc insert | sed "s/$/<br>/g" 2>&1
+				echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
 				)</p>
 
 				<!-- リンク -->
@@ -61,17 +61,16 @@ cat << EOS
 
 				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
 				$(# クエリを変数展開で加工,空でない場合に真,空の場合に偽
-				[ -n "${QUERY_STRING#*\=}" ] &&
+				test -n "${QUERY_STRING#*\=}" &&
 
 					# 真の場合はクエリを変数展開で加工,デコード
 					search_var=$(echo ${QUERY_STRING#*\=} | urldecode) ||
 					
-				
 					# 偽の場合は"."で全てにマッチングする行を表示
 					search_var="." 
 
 				mpc listall | grep -i ${search_var} |
-				awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}'
+				awk '{print "<p><button name=button value="$0">"$0"</button></p>"}'
 				)
 
 		</form>
