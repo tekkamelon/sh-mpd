@@ -23,7 +23,7 @@ cat << EOS
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/
 		$(# "css.conf"の中身を表示,空であれば"stylesheet.css"を指定
-		cat ../css_conf | grep -q . || echo "stylesheet.css"
+		cat ../css_conf | grep . || echo "stylesheet.css"
 		)">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
