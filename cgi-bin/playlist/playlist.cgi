@@ -63,7 +63,7 @@ cat << EOS
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
 				<!-- mpc管理下のプレイリストを再帰的に表示,awkで出力をボタン化 -->
-				$(mpc lsplaylist | awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}')
+				$(mpc ls | awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}')
 		</form>
 	</body>
 
