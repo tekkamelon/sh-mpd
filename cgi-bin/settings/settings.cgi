@@ -27,7 +27,7 @@ cat << EOS
     <body>
 		<!-- ホスト名の設定 -->
 		<h3>hostname: $(# "hostname"を表示,ファイルが空の場合は"localhost"を表示
-		cat hostname | cut -d"=" -f 2 | grep -q . || echo "localhost"
+		cat hostname | cut -d"=" -f 2 | grep . || echo "localhost"
 		)</h3>
 		<button><a href="/cgi-bin/settings/host/host.cgi">change_host</a></button>
 			

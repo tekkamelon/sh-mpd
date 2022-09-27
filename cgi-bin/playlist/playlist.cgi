@@ -9,7 +9,7 @@
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../settings/hostname)
 	# 変数展開で加工
-	echo ${hostname_var#export\&MPD_HOST\=} | grep -q . || echo "localhost"
+	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
 ) 
 
 echo "Content-type: text/html"
@@ -62,7 +62,7 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
-				<!-- mpc管理下のプレイリストを再帰的に表示,awkで出力をボタン化 -->
+				<!-- mpc管理下のプレイリスト,親ディレクトリを再帰的に表示,awkで出力をボタン化 -->
 				$(mpc ls | awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}')
 		</form>
 	</body>

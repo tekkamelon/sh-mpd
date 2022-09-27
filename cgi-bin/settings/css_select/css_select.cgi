@@ -9,7 +9,7 @@
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../hostname)
 	# 変数展開で加工,文字列がない場合は"localhost"を環境変数に代入
-	echo ${hostname_var#export\&MPD_HOST\=} | grep -q . || echo "localhost"
+	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
 ) 
 
 echo "Content-type: text/html"

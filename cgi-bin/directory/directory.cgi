@@ -9,7 +9,7 @@
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../settings/hostname)
 	# 変数展開で加工
-	echo ${hostname_var#export\&MPD_HOST\=} | grep -q . || echo "localhost"
+	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
 ) 
 
 echo "Content-type: text/html"
@@ -54,8 +54,8 @@ cat << EOS
 					# 真の場合,POSTを変数展開で加工,デコードしxargsでmpcに渡しキューに追加
 					echo ${cat_post#*\=} | urldecode | mpc insert && 
 	
-					# "mpc insert"で挿入した曲を再生
-					mpc next | sed "s/$/<br>/g" 2>&1 || 
+						# "mpc insert"で挿入した曲を再生
+						mpc next | sed "s/$/<br>/g" 2>&1 || 
 
 					# 偽の場合は何もせず終了
 					:
