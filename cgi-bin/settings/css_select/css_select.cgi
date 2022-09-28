@@ -47,14 +47,18 @@ cat << EOS
 			$(# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
 				
-				# POSTに文字列が含まれていれば真,なければ偽
-				echo  ${cat_post#*\=} | grep -q . &&
+			# POSTに文字列が含まれていれば真,なければ偽
+			if [ -n "${cat_post#*\=}" ] ; then
 	
-					# 真の場合,設定ファイルへの書き込み
-					echo ${cat_post#*\=} >| ../css_conf ||
+				# 真の場合,設定ファイルへの書き込み
+				echo ${cat_post#*\=} >| ../css_conf
 	
-					# 偽の場合は何もしない
-					:
+			else
+
+				# 偽の場合は何もしない
+				:
+
+			fi
 			)
  
 		</form>

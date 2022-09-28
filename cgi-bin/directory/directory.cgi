@@ -48,16 +48,20 @@ cat << EOS
 				cat_post=$(cat)
 
 				# POSTを変数展開で加工,空でない場合に真,空の場合に偽
-				test -n "${cat_post#*\=}" &&
+				if [ -n "${cat_post#*\=}" ] ; then
 
 					# 真の場合,POSTを変数展開で加工,デコードしxargsでmpcに渡しキューに追加
 					echo ${cat_post#*\=} | urldecode | mpc insert && 
 	
-						# "mpc insert"で挿入した曲を再生
-						mpc next | sed "s/$/<br>/g" 2>&1 || 
+					# "mpc insert"で挿入した曲を再生
+					mpc next | sed "s/$/<br>/g" 2>&1
+
+				else
 
 					# 偽の場合は何もせず終了
 					:
+
+				fi
 				)</p>
 
 				<!-- リンク -->
@@ -67,14 +71,17 @@ cat << EOS
 
 				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
 				$(# クエリを変数展開で加工,空でない場合に真,空の場合に偽
-				test -n "${QUERY_STRING#*\=}" &&
+				if [ -n "${QUERY_STRING#*\=}" ] ; then 
 
 					# 真の場合はクエリを変数展開で加工,デコード
-					search_var=$(echo ${QUERY_STRING#*\=} | urldecode) ||
+					search_var=$(echo ${QUERY_STRING#*\=} | urldecode)
 					
+				else
+
 					# 偽の場合は"."で全てにマッチングする行を表示
 					search_var="." 
 
+				fi
 				mpc listall | grep -i ${search_var} |
 				awk '{print "<p><button name=button value="$0">"$0"</button></p>"}'
 				)

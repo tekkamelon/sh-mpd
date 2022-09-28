@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -euxv
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -9,7 +9,7 @@
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../hostname)
 	# 変数展開で加工
-	echo ${hostname_var#export\&MPD_HOST\=} | grep -q . || echo "localhost"
+	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
 ) 
 
 echo "Content-type: text/html"
@@ -41,22 +41,21 @@ cat << EOS
 			# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
 
-			# 変数に代入された文字列が空かどうかを判定
-			if [ -z $cat_post ]; then
+			# POSTに文字列が含まれていれば真,なければ偽
+			if [ -n "${cat_post#*\=}" ] ; then
 
-			# 空の場合
-				mpc outputs |
+				# 真の場合
+				echo ${cat_post#*\=} | xargs mpc toggleoutput | 
 
 				# "Output"を含む行を抽出,ボタン化し出力
 				awk '/Output/{
 					print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
 				}'  
 
-			# 空でない場合
 			else
 
-				# 変数に代入された文字列から"="を置換しmpcに渡す
-				echo ${cat_post#*\=} | xargs mpc toggleoutput | 
+				# 偽の場合,変数に代入された文字列から"="を置換しmpcに渡す
+				mpc outputs |
 
 				# "Output"を含む行を抽出,ボタン化し出力
 	 			awk '/Output/{

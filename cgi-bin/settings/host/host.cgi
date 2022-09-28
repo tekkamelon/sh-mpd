@@ -45,7 +45,7 @@ cat << EOS
 			cat_post=$(cat) 
 
 				# POSTを変数展開で加工,数字,"localhost",".local"のどれかにマッチすれば真
-				if echo  "${cat_post#*\=}" | grep -q -E "[0-9]|localhost|*\.local" ; then
+				if echo "${cat_post#*\=}" | grep -q -E "[0-9]|localhost|*\.local" ; then
 
 					# 真の場合,変数展開で加工,teeで設定ファイルへの書き込み
 					echo ${cat_post#*\=} | tee ../hostname | 
