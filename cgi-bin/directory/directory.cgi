@@ -8,8 +8,7 @@
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
 export MPD_HOST=$(# hostnameを変数に代入
 	hostname_var=$(cat ../settings/hostname)
-	# 変数展開で加工
-	echo ${hostname_var#export\&MPD_HOST\=} | grep . || echo "localhost"
+	echo $hostname_var | grep . || echo "localhost"
 ) 
 
 echo "Content-type: text/html"
