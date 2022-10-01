@@ -152,11 +152,17 @@ MPD UI using shellscript and CGi
 				    </form>
 	            </select>
 
-		<h3>current song</h3>
-			<p>$(mpc status | sed "s/$/<br>/g")</p>
+		<form name="FORM" method="GET" >
 
-		<h3>next song</h3>
-			<p>$(mpc queued)</p>
+			<!-- 現在の曲 -->
+			<h3>current song</h3>
+				<p>$(mpc status | sed "s/$/<br>/g")</p>
+	
+			<!-- 次の曲 -->
+			<h3>next song</h3>
+				<p><button name="button" value="next">$(mpc queued)</button></p>
+	
+		</form>
 
 		<!-- リンク -->
 		<button><a href="queued/queued.cgi">Queued</a></button>
@@ -167,13 +173,10 @@ MPD UI using shellscript and CGi
     </body>
 
 	<footer>
+
 		<h4>source code</h4>
 		<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
 		<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode" reference source</a></p>
-
-		<h4>debug info</h4>
-
-			<p>QUERY_STRING: $(echo "$QUERY_STRING")</p>
 
 	</footer>
 
