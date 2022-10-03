@@ -119,8 +119,9 @@ MPD UI using shellscript and CGi
 				</tr>
 			</table>
 
-			$(# 変数展開でクエリを加工,デコードしxargsでmpcに渡す
-			echo ${QUERY_STRING#*\=} | urldecode | xargs mpc -q > /dev/null)
+			$(# 変数展開でクエリを加工,デコードしxargsでmpcに渡し,エラー出力以外を/dev/nullへ
+			echo ${QUERY_STRING#*\=} | urldecode | xargs mpc -q > /dev/null
+			)
 
         </form>
 
@@ -156,7 +157,30 @@ MPD UI using shellscript and CGi
 
 			<!-- 現在の曲 -->
 			<h3>current song</h3>
-				<p>$(mpc status | sed "s/$/<br>/g")</p>
+				<p>$(# ステータスの"playing"及び"paused"をボタン化
+				mpc status |
+
+				# "playing"若しくは"paused"をボタン化
+				awk '/playing|paused/{
+
+					# "playing"若しくは"paused"を区切り文字に指定
+					FS = "playing|paused"
+
+					# "toggle"ボタン化して出力
+					print "<button name=button value=toggle>"$1"</button>"
+
+					# 2番目以降のフィールドを表示
+					for(i=2;i<NF;++i){printf("%s ",$i)}
+
+					# 行末を改行し表示
+					print $NF"<br>"
+				}
+
+				# "playing"若しくは"paused"にマッチしない行を改行し表示
+				! /playing|paused/{
+					print $0"<br>"
+				}'
+				)</p>
 	
 			<!-- 次の曲 -->
 			<h3>next song</h3>
