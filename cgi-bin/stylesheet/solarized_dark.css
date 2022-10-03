@@ -1,10 +1,9 @@
 @charset "UTF-8";
-/* stylesheet.css: 標準のスタイル,ダークテーマのcss */
+/* solarized_dark.css: ソラライズド・ダークのcss */
 
 /* 見出しの色 */
 :root{
     --main-bg-color: #93a1a1;
-    --letter-color: rgb(35, 35, 35);
 }
 
 /* アスキーアート */
@@ -103,22 +102,18 @@ input{
 
 table {
 	border-collapse:collapse;
-	border-color: #8559900;
+	border-color: var(--main-bg-color);
 }
 
 /* table */
 table th{
-	border-color: #8559900;
+	border-color: var(--main-bg-color);
 	color: #657b83;
 	text-align: center
 }
-
-tr {
-	border-color: #8559900;
-}
 	 
 table td{
-	border-color: #8559900;
+	border-color: var(--main-bg-color);
 	color: #657b83;
 	text-align: center
 }
@@ -137,8 +132,8 @@ button{
 button:hover{
 	margin: 3px;
 	padding: 7px 14px;
-	color: #0733642;
-	background-color: #0733642;
+	color: #073642;
+	background-color: #073642;
 	border: 1px solid #dc322f;
 	border-radius: 12px;
 	text-align: center;
