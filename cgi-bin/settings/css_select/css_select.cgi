@@ -5,9 +5,6 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
-export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
-
 echo "Content-type: text/html"
 echo ""
 
@@ -18,8 +15,18 @@ cat << EOS
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/
-		$(# "css.conf"の中身を表示,空であれば"stylesheet.css"を指定
-		cat ../css_conf | grep . || echo "stylesheet.css"
+		$(# クエリを変数展開で加工,文字列があれば真,なければ偽
+		if [ -n "${QUERY_STRING#*\=}" ] ; then
+
+			# 真の場合,クエリを変数展開で加工し出力
+			echo ${QUERY_STRING#*\=}
+
+		else
+
+			# 偽の場合は"css_conf"の中身を出力,なければ"stylesheet.css"を指定
+			cat ../css_conf | grep . || echo "stylesheet.css"
+
+		fi
 		)">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
@@ -28,27 +35,22 @@ cat << EOS
 
     <body>
 		<!-- ホスト名の設定 -->
-		<form name="setting" method="POST" >
+		<form name="setting" method="GET" >
 
 			<!-- CSSの設定 -->
 			<h3>CSS setting</h3>
 			$(# css一覧を表示
 			ls  ../../stylesheet | 
 			
-			# ボタン化
-			awk '{
-				print "<p><button name=css value="$0">"$0"</button></p>"
-			}' 
+			# xargsとechoでボタン化
+			xargs -I{} echo "<p><button name=css value="{}">"{}"</button></p>"
 			)
 
-			$(# POSTで受け取った文字列を変数に代入
-			cat_post=$(cat)
-				
-			# POSTに文字列が含まれていれば真,なければ偽
-			if [ -n "${cat_post#*\=}" ] ; then
+			$(# クエリを変数展開で加工,文字列があれば真,なければ偽
+			if [ -n "${QUERY_STRING#*\=}" ] ; then
 	
 				# 真の場合,設定ファイルへの書き込み
-				echo ${cat_post#*\=} >| ../css_conf
+				echo ${QUERY_STRING#*\=} >| ../css_conf
 	
 			else
 
