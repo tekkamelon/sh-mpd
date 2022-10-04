@@ -132,8 +132,8 @@ button{
 button:hover{
 	margin: 3px;
 	padding: 7px 14px;
-	color: #073642;
-	background-color: #073642;
+	color: #268bd2;
+	background-color: #ffffd7;
 	border: 1px solid #dc322f;
 	border-radius: 12px;
 	text-align: center;
