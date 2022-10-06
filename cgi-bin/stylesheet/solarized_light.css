@@ -9,7 +9,7 @@
 
 /* アスキーアート */
 pre{
-	color: var(--main-bg-color);
+	color: #d33682;
     text-align:left
 }
 
@@ -31,7 +31,7 @@ header{
 
 /* 背景色 */
 body{
-    background-color: #002b36;
+    background-color: #ffffd7;
     text-align:left
 }
 
@@ -78,7 +78,7 @@ p{
 
 select{
 	color: var(--main-bg-color);
-	background-color: #073642;
+	background-color: #ffffd7;
 	border: 1px solid #2aa198;
 	border-radius: 6px;
     text-align:center
@@ -96,7 +96,7 @@ summary{
 input{
 	margin-top: 20px;
 	color: var(--main-bg-color);
-	background-color: #073642;
+	background-color: #ffffd7;
 	border: 1px solid #2aa198;
 	border-radius: 6px;
 }
@@ -114,7 +114,7 @@ table th{
 }
 	 
 table td{
-	border-color: red; 
+	border-color: var(--main-bg-color);
 	color: #657b83;
 	text-align: center
 }
@@ -124,7 +124,7 @@ button{
 	margin: 3px;
 	padding: 7px 14px;
 	color: #657b83;
-	background-color: #002b36;
+	background-color: #ffffd7;
 	border: 1px solid #2aa198;
 	border-radius: 12px;
 	text-align: center;
@@ -133,8 +133,8 @@ button{
 button:hover{
 	margin: 3px;
 	padding: 7px 14px;
-	color: #073642;
-	background-color: #073642;
+	color:  #ffffd7;
+	background-color: #657b83;
 	border: 1px solid #dc322f;
 	border-radius: 12px;
 	text-align: center;
