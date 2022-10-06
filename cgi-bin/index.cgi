@@ -184,7 +184,7 @@ MPD UI using shellscript and CGi
 	
 			<!-- 次の曲 -->
 			<h3>next song</h3>
-				<p><button name="button" value="next">$(mpc queued)</button></p>
+			<p><button name=button value=next>$(mpc queued | grep . || echo "NO queued song")</button></p>
 	
 		</form>
 
