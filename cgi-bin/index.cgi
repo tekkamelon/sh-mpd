@@ -142,12 +142,23 @@ MPD UI using shellscript and CGi
 					</form>
 					<form method="POST">
 						<p>
-							<span style="color: rgb(0, 255, 10); ">
+							<span>
 								<input type="text" name="search">
 							</span>
 						</p>
-						<p>$(# POSTを取得,awkとurldecodeで加工後,mpcに渡し,標準エラー出力ごと表示
-						cat | awk -F'[=&]' '{print $2,"\047"$4"\047"}' | urldecode | xargs mpc -q 2>&1 
+						<p>$(# POSTで受け取った文字列を変数に代入
+						cat_post=$(cat)					
+
+						# POSTを変数展開で加工,デコード
+						echo ${cat_post#*\=} | urldecode |
+
+						# awkで1フィールド目,3フィールド目をシングルクォート付きで出力
+						awk -F'[=&]' '{
+							print $1,"\047"$3"\047"
+						}' | 
+
+						# xargsでmpcに渡す
+						xargs mpc -q
 						)</p>
 
 				    </form>
@@ -184,7 +195,7 @@ MPD UI using shellscript and CGi
 	
 			<!-- 次の曲 -->
 			<h3>next song</h3>
-			<p><button name=button value=next>$(mpc queued | grep . || echo "NO queued song")</button></p>
+			<p><button name=button value=next>$(mpc queued | grep . || echo "next song not found")</button></p>
 	
 		</form>
 

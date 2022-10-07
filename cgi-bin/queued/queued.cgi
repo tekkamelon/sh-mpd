@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -euxv
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -72,8 +72,8 @@ cat << EOS
 			
 			else
 
-				# 偽の場合,POSTを変数展開で加工,デコードしてmpcに渡す
-				echo ${cat_post#*\=} | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
+				# 偽の場合,POSTを変数展開で加工しダブルクォート付きで出力,デコードしてmpcに渡す
+				echo \"${cat_post#*\=}\" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
 
 			fi
 			)</p>
