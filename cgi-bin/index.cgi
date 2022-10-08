@@ -157,8 +157,8 @@ MPD UI using shellscript and CGi
 							print $1,"\047"$3"\047"
 						}' | 
 
-						# xargsでmpcに渡す
-						xargs mpc -q
+						# xargsでmpcに渡し,エラー出力のみ捨てる
+						xargs mpc -q 2> /dev/null
 						)</p>
 
 				    </form>

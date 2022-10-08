@@ -51,7 +51,7 @@ cat << EOS
 		            </select>
 
 					<!-- playlistの名前,検索ワードの入力欄 -->
-					<span style="color: rgb(0, 255, 10); ">
+					<span>
 						<input type="text" name="input_string">
 					</span>
 				</p>
@@ -63,11 +63,12 @@ cat << EOS
 
 			# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
-
-			# POSTに"http"が含まれていれば真,なければ偽
+			
+			# POSTを変数展開で加工,文字列があれば真,なければ偽
 			if [ "${cat_post#*\=}" ] ; then
 				
-				if test "${cat_post#*\=}" | grep -q "http" ; then
+				# POSTに"http"が含まれていれば真,なければ偽
+				if [ "${cat_post#*\=}" ] | grep -q "http" ; then
 	
 					# 真の場合,POSTを変数展開で加工,デコードしてmpc insertに渡して再生
 					echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
@@ -80,7 +81,8 @@ cat << EOS
 				fi
 
 			else
-
+				
+				# 偽の場合は何もしない
 				:
 
 			fi
