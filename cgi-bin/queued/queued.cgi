@@ -63,27 +63,17 @@ cat << EOS
 
 			# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
-			
-			# POSTを変数展開で加工,文字列があれば真,なければ偽
-			if [ "${cat_post#*\=}" ] ; then
-				
-				# POSTに"http"が含まれていれば真,なければ偽
-				if [ "${cat_post#*\=}" ] | grep -q "http" ; then
-	
-					# 真の場合,POSTを変数展開で加工,デコードしてmpc insertに渡して再生
-					echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
-				
-				else
-	
-					# 偽の場合,POSTを変数展開で加工しダブルクォート付きで出力,デコードしてmpcに渡す
-					echo \"${cat_post#*\=}\" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
-	
-				fi
+		
+			# POSTに"http"が含まれていれば真,なければ偽
+			if $(echo "${cat_post#*\=}" | grep -q "http") ; then
 
+				# 真の場合,デコードし次の曲に追加,再生
+				echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
+			
 			else
-				
-				# 偽の場合は何もしない
-				:
+
+				# 偽の場合,POSTを変数展開で加工,デコードしてmpcに渡す
+				echo ${cat_post#*\=} | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
 
 			fi
 			)</p>
