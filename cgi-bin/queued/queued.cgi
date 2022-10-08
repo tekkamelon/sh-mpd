@@ -65,15 +65,23 @@ cat << EOS
 			cat_post=$(cat)
 
 			# POSTに"http"が含まれていれば真,なければ偽
-			if test "${cat_post#*\=}" | grep -q "http" ; then
+			if [ "${cat_post#*\=}" ] ; then
+				
+				if test "${cat_post#*\=}" | grep -q "http" ; then
+	
+					# 真の場合,POSTを変数展開で加工,デコードしてmpc insertに渡して再生
+					echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
+				
+				else
+	
+					# 偽の場合,POSTを変数展開で加工しダブルクォート付きで出力,デコードしてmpcに渡す
+					echo \"${cat_post#*\=}\" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
+	
+				fi
 
-				# 真の場合,POSTを変数展開で加工,デコードしてmpc insertに渡して再生
-				echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
-			
 			else
 
-				# 偽の場合,POSTを変数展開で加工しダブルクォート付きで出力,デコードしてmpcに渡す
-				echo \"${cat_post#*\=}\" | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
+				:
 
 			fi
 			)</p>
