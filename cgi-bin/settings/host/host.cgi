@@ -1,4 +1,4 @@
-#!/bin/sh -euxv
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -6,10 +6,7 @@
 # v 変数の表示
 
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
-export MPD_HOST=$(# hostnameを変数に代入
-	hostname_var=$(cat ../hostname)
-	echo $hostname_var | grep . || echo "localhost"
-) 
+export MPD_HOST=$(cat ../hostname | grep . || echo "localhost") 
 
 echo "Content-type: text/html"
 echo ""
@@ -35,9 +32,8 @@ cat << EOS
 		<h3>hostname: $(echo $MPD_HOST)</h4>
 		<form name="setting" method="POST" >
 
-			<h3>enter HOST</h3>
 				<span>
-					<input type="text" name="MPD_HOST">
+					<p>enter hostname or local IP: <input type="text" placeholder="example: foobar.local" name="MPD_HOST"></p>
 				</span>
 			
 			<!-- 実行結果を表示 -->

@@ -1,4 +1,4 @@
-#!/bin/sh -euxv
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -65,7 +65,7 @@ cat << EOS
 			cat_post=$(cat)
 		
 			# POSTに"http"が含まれていれば真,なければ偽
-			if $(echo "${cat_post#*\=}" | grep -q "http") ; then
+			if echo "${cat_post#*\=}" | grep -q "http" ; then
 
 				# 真の場合,デコードし次の曲に追加,再生
 				echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
@@ -97,8 +97,10 @@ cat << EOS
 
 			# "/"と" - "を区切り文字に指定,"http"にマッチしない文字列をボタン化
 			awk -F'/| - ' '!/http/{
+
 				# １番目のフィールドをボタン化
 				print "<p><button name=button value="$1">"$1"</button>",
+
 				# 最終フィールドをボタン化
 				"<button name=button value="$NF">"$NF"</button></p>"
 			}
