@@ -52,7 +52,7 @@ cat << EOS
 				<p>$(# POSTで受け取った文字列を変数に代入
 				cat_post=$(cat)
 
-					# POSTを変数展開で加工,デコードしmpcに渡す
+					# POSTを変数展開で加工,デコードしmpcに渡し,エラー出力ごと表示
 					echo ${cat_post#*\=} | urldecode | mpc load | sed "s/$/<br>/g" 2>&1
 				)</p>
 

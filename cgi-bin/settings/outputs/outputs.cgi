@@ -40,7 +40,7 @@ cat << EOS
 			# POSTに文字列が含まれていれば真,なければ偽
 			if [ -n "${cat_post#*\=}" ] ; then
 
-				# 真の場合
+				# 真の場合,変数展開でPOSTを加工,xargsでmpcに渡す
 				echo ${cat_post#*\=} | xargs mpc toggleoutput | 
 
 				# "Output"を含む行を抽出,ボタン化し出力
@@ -50,7 +50,7 @@ cat << EOS
 
 			else
 
-				# 偽の場合,変数に代入された文字列から"="を置換しmpcに渡す
+				# 偽の場合,出力デバイスの一覧をボタン化
 				mpc outputs |
 
 				# "Output"を含む行を抽出,ボタン化し出力

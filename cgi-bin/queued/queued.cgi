@@ -34,7 +34,11 @@ cat << EOS
 			
 			<p>$(# playlistのセーブ
 
-			echo ${QUERY_STRING#*\=} | sed "s/\&input_string\=/ /g" | urldecode | xargs mpc > /dev/null
+			# クエリを変数展開で加工
+			echo ${QUERY_STRING#*\=} | 
+
+			# "&input_string="をスペースに置換,デコードしxargsでmpcに渡す
+			sed "s/\&input_string\=/ /g" | urldecode | xargs mpc -q > /dev/null
 			)</p>
 
 			<!-- クエリの表示 -->
@@ -67,7 +71,7 @@ cat << EOS
 			# POSTに"http"が含まれていれば真,なければ偽
 			if echo "${cat_post#*\=}" | grep -q "http" ; then
 
-				# 真の場合,デコードし次の曲に追加,再生
+				# 真の場合,デコードし次の曲に追加,成功時のみ再生
 				echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
 			
 			else
@@ -92,11 +96,11 @@ cat << EOS
 			# 偽の場合は"."で全てにマッチングする行を表示
 			search_var="."
 
-			# キューされた曲の表示
+			# キューされた曲をgrepで検索し結果を表示
 			mpc playlist | grep -i ${search_var} |
 
-			# "/"と" - "を区切り文字に指定,"http"にマッチしない文字列をボタン化
-			awk -F'/| - ' '!/http/{
+			# "/"と" - "を区切り文字に指定,先頭が"http"にマッチしない文字列をボタン化
+			awk -F'/| - ' '!/^http/{
 
 				# １番目のフィールドをボタン化
 				print "<p><button name=button value="$1">"$1"</button>",
@@ -105,8 +109,8 @@ cat << EOS
 				"<button name=button value="$NF">"$NF"</button></p>"
 			}
 
-			# "http"にマッチする文字列をボタン化
-			/http/{
+			# 先頭が"http"にマッチする文字列をボタン化
+			/^http/{
 				print "<p><button name=button value="$0">"$0"</button></p>"
 			}' |
 
