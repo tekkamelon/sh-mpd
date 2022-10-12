@@ -134,7 +134,7 @@ button{
 button:hover{
 	margin: 3px;
 	padding: 7px 14px;
-	color: rgb(185, 185, 185);
+	color: rgb(25, 25, 25);
 	background-color: rgb(200, 200, 200);
 	border: 1px solid rgb(185, 185, 185);
 	border-radius: 12px;

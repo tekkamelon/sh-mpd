@@ -3,13 +3,13 @@
 
 /* 見出しの色 */
 :root{
-    --main-bg-color: rgb(50, 150, 150);
+    --main-bg-color: rgb(75, 175, 175);
     --letter-color: rgb(0, 255, 0);
 }
 
 /* アスキーアート */
 pre{
-	color: var(--main-bg-color);
+	color: rgb(220, 170, 80);
     text-align:left
 }
 
@@ -31,7 +31,7 @@ header{
 
 /* 背景色 */
 body{
-    background-color: rgb(90, 60, 115);
+    background-color: rgb(90, 50, 115);
     text-align:left
 }
 
@@ -60,18 +60,18 @@ h4{
 }
 
 l1{
-    color:white ;
+    color:rgb(220, 170, 80) ;
     text-align:left
 }
 
 l2{
-    color:white ;
+    color:rgb(220, 170, 80) ;
     text-align:left
 }
 
 /* 本文 */
 p{
-    color: white;
+    color: rgb(220, 170, 80);
     font-size: 15px;
     text-align:left
 }
@@ -109,13 +109,13 @@ table {
 /* table */
 table th{
 	border-color: var(--main-bg-color);
-	color: white;
+	color: rgb(220, 170, 80);
 	text-align: center
 }
 
 table td{
 	border-color: var(--main-bg-color);
-	color: white;
+	color: rgb(220, 170, 80);
 	text-align: center
 }
 
@@ -123,8 +123,8 @@ table td{
 button{
 	margin: 3px;
 	padding: 7px 14px;
-	color: white;
-	background-color: purple;
+	color: rgb(220, 170, 80);
+	background-color: rgb(150, 65, 150);
 	border: 1px solid blue;
 	border-radius: 12px;
 	text-align: center;
@@ -135,7 +135,7 @@ button:hover{
 	padding: 7px 14px;
 	color: aqua;
 	background-color: rgb(50, 50, 100);
-	border: 1px solid pink;
+	border: 1px solid rgb(160, 40, 140);
 	border-radius: 12px;
 	text-align: center;
 }
