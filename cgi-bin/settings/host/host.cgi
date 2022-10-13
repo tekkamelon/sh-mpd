@@ -6,7 +6,7 @@
 # v 変数の表示
 
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
-export MPD_HOST=$(cat ../sh-mpd.conf | head -n 1 || echo "localhost") 
+export MPD_HOST=$(cat ../hostname | grep . || echo "localhost") 
 
 echo "Content-type: text/html"
 echo ""
@@ -17,13 +17,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(
-		# cssの設定
-		cat ../sh-mpd.conf |
-
-		# hostnameが無い場合は"stylesheet.css"
-		grep ".css" || echo "stylesheet.css"
-		)">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf | grep . || echo "stylesheet.css")">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
@@ -49,11 +43,11 @@ cat << EOS
 				# POSTを変数展開で加工,数字,"localhost",".local"のどれかにマッチすれば真
 				if echo "${cat_post#*\=}" | grep -q -E "[0-9]|localhost|*\.local" ; then
 
-					# 真の場合,sedで加工,teeで設定ファイルへの書き込み
-					cat ../sh-mpd.conf | sed "1 s/.*/$(echo ${cat_post#*\=})/g" | tee ../sh-mpd.conf | 
+					# 真の場合,変数展開で加工,teeで設定ファイルへの書き込み
+					echo ${cat_post#*\=} | tee ../hostname | 
 
-					# headで抽出,xargsでechoに渡す
-					head -n 1 | xargs -I{} echo '<p>hostname:{}</p>'
+					# xargsでechoに渡す
+					xargs -I{} echo '<p>hostname:{}</p>'
 
 				else
 					
