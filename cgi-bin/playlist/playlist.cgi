@@ -6,7 +6,7 @@
 # v 変数の表示
 
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
-export MPD_HOST=$(cat ../settings/sh-mpd.conf | head -n 1 || echo "localhost") 
+export MPD_HOST=$(cat ../settings/sh-mpd.css | head -n 1 || echo ""localhost") 
 
 echo "Content-type: text/html"
 echo ""
