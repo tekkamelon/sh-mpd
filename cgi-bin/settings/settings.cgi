@@ -14,7 +14,14 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat css_conf | grep . || echo "stylesheet.css")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(
+		# cssの設定
+		cat sh-mpd.conf |
+
+		# hostnameが無い場合は"stylesheet.css"
+		grep ".css" || echo "stylesheet.css"
+		)">
+
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
@@ -27,8 +34,12 @@ cat << EOS
     <body>
 		<!-- ホスト名の表示 -->
 		<h3>hostname: $(# "hostname"を表示,ファイルが空の場合は"localhost"を表示
-		cat hostname | grep . || echo "localhost"
+			cat sh-mpd.conf | 
+			
+			# hostnameが無い場合は"localhost"
+			head -n 1 || echo "localhost"
 		)</h3>
+
 		<button><a href="/cgi-bin/settings/host/host.cgi">change_host</a></button>
 			
 		<!-- 出力先デバイスの設定 -->

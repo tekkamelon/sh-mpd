@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -euxv
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -14,8 +14,8 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/
-		$(# クエリを変数展開で加工,文字列があれば真,なければ偽
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(
+		# クエリを変数展開で加工,文字列があれば真,なければ偽
 		if [ -n "${QUERY_STRING#*\=}" ] ; then
 
 			# 真の場合,クエリを変数展開で加工し出力
@@ -23,8 +23,10 @@ cat << EOS
 
 		else
 
-			# 偽の場合は"css_conf"の中身を出力,なければ"stylesheet.css"を指定
-			cat ../css_conf | grep . || echo "stylesheet.css"
+			# 偽の場合は"sh-mpd.conf"の中身を出力,なければ"stylesheet.css"を指定
+			cat ../sh-mpd.conf |
+
+			grep ".css" || echo "stylesheet.css"
 
 		fi
 		)">
@@ -50,8 +52,8 @@ cat << EOS
 			if [ -n "${QUERY_STRING#*\=}" ] ; then
 	
 				# 真の場合,設定ファイルへの書き込み
-				echo ${QUERY_STRING#*\=} >| ../css_conf
-	
+				cat ../sh-mpd.conf | sed "2 s/.*/$(echo ${QUERY_STRING#*\=})/g" | tee ../sh-mpd.conf > /dev/null
+
 			else
 
 				# 偽の場合は何もしない

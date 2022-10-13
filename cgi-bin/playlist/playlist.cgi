@@ -6,10 +6,7 @@
 # v 変数の表示
 
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
-export MPD_HOST=$(# hostnameを変数に代入
-	hostname_var=$(cat ../settings/hostname)
-	echo $hostname_var | grep . || echo "localhost"
-) 
+export MPD_HOST=$(cat ../settings/sh-mpd.css | head -n 1 || echo ""localhost") 
 
 echo "Content-type: text/html"
 echo ""
@@ -20,7 +17,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf | grep . || echo "stylesheet.css")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/sh-mpd.conf | grep ".css" || echo "stylesheet.css")">
 		<link rel="icon" ref="image/favicon_ios.ico">
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
         <title>sh-MPD</title>
