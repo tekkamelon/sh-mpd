@@ -16,10 +16,10 @@ $ sudo apt install mpc mpd
 $ sudo pacman -S mpc mpd
 
 # githubよりclone
-$ git clone https://github.com/tekkamelon/sh-mpc
+$ git clone https://github.com/tekkamelon/sh-mpd
 
 # スクリプトのあるディレクトリへ移動
-$ cd sh-mpc
+$ cd sh-mpd
 
 # "urldecode"コマンドに実行権限を付与
 $ chmod 755 urldecode
@@ -31,10 +31,10 @@ $ sudo cp /usr/local/bin # ※一例
 $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
 ```
 
-### cssの変更が出来ない場合(apache2)
+### css,ホスト名の変更が出来ない場合(apache2)
 
 ```sh
-$ cd sh-mpc/cgi-bin/
+$ cd sh-mpd/cgi-bin/
 
 $ sudo chwon www-data settings/
 ```
