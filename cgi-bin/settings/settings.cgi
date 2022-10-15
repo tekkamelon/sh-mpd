@@ -31,14 +31,20 @@ cat << EOS
 		)</h3>
 		<button><a href="/cgi-bin/settings/host/host.cgi">change_host</a></button>
 			
+		<!-- ポート番号の設定 -->
+		<h3>port: $(# "port_conf"を表示,ファイルが空の場合は"localhost"を表示
+		cat port_conf | grep . || echo "port_conf"
+		)</h3>
+		<button><a href="/cgi-bin/settings/port/port.cgi">change_port</a></button>
+
 		<!-- 出力先デバイスの設定 -->
 		<h3>ountput devices list</h3>
 		<button><a href="/cgi-bin/settings/outputs/outputs.cgi">select_output_device</a></button>
 		
-			<!-- CSSの設定 -->
-			<h3>CSS setting</h3>
-			<button><a href="/cgi-bin/settings/css_select/css_select.cgi">select_css</a></button>
-
+		<!-- CSSの設定 -->
+		<h3>CSS setting</h3>
+		<button><a href="/cgi-bin/settings/css_select/css_select.cgi">select_css</a></button>
+			
     </body>
 
 	<div class="link">
