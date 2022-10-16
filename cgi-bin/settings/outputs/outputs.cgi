@@ -7,6 +7,7 @@
 
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
+export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
 
 echo "Content-type: text/html"
 echo ""
