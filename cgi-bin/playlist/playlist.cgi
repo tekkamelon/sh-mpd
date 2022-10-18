@@ -40,7 +40,7 @@ cat << EOS
 
 			$(# 変数展開でクエリを加工,xargsでmpcに渡す
 			echo ${QUERY_STRING#*\=} | xargs mpc -q > /dev/null
-		)</p>
+			)</p>
 
 		</form>
 	
@@ -50,8 +50,18 @@ cat << EOS
 				<p>$(# POSTで受け取った文字列を変数に代入
 				cat_post=$(cat)
 
-					# POSTを変数展開で加工,デコードしmpcに渡し,エラー出力ごと表示
+				# POSTを変数展開で加工,空でない場合に真,空の場合に偽
+				if [ -n "${cat_post#*\=}" ] ; then 
+
+					# 真の場合はPOSTを変数展開で加工,デコードしmpcに渡し,エラー出力ごと表示
 					echo ${cat_post#*\=} | urldecode | mpc load | sed "s/$/<br>/g" 2>&1
+
+				else
+
+					# 偽の場合は何もしない
+					: 
+
+				fi
 				)</p>
 
 				<!-- リンク -->
