@@ -30,7 +30,7 @@ cat << EOS
 	</header>
 
     <body>
-		<h4>hostname: $(echo $MPD_HOST)</h4>
+		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>")</h4>
 		<form name="FORM" method="GET" >
 
 			debug_info:$(echo ${QUERY_STRING} | urldecode)

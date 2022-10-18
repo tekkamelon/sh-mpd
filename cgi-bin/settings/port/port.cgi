@@ -30,7 +30,7 @@ cat << EOS
 
     <body>
 		<!-- ポート番号の設定 -->
-		<h3>port: $(echo $MPD_PORT)</h4>
+		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>")</h4>
 		<form name="setting" method="POST" >
 
 				<span>
