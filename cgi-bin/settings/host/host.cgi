@@ -29,8 +29,8 @@ cat << EOS
 	</header>
 
     <body>
-		<!-- ホスト名の設定 -->
-		<h3>hostname: $(echo $MPD_HOST)</h4>
+		<!-- ホスト名,ポート番号の表示-->
+		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>")</h4>
 		<form name="setting" method="POST" >
 
 				<span>
