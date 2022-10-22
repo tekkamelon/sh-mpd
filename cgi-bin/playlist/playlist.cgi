@@ -39,7 +39,7 @@ cat << EOS
 			<button name="button" value="next">next</button>
 
 			$(# 変数展開でクエリを加工,xargsでmpcに渡す
-			echo ${QUERY_STRING#*\=} | xargs mpc -q > /dev/null
+			echo "${QUERY_STRING#*\=}" | xargs mpc -q > /dev/null
 			)</p>
 
 		</form>
@@ -54,7 +54,7 @@ cat << EOS
 				if [ -n "${cat_post#*\=}" ] ; then 
 
 					# 真の場合はPOSTを変数展開で加工,デコードしmpcに渡し,エラー出力ごと表示
-					echo ${cat_post#*\=} | urldecode | mpc load | sed "s/$/<br>/g" 2>&1
+					echo "${cat_post#*\=}" | urldecode | mpc load | sed "s/$/<br>/g" 2>&1
 
 				else
 

@@ -121,7 +121,7 @@ MPD UI using shellscript and CGi
 			</table>
 
 			$(# 変数展開でクエリを加工,デコードしxargsでmpcに渡し,エラー出力以外を/dev/nullへ
-			echo ${QUERY_STRING#*\=} | urldecode | xargs mpc -q > /dev/null
+			echo "${QUERY_STRING#*\=}" | urldecode | xargs mpc -q > /dev/null
 			)
 
         </form>

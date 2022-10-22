@@ -36,14 +36,14 @@ cat << EOS
 			<p>$(# playlistのセーブ
 
 			# クエリを変数展開で加工
-			echo ${QUERY_STRING#*\=} | 
+			echo "${QUERY_STRING#*\=}" | 
 
 			# "&input_string="をスペースに置換,デコードしxargsでmpcに渡す
 			sed "s/\&input_string\=/ /g" | urldecode | xargs mpc -q > /dev/null
 			)</p>
 
 			<!-- クエリの表示 -->
-			<p>debug:$(echo $QUERY_STRING)</p>
+			<p>debug:$(echo "$QUERY_STRING")</p>
 				<p>
 					<!-- ドロップダウンリスト -->
 	             	<select name="button">

@@ -19,7 +19,7 @@ cat << EOS
 		if [ -n "${QUERY_STRING#*\=}" ] ; then
 
 			# 真の場合,クエリを変数展開で加工し出力
-			echo ${QUERY_STRING#*\=}
+			echo "${QUERY_STRING#*\=}"
 
 		else
 
@@ -50,7 +50,7 @@ cat << EOS
 			if [ -n "${QUERY_STRING#*\=}" ] ; then
 	
 				# 真の場合,設定ファイルへの書き込み
-				echo ${QUERY_STRING#*\=} >| ../css_conf
+				echo "${QUERY_STRING#*\=}" >| ../css_conf
 	
 			else
 

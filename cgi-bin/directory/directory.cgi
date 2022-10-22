@@ -33,7 +33,7 @@ cat << EOS
 		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>")</h4>
 		<form name="FORM" method="GET" >
 
-			debug_info:$(echo ${QUERY_STRING} | urldecode)
+			debug_info:$(echo "${QUERY_STRING}" | urldecode)
 				
 					<!-- 検索ワードの入力欄 -->
 						<p>search_word:<input type="text" name="search_word"></p>
@@ -73,7 +73,7 @@ cat << EOS
 				if [ -n "${QUERY_STRING#*\=}" ] ; then 
 
 					# 真の場合はクエリを変数展開で加工,デコード
-					search_var=$(echo ${QUERY_STRING#*\=} | urldecode)
+					search_var=$(echo "${QUERY_STRING#*\=}" | urldecode)
 					
 				else
 
