@@ -9,13 +9,19 @@
 # 接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
-export SAVE_PLAYLIST=$(
+
+# クエリを加工,環境変数に設定
+export SAVE_PLAYLIST=$(# クエリ内に"save"があれば真,なければ偽
 	echo "${QUERY_STRING#*\=}" | grep -q "save" && 
+
+	# 真の場合は"save"と受け取った文字列を代入,偽の場合は"-q"を代入
 	echo "${QUERY_STRING#*\=}" | sed "s/\&input_string\=/ /g" | grep "." || echo "-q"
 )
 
-export SEARCH_VAR=$(
+export SEARCH_VAR=$(# クエリ内に"match"があれば真,なければ偽
 	echo "${QUERY_STRING#*\=}" | grep -q "match" &&
+
+	# 真の場合は"match"と受け取った文字列を代入,偽の場合は"."を代入
 	echo "${QUERY_STRING#*\=}" | sed "s/match\&input_string\=//g" | grep "." || echo "."
 )
 
@@ -89,10 +95,9 @@ cat << EOS
 			<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
-			<!-- プレイリストの一覧を表示 -->
-			$(# クエリ内に"match"があるかどうかを判断
-
-			echo "${SAVE_PLAYLIST}" | grep -q "save" && mpc $(echo "${SAVE_PLAYLIST}") &
+			<!-- キュー内の曲を表示 -->
+			$(# キュー内の曲をプレイリストに保存
+			mpc $(echo "${SAVE_PLAYLIST}") &
 
 			# キューされた曲をgrepで検索し結果を表示
 			mpc playlist | grep -i ${SEARCH_VAR} |
