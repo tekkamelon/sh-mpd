@@ -43,20 +43,13 @@ cat << EOS
 			cat_post=$(cat) 
 
 				# POSTを変数展開で加工,数字にマッチすれば真
-				if echo "${cat_post#*\=}" | grep -q -E "[0-9]" ; then
+				echo "${cat_post#*\=}" | grep -q -E "[0-9]" && 
 
-					# 真の場合,変数展開で加工,teeで設定ファイルへの書き込み
-					echo ${cat_post#*\=} | tee ../port_conf | 
+				# 真の場合,変数展開で加工,teeで設定ファイルへの書き込み,出力
+				echo  "${cat_post#*\=}" | tee ../port_conf | 
 
-					# xargsでechoに渡す
-					xargs -I{} echo '<p>changed port:{}</p>'
-
-				else
-					
-					# 偽の場合は何もしない
-					:
-
-				fi
+				# xargsでechoに渡す
+				xargs -I{} echo '<p>changed port:{}</p>'
 			)</p>
 			
 		</form>

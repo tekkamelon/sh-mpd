@@ -50,18 +50,11 @@ cat << EOS
 				<p>$(# POSTで受け取った文字列を変数に代入
 				cat_post=$(cat)
 
-				# POSTを変数展開で加工,空でない場合に真,空の場合に偽
-				if [ -n "${cat_post#*\=}" ] ; then 
+				# POSTを変数展開で加工,grepで文字列の有無の判定,空でない場合に真,空の場合に偽
+				echo  "${cat_post#*\=}" | grep -q . &&
 
-					# 真の場合はPOSTを変数展開で加工,デコードしmpcに渡し,エラー出力ごと表示
-					echo "${cat_post#*\=}" | urldecode | mpc load | sed "s/$/<br>/g" 2>&1
-
-				else
-
-					# 偽の場合は何もしない
-					: 
-
-				fi
+				# 真の場合はPOSTを変数展開で加工,デコードしmpcに渡し,エラー出力ごと表示
+				echo "${cat_post#*\=}" | urldecode | mpc load | sed "s/$/<br>/g" 2>&1
 				)</p>
 
 				<!-- リンク -->

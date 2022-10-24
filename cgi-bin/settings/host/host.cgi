@@ -42,20 +42,13 @@ cat << EOS
 			cat_post=$(cat) 
 
 				# POSTを変数展開で加工,数字,"localhost",".local"のどれかにマッチすれば真
-				if echo "${cat_post#*\=}" | grep -q -E "[0-9]|localhost|*\.local" ; then
+				echo "${cat_post#*\=}" | grep -q -E "[0-9]|localhost|*\.local" &&
 
-					# 真の場合,変数展開で加工,teeで設定ファイルへの書き込み
-					echo ${cat_post#*\=} | tee ../hostname | 
+				# 真の場合,変数展開で加工,teeで設定ファイルへの書き込み,出力
+				echo ${cat_post#*\=} | tee ../hostname | 
 
-					# xargsでechoに渡す
-					xargs -I{} echo '<p>hostname:{}</p>'
-
-				else
-					
-					# 偽の場合は何もしない
-					:
-
-				fi
+				# xargsでechoに渡す
+				xargs -I{} echo '<p>hostname:{}</p>'
 			)</p>
 			
 		</form>

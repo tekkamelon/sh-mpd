@@ -46,18 +46,11 @@ cat << EOS
 			xargs -I{} echo "<p><button name=css value="{}">"{}"</button></p>"
 			)
 
-			$(# クエリを変数展開で加工,文字列があれば真,なければ偽
-			if [ -n "${QUERY_STRING#*\=}" ] ; then
+			$(# クエリを変数展開で加工,grepで文字列の有無の判定,空でない場合に真,空の場合に偽
+			echo "${QUERY_STRING#*\=}" | grep -q . &&
 	
-				# 真の場合,設定ファイルへの書き込み
-				echo "${QUERY_STRING#*\=}" >| ../css_conf
-	
-			else
-
-				# 偽の場合は何もしない
-				:
-
-			fi
+			# 真の場合,設定ファイルへの書き込み
+			echo "${QUERY_STRING#*\=}" >| ../css_conf
 			)
  
 		</form>
