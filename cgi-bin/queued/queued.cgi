@@ -1,13 +1,23 @@
-#!/bin/sh -eu
+#!/bin/sh -euxv
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# 環境変数で接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
+# 環境変数の設定
+# 接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
+export SAVE_PLAYLIST=$(
+	echo "${QUERY_STRING#*\=}" | grep -q "save" && 
+	echo "${QUERY_STRING#*\=}" | sed "s/\&input_string\=/ /g" | grep "." || echo "-q"
+)
+
+export SEARCH_VAR=$(
+	echo "${QUERY_STRING#*\=}" | grep -q "match" &&
+	echo "${QUERY_STRING#*\=}" | sed "s/match\&input_string\=//g" | grep "." || echo "."
+)
 
 echo "Content-type: text/html"
 echo ""
@@ -32,15 +42,6 @@ cat << EOS
 		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>")</h4>
 		<!-- playlistの処理 -->
 		<form name="FORM" method="GET" >
-			
-			<p>$(# playlistのセーブ
-
-			# クエリを変数展開で加工
-			echo "${QUERY_STRING#*\=}" | 
-
-			# "&input_string="をスペースに置換,デコードしxargsでmpcに渡す
-			sed "s/\&input_string\=/ /g" | urldecode | xargs mpc -q > /dev/null
-			)</p>
 
 			<!-- クエリの表示 -->
 			<p>debug:$(echo "$QUERY_STRING")</p>
@@ -91,14 +92,10 @@ cat << EOS
 			<!-- プレイリストの一覧を表示 -->
 			$(# クエリ内に"match"があるかどうかを判断
 
-			# クエリを変数展開で加工,デコードしgrepの終了ステータスで文字列があるかどうかを判断
-			search_var=$(echo ${QUERY_STRING#*\=match&input_string\=} | urldecode | grep .) ||
-
-			# 偽の場合は"."で全てにマッチングする行を表示
-			search_var="."
+			echo "${SAVE_PLAYLIST}" | grep -q "save" && mpc $(echo "${SAVE_PLAYLIST}") &
 
 			# キューされた曲をgrepで検索し結果を表示
-			mpc playlist | grep -i ${search_var} |
+			mpc playlist | grep -i ${SEARCH_VAR} |
 
 			# "/"と" - "を区切り文字に指定,先頭が"http"にマッチしない文字列をボタン化
 			awk -F'/| - ' '!/^http/{
