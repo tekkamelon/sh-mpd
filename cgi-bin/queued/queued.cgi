@@ -11,10 +11,10 @@ export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost")
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
 
 # クエリ内に"save"があれば真,なければ偽
-export SAVE_PLAYLIST=$(echo "${QUERY_STRING#*\=}" | urldecode | grep "save" || echo "-q")
+export SAVE_PLAYLIST=$(echo "${QUERY_STRING#*\=}" | urldecode | grep "save&input_string=." || echo "-q") 
 
 # クエリ内に"match"があれば真,なければ偽
-export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | urldecode | grep "match" || echo ".")
+export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | urldecode | grep "match&input_string=." || echo ".")
 
 echo "Content-type: text/html"
 echo ""
