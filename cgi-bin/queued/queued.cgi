@@ -10,20 +10,11 @@
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
 
-# クエリを加工,環境変数に設定
-export SAVE_PLAYLIST=$(# クエリ内に"save"があれば真,なければ偽
-	echo "${QUERY_STRING#*\=}" | grep -q "save" && 
+# クエリ内に"save"があれば真,なければ偽
+export SAVE_PLAYLIST=$(echo "${QUERY_STRING#*\=}" | grep "save" | urldecode | grep "." || echo "-q")
 
-	# 真の場合は"save"と受け取った文字列を代入,偽の場合は"-q"を代入
-	echo "${QUERY_STRING#*\=}" | sed "s/\&input_string\=/ /g" | grep "." || echo "-q"
-)
-
-export SEARCH_VAR=$(# クエリ内に"match"があれば真,なければ偽
-	echo "${QUERY_STRING#*\=}" | grep -q "match" &&
-
-	# 真の場合は"match"と受け取った文字列を代入,偽の場合は"."を代入
-	echo "${QUERY_STRING#*\=}" | sed "s/match\&input_string\=//g" | grep "." || echo "."
-)
+# クエリ内に"match"があれば真,なければ偽
+export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | grep "match" |	urldecode | grep "." || echo ".")
 
 echo "Content-type: text/html"
 echo ""
@@ -97,10 +88,10 @@ cat << EOS
 
 			<!-- キュー内の曲を表示 -->
 			$(# キュー内の曲をプレイリストに保存
-			mpc $(echo "${SAVE_PLAYLIST}") &
+			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/\&input_string\=/ /g") &
 
 			# キューされた曲をgrepで検索し結果を表示
-			mpc playlist | grep -i ${SEARCH_VAR} |
+			mpc playlist | grep -i ${SEARCH_VAR#match\&input_string\=} | 
 
 			# "/"と" - "を区切り文字に指定,先頭が"http"にマッチしない文字列をボタン化
 			awk -F'/| - ' '!/^http/{
