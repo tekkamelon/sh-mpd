@@ -1,4 +1,4 @@
-#!/bin/sh -euxv
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -11,10 +11,10 @@ export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost")
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
 
 # クエリ内に"save"があれば真,なければ偽
-export SAVE_PLAYLIST=$(echo "${QUERY_STRING#*\=}" | grep "save" | urldecode | grep "." || echo "-q")
+export SAVE_PLAYLIST=$(echo "${QUERY_STRING#*\=}" | urldecode | grep "save" || echo "-q")
 
 # クエリ内に"match"があれば真,なければ偽
-export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | grep "match" |	urldecode | grep "." || echo ".")
+export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | urldecode | grep "match" || echo ".")
 
 echo "Content-type: text/html"
 echo ""
