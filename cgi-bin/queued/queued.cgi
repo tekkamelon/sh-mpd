@@ -9,12 +9,36 @@
 # 接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
+export $(# クエリ内の文字列をawkで判定し,処理を分け環境変数へ代入
 
-# クエリ内に"save"があれば真,なければ偽
-export SAVE_PLAYLIST=$(echo "${QUERY_STRING#*\=}" | urldecode | grep "save&input_string=." || echo "-q") 
+	# クエリを変数展開で加工,デコード
+	echo "${QUERY_STRING#*\=}" | urldecode | 
 
-# クエリ内に"match"があれば真,なければ偽
-export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | urldecode | grep "match&input_string=." || echo ".")
+	# "save"にマッチした場合の処理
+	awk -F'[=&]' '/save/{
+
+		print "SAVE_PLAYLIST="$1"_"$NF
+
+	}
+
+	# "search&input_string=."にマッチした場合の処理
+	/search&input_string=./{
+
+		print "SAVE_PLAYLIST=-q"
+		print "SEARCH_VAR="$NF
+
+	}
+	
+	# "search&input_string=."にマッチしなかった場合の処理
+	!/search&input_string=./{
+
+		print "SEARCH_VAR=."
+
+	}' |
+	
+	# 環境変数へ代入
+	xargs -L 1 -P 2
+)
 
 echo "Content-type: text/html"
 echo ""
@@ -41,13 +65,13 @@ cat << EOS
 		<form name="FORM" method="GET" >
 
 			<!-- クエリの表示 -->
-			<p>debug:$(echo "$QUERY_STRING")</p>
+			<p>debug:$(echo "${QUERY_STRING}")</p>
 				<p>
 					<!-- ドロップダウンリスト -->
 	             	<select name="button">
 						
 						<!-- 検索 -->
-						<option value="match">match</option>
+						<option value="search">search</option>
 
 						<!-- 保存 -->
 						<option value="save">save playlist</option>
@@ -88,10 +112,10 @@ cat << EOS
 
 			<!-- キュー内の曲を表示 -->
 			$(# キュー内の曲をプレイリストに保存
-			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/\&input_string\=/ /g") &
+			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /" | grep . || echo -q) &
 
 			# キューされた曲をgrepで検索し結果を表示
-			mpc playlist | grep -i ${SEARCH_VAR#match\&input_string\=} | 
+			mpc playlist | grep -i "${SEARCH_VAR}" | 
 
 			# "/"と" - "を区切り文字に指定,先頭が"http"にマッチしない文字列をボタン化
 			awk -F'/| - ' '!/^http/{
@@ -105,12 +129,16 @@ cat << EOS
 
 			# 先頭が"http"にマッチする文字列をボタン化
 			/^http/{
+
 				print "<p><button name=button value="$0">"$0"</button></p>"
+
 			}' |
 
 			# 重複行を削除
 			awk '!a[$0]++{
+
 				print $0
+
 			}'
 			)
 
