@@ -14,14 +14,15 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 	# クエリを変数展開で加工,デコード
 	echo "${QUERY_STRING#*\=}" | urldecode | 
 
-	# "save"にマッチした場合の処理
-	awk -F'[=&]' '/save/{
+	# "save&input_string=(任意の1文字以上)"にマッチした場合の処理
+	awk -F'[=&]' '/save&input_string=./{
 
 		print "SAVE_PLAYLIST="$1"_"$NF
+		print "SEARCH_VAR=."
 
 	}
 
-	# "search&input_string=."にマッチした場合の処理
+	# "search&input_string=(任意の1文字以上)"にマッチした場合の処理
 	/search&input_string=./{
 
 		print "SAVE_PLAYLIST=-q"
@@ -29,9 +30,10 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 
 	}
 	
-	# "search&input_string=."にマッチしなかった場合の処理
-	!/search&input_string=./{
+	# "&input_string=(任意の1文字以上)"にマッチしなかった場合の処理
+	!/&input_string=./{
 
+		print "SAVE_PLAYLIST=-q"
 		print "SEARCH_VAR=."
 
 	}' |
@@ -112,7 +114,7 @@ cat << EOS
 
 			<!-- キュー内の曲を表示 -->
 			$(# キュー内の曲をプレイリストに保存
-			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /" | grep . || echo -q) &
+			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /") &
 
 			# キューされた曲をgrepで検索し結果を表示
 			mpc playlist | grep -i "${SEARCH_VAR}" | 
