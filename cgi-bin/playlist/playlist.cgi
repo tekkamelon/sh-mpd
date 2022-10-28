@@ -9,6 +9,9 @@
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
 
+# 変数展開でクエリを加工,デコードし,文字列の有無を判定
+export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo ".")
+
 echo "Content-type: text/html"
 echo ""
 
@@ -36,12 +39,10 @@ cat << EOS
 		<!-- mpc nextボタン -->
 		<form name="FORM" method="GET" >
 
-			<button name="button" value="next">next</button>
+			<!-- 検索ワードの入力欄 -->
+			<p>search_word:<input type="text" name="search_word"></p>
 
-			$(# 変数展開でクエリを加工,xargsでmpcに渡す
-			echo "${QUERY_STRING#*\=}" | xargs mpc -q > /dev/null
-			)</p>
-
+			
 		</form>
 	
 		<!-- mpd.confで設定されたプレイリスト一覧を表示 --> 
@@ -62,8 +63,15 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
-				<!-- mpc管理下のプレイリスト,親ディレクトリを再帰的に表示,awkで出力をボタン化 -->
-				$(mpc ls | awk '{ print "<p><button name=button value="$0">"$0"</button></p>"}')
+				<!-- mpc管理下のプレイリストをgrepで検索し表示,awkで出力をボタン化 -->
+				$(mpc lsplaylist | grep -i "${SEARCH_VAR}" | 
+
+				awk '{
+						
+					print "<p><button name=button value="$0">"$0"</button></p>"
+
+				}'
+				)
 		</form>
 	</body>
 
