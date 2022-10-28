@@ -9,7 +9,6 @@
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
 
-
 echo "Content-type: text/html"
 echo ""
 
@@ -36,7 +35,7 @@ cat << EOS
 			debug_info:$(echo "${QUERY_STRING}" | urldecode)
 				
 					<!-- 検索ワードの入力欄 -->
-						<p>search_word:<input type="text" name="search_word"></p>
+					<p>search_word:<input type="text" name="search_word"></p>
 				
 		</form>
 	
@@ -47,10 +46,10 @@ cat << EOS
 				cat_post=$(cat)
 
 				# POSTを変数展開で加工,空でない場合に真,空の場合に偽
-				echo "${cat_post#*\=}" | grep -q .&& 
+				echo "${cat_post#*\=}" | grep -q . && 
 
 				# 真の場合,POSTを変数展開で加工,デコードしxargsでmpcに渡しキューに追加
-				echo ${cat_post#*\=} | urldecode | mpc insert && 
+				echo "${cat_post#*\=}" | urldecode | mpc insert && 
 	
 				# "mpc insert"で挿入した曲を再生
 				mpc next | sed "s/$/<br>/g" 2>&1
@@ -74,7 +73,7 @@ cat << EOS
 					search_var="." 
 
 				fi
-				mpc listall | grep -i ${search_var} |
+				mpc listall | grep -i "${search_var}" |
 				awk '{print "<p><button name=button value="$0">"$0"</button></p>"}'
 				)
 
