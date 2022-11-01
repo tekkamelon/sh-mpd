@@ -42,14 +42,14 @@ cat << EOS
 		<!-- mpd.confで設定されたディレクトリ配下を表示 --> 
 		<form name="music" method="POST" >
 
-				<p>$(# POSTで受け取った文字列を変数に代入
-				cat_post=$(cat)
+				<p>$(# POSTで受け取った文字列をデコード,変数に代入
+				cat_post=$(cat | urldecode)
 
 				# POSTを変数展開で加工,空でない場合に真,空の場合に偽
 				echo "${cat_post#*\=}" | grep -q . && 
 
 				# 真の場合,POSTを変数展開で加工,デコードしxargsでmpcに渡しキューに追加
-				echo "${cat_post#*\=}" | urldecode | mpc insert && 
+				echo "${cat_post#*\=}" | mpc insert && 
 	
 				# "mpc insert"で挿入した曲を再生
 				mpc next | sed "s/$/<br>/g" 2>&1
@@ -73,7 +73,11 @@ cat << EOS
 					search_var="." 
 
 				fi
+
+				# 曲の一覧をgrepで検索
 				mpc listall | grep -i "${search_var}" |
+
+				# 出力をボタン化
 				awk '{print "<p><button name=button value="$0">"$0"</button></p>"}'
 				)
 

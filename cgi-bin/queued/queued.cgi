@@ -90,19 +90,19 @@ cat << EOS
 			
 			<p>$(# 曲の再生部分
 
-			# POSTで受け取った文字列を変数に代入
-			cat_post=$(cat)
+			# POSTで受け取った文字列をデコード,変数に代入
+			cat_post=$(cat | urldecode)
 		
 			# POSTに"http"が含まれていれば真,なければ偽
 			if echo "${cat_post#*\=}" | grep -q "http" ; then
 
 				# 真の場合,デコードし次の曲に追加,成功時のみ再生
-				echo ${cat_post#*\=} | urldecode | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
+				echo ${cat_post#*\=} | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
 			
 			else
 
 				# 偽の場合,POSTを変数展開で加工,デコードしてmpcに渡す
-				echo ${cat_post#*\=} | urldecode | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
+				echo ${cat_post#*\=} | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
 
 			fi
 			)</p>

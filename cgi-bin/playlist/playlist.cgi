@@ -47,10 +47,10 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<!-- ステータスを表示 -->
-				<p>$(# POSTをデコード,awkで加工しxargsでmpcに渡す
-				cat | urldecode | awk -F"=" '{print "load",$2}' |
+				<p>$(# POSTをデコード,cutで加工しmpcに渡す
+				cat | urldecode | cut -d"=" -f2 |
 
-				xargs mpc | sed "s/$/<br>/g" 2>&1
+				mpc load | sed "s/$/<br>/g" 2>&1
 				
 				)</p>
 
