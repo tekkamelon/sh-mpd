@@ -39,17 +39,24 @@ cat << EOS
 				</span>
 			
 			<!-- 実行結果を表示 -->
-			<p>$(# POSTで受け取った文字列を変数に代入
-			cat_post=$(cat) 
+			<p>$(# POSTを取得,区切り文字を"="に指定,数値にマッチする場合の処理
+			cat | awk -F"=" '/[0-9]/{
 
-				# POSTを変数展開で加工,数字にマッチすれば真
-				echo "${cat_post#*\=}" | grep -q -E "[0-9]" && 
+					# メッセージを表示	
+					print "<p>changed port:"$2"</p>"
 
-				# 真の場合,変数展開で加工,teeで設定ファイルへの書き込み,出力
-				echo  "${cat_post#*\=}" | tee ../port_conf | 
+					# ファイルに上書き
+					print $2 > "../port_conf"
 
-				# xargsでechoに渡す
-				xargs -I{} echo '<p>changed port:{}</p>'
+				}
+
+				# 数値にマッチしない場合の処理
+				!/[0-9]/{
+
+					# メッセージを表示
+					print "please enter port number!"
+
+				}'
 			)</p>
 			
 		</form>
