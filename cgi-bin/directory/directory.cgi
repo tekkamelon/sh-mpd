@@ -61,19 +61,9 @@ cat << EOS
 				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
-				$(# クエリを変数展開で加工,空でない場合に真,空の場合に偽
-				if [ -n "${QUERY_STRING#*\=}" ] ; then 
-
-					# 真の場合はクエリを変数展開で加工,デコード
-					search_var=$(echo "${QUERY_STRING#*\=}" | urldecode)
-					
-				else
-
-					# 偽の場合は"."で全てにマッチングする行を表示
-					search_var="." 
-
-				fi
-
+				$(# クエリを変数展開で加工,デコード,文字列があれば変数に代入,なければ"."を代入
+				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | awk '/./{print $0}; !/./{print "."}')
+				
 				# 曲の一覧をgrepで検索
 				mpc listall | grep -i "${search_var}" |
 
