@@ -119,8 +119,8 @@ cat << EOS
 			# キューされた曲をgrepで検索し結果を表示
 			mpc playlist | grep -i "${SEARCH_VAR}" | 
 
-			# "/"と" - "を区切り文字に指定,先頭が"http:"にマッチしない文字列をボタン化
-			awk -F'/| - ' '!/^http:/{
+			# "/"と" - "を区切り文字に指定,先頭が"http:","https:"にマッチしない文字列をボタン化
+			awk -F'/| - ' '!/^http:/ || !/^https:/{
 
 				# １番目のフィールドをボタン化
 				print "<p><button name=button value="$1">"$1"</button>",
@@ -129,8 +129,8 @@ cat << EOS
 				"<button name=button value="$NF">"$NF"</button></p>"
 			}
 
-			# 先頭が"http:"にマッチする文字列をボタン化
-			/^http:/{
+			# 先頭が"http:","https:"にマッチする文字列をボタン化
+			/^http:/ || /^https:/{
 
 				print "<p><button name=button value="$0">"$0"</button></p>"
 
