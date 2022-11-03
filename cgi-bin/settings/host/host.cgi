@@ -38,17 +38,27 @@ cat << EOS
 				</span>
 			
 			<!-- 実行結果を表示 -->
-			<p>$(# POSTで受け取った文字列を変数に代入
-			cat_post=$(cat) 
+			<p>$(# POSTをデコード
+			cat | urldecode |
 
-				# POSTを変数展開で加工,数字,"localhost",".local"のどれかにマッチすれば真
-				echo "${cat_post#*\=}" | grep -q -E "[0-9]|localhost|*\.local" &&
+			# 区切り文字を"="に指定,数値,"localhost","任意の1文字以上.local"にマッチする場合の処理
+			awk -F"=" '/[0-9]/ || /localhost/ || /.\.local/{
 
-				# 真の場合,変数展開で加工,teeで設定ファイルへの書き込み,出力
-				echo ${cat_post#*\=} | tee ../hostname | 
+				# メッセージを表示	
+				print "<p>changed host:"$2"</p>"
 
-				# xargsでechoに渡す
-				xargs -I{} echo '<p>hostname:{}</p>'
+				# ファイルに上書き
+				print $2 > "../hostname"
+
+			}
+
+			# いずれにもマッチしない場合の処理
+			!/[0-9]/ && !/localhost/ && !/.\.local/{
+
+				# メッセージを表示	
+				print "<p>please enter hostname or local IP adress!</p>"
+				
+			}'
 			)</p>
 			
 		</form>
