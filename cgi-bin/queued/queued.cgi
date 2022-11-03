@@ -14,7 +14,7 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 	# クエリを変数展開で加工,デコード
 	echo "${QUERY_STRING#*\=}" | urldecode | 
 
-	# "save&input_string=(任意の1文字以上)"にマッチした場合の処理
+	# プレイリストのセーブの処理,"save&input_string=(任意の1文字以上)"にマッチした場合の処理
 	awk -F'[=&]' '/save&input_string=./{
 
 		print "SAVE_PLAYLIST="$1"_"$NF
@@ -22,7 +22,7 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 
 	}
 
-	# "search&input_string=(任意の1文字以上)"にマッチした場合の処理
+	# 検索の処理,"search&input_string=(任意の1文字以上)"にマッチした場合の処理
 	/search&input_string=./{
 
 		print "SAVE_PLAYLIST=-q"
@@ -119,8 +119,8 @@ cat << EOS
 			# キューされた曲をgrepで検索し結果を表示
 			mpc playlist | grep -i "${SEARCH_VAR}" | 
 
-			# "/"と" - "を区切り文字に指定,先頭が"http:","https:"にマッチしない文字列をボタン化
-			awk -F'/| - ' '!/^http:/ || !/^https:/{
+			# "/"と" - "を区切り文字に指定,先頭が"http:","https:"の両方にマッチしない文字列をボタン化
+			awk -F'/| - ' '!/^http:/ && !/^https:/{
 
 				# １番目のフィールドをボタン化
 				print "<p><button name=button value="$1">"$1"</button>",
@@ -129,7 +129,7 @@ cat << EOS
 				"<button name=button value="$NF">"$NF"</button></p>"
 			}
 
-			# 先頭が"http:","https:"にマッチする文字列をボタン化
+			# 先頭が"http:","https:"のどちらかにマッチする文字列をボタン化
 			/^http:/ || /^https:/{
 
 				print "<p><button name=button value="$0">"$0"</button></p>"
