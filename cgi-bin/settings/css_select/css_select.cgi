@@ -39,18 +39,22 @@ cat << EOS
 
 			<!-- CSSの設定 -->
 			<h3>CSS setting</h3>
-			$(# css一覧を表示
+			$(# クエリを変数展開で加工,".css"にマッチする場合にファイルに書き込み
+			echo "${QUERY_STRING#*\=}" | 
+
+			awk '/.\.css/{
+
+			print "<p>changed css:"$0"</p>"
+			print $0 > "../css_conf"
+
+			}'
+
+			# css一覧を表示
 			ls  ../../stylesheet | 
 			
 			# xargsとechoでボタン化
-			xargs -I{} echo "<p><button name=css value="{}">"{}"</button></p>"
-			)
-
-			$(# クエリを変数展開で加工,grepで文字列の有無の判定,空でない場合に真,空の場合に偽
-			echo "${QUERY_STRING#*\=}" | grep -q . &&
-	
-			# 真の場合,設定ファイルへの書き込み
-			echo "${QUERY_STRING#*\=}" >| ../css_conf
+			xargs -I{} echo "<p><button name=css value="{}">"{}"</button></p>" 
+			
 			)
  
 		</form>
