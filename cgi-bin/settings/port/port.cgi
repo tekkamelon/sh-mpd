@@ -40,23 +40,23 @@ cat << EOS
 			
 			<!-- 実行結果を表示 -->
 			<p>$(# POSTを取得,区切り文字を"="に指定,数値にマッチする場合の処理
-			cat | awk -F"=" '/[0-9]/{
-
-					# メッセージを表示	
-					print "<p>changed port:"$2"</p>"
-
-					# ファイルに上書き
-					print $2 > "../port_conf"
-
-				}
-
-				# 数値にマッチしない場合の処理
-				!/[0-9]/{
-
-					# メッセージを表示
-					print "please enter port number!"
-
-				}'
+ 			cat | awk -F"=" '/[0-9]/{
+ 
+ 					# メッセージを表示	
+ 					print "<p>changed port:"$2"</p>"
+ 
+ 					# ファイルに上書き
+ 					print $2 > "../port_conf"
+ 
+ 				}
+ 
+ 				# 数値にマッチしない場合の処理
+ 				!/[0-9]/{
+ 
+ 					# メッセージを表示
+ 					print "<p>please enter port number!</p>"
+ 
+ 				}'
 			)</p>
 			
 		</form>
