@@ -121,7 +121,7 @@ MPD UI using shellscript and CGi
 			</table>
 
 			$(# 変数展開でクエリを加工,デコードしxargsでmpcに渡し,エラー出力以外を/dev/nullへ
-			echo "${QUERY_STRING#*\=}" | urldecode | xargs mpc -q > /dev/null
+			echo "${QUERY_STRING#*\=}" | sed -e "s/+-/ -/g" -e "s/+\%2B/ +/g" | xargs mpc -q > /dev/null
 			)
 
         </form>
@@ -186,11 +186,14 @@ MPD UI using shellscript and CGi
 
 					# 行末を改行し表示
 					print $NF"<br>"
+
 				}
 
 				# "playing"若しくは"paused"にマッチしない行を改行し表示
 				! /playing|paused/{
+
 					print $0"<br>"
+
 				}'
 				)</p>
 	
