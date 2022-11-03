@@ -10,7 +10,7 @@ export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost")
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
 
 # 変数展開でクエリを加工,デコードし,文字列の有無を判定
-export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo ".")
+# export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo ".")
 
 echo "Content-type: text/html"
 echo ""
@@ -48,7 +48,7 @@ cat << EOS
 
 				<!-- ステータスを表示 -->
 				<p>$(# POSTをデコード,cutで加工しmpcに渡す
-				cat | urldecode | cut -d"=" -f2 |
+				cat | urldecode | cut -d"=" -f2- |
 
 				mpc load | sed "s/$/<br>/g" 2>&1
 				
@@ -59,9 +59,14 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
-				<!-- mpc管理下のプレイリストをgrepで検索し表示,awkで出力をボタン化 -->
-				$(mpc lsplaylist | grep -i "${SEARCH_VAR}" | 
+				<!-- mpc管理下のプレイリストを表示 -->
+				$(# 変数展開でクエリを加工,デコードし,文字列の有無を判定
+				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo ".")
 
+				# プレイリストをgrepで検索
+				mpc lsplaylist | grep -i "${search_var}" | 
+
+				# ボタン化
 				awk '{
 						
 					print "<p><button name=button value="$0">"$0"</button></p>"
