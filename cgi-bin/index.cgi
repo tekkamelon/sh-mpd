@@ -155,7 +155,9 @@ MPD UI using shellscript and CGi
 
 						# awkで1フィールド目,3フィールド目をシングルクォート付きで出力
 						awk -F'[=&]' '{
+
 							print $1,"\047"$3"\047"
+
 						}' | 
 
 						# xargsでmpcに渡し,エラー出力のみ捨てる

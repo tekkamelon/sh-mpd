@@ -62,7 +62,7 @@ cat << EOS
 	</header>
 
     <body>
-		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>")</h4>
+		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>" &)</h4>
 		<!-- playlistの処理 -->
 		<form name="FORM" method="GET" >
 
@@ -97,14 +97,14 @@ cat << EOS
 			if echo "${cat_post#*\=}" | grep -q "http" ; then
 
 				# 真の場合,デコードし次の曲に追加,成功時のみ再生
-				echo ${cat_post#*\=} | mpc insert && mpc next | sed "s/$/<br>/g" 2>&1
-			
+				echo ${cat_post#*\=} | mpc insert && mpc next 			
+
 			else
 
 				# 偽の場合,POSTを変数展開で加工,デコードしてmpcに渡す
-				echo ${cat_post#*\=} | xargs mpc searchplay | sed "s/$/<br>/g" 2>&1 
+				echo ${cat_post#*\=} | xargs mpc searchplay 
 
-			fi
+			fi | sed "s/$/<br>/g" 2>&1
 			)</p>
 
 			<!-- リンク -->
