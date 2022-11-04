@@ -9,9 +9,6 @@
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
 
-# 変数展開でクエリを加工,デコードし,文字列の有無を判定
-# export SEARCH_VAR=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo ".")
-
 echo "Content-type: text/html"
 echo ""
 
@@ -32,7 +29,7 @@ cat << EOS
 	</header>
 
     <body>
-		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>")</h4>
+		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>" &)</h4>
 
 		<!-- 入力欄の設定 -->
 		<form name="FORM" method="GET" >
@@ -40,17 +37,16 @@ cat << EOS
 			<!-- 検索ワードの入力欄 -->
 			<p>search_word:<input type="text" name="search_word"></p>
 
-			
 		</form>
 	
 		<!-- mpd.confで設定されたプレイリスト一覧を表示 --> 
 		<form name="music" method="POST" >
 
 				<!-- ステータスを表示 -->
-				<p>$(# POSTをデコード,cutで加工しmpcに渡す
-				cat | urldecode | cut -d"=" -f2- |
+				<p>$(# POSTをデコード,変数展開で加工しmpcに渡す
+				cat_post=$(cat | urldecode)
 
-				mpc load | sed "s/$/<br>/g" 2>&1
+				echo "${cat_post#*\=}" | mpc load | sed "s/$/<br>/g" 2>&1
 				
 				)</p>
 
