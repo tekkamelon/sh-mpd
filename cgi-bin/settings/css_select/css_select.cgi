@@ -16,17 +16,13 @@ cat << EOS
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/
 		$(# クエリを変数展開で加工,文字列があれば真,なければ偽
-		if [ -n "${QUERY_STRING#*\=}" ] ; then
 
 			# 真の場合,クエリを変数展開で加工し出力
-			echo "${QUERY_STRING#*\=}"
-
-		else
+			echo "${QUERY_STRING#*\=}" | grep . ||
 
 			# 偽の場合は"css_conf"の中身を出力,なければ"stylesheet.css"を指定
 			cat ../css_conf | grep . || echo "stylesheet.css"
 
-		fi
 		)">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
@@ -39,13 +35,17 @@ cat << EOS
 
 			<!-- CSSの設定 -->
 			<h3>CSS setting</h3>
-			$(# クエリを変数展開で加工,".css"にマッチする場合にファイルに書き込み
+			$(# クエリを変数展開で加工
 			echo "${QUERY_STRING#*\=}" | 
 
+			# ".css"にマッチする場合に処理
 			awk '/.\.css/{
+			
+				# メッセージを表示
+				print "<p>changed css:"$0"</p>"
 
-			print "<p>changed css:"$0"</p>"
-			print $0 > "../css_conf"
+				# ファイルに上書き
+				print $0 > "../css_conf"
 
 			}'
 

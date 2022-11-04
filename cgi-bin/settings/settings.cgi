@@ -14,7 +14,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat css_conf | grep . || echo "stylesheet.css")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat css_conf | grep . || echo "stylesheet.css" &)">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
@@ -27,13 +27,13 @@ cat << EOS
     <body>
 		<!-- ホスト名の表示 -->
 		<h3>hostname: $(# "hostname"を表示,ファイルが空の場合は"localhost"を表示
-		cat hostname | grep . || echo "localhost"
+		cat hostname | grep . || echo "localhost" &
 		)</h3>
 		<button><a href="/cgi-bin/settings/host/host.cgi">change_host</a></button>
 			
 		<!-- ポート番号の設定 -->
 		<h3>port: $(# "port_conf"を表示,ファイルが空の場合は"6600"を表示
-		cat port_conf | grep . || echo "6600"
+		cat port_conf | grep . || echo "6600" &
 		)</h3>
 		<button><a href="/cgi-bin/settings/port/port.cgi">change_port</a></button>
 
