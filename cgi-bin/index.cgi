@@ -61,13 +61,13 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="status">status</button>
 					</td>
 					<td>
-				 		<button name="button" value="volume -100">mute</button>
+				 		<button name="button" value="volume_-100">mute</button>
 					</td>
 					<td>
-				 		<button name="button" value="volume -5">volume -5</button>
+				 		<button name="button" value="volume_-5">volume -5</button>
 					</td>
 					<td>
-				 		<button name="button" value="volume +5">volume +5</button>
+				 		<button name="button" value="volume_+5">volume +5</button>
 					</td>
 				</tr>	
 
@@ -112,16 +112,16 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="update">update</button>
 					</td>
 					<td>
-				 		<button name="button" value="seek -5%">seek -5%</button>
+				 		<button name="button" value="seek_-5%">seek -5%</button>
 					</td>
 					<td>
-				 		<button name="button" value="seek +5%">seek +5%</button>
+				 		<button name="button" value="seek_+5%">seek +5%</button>
 					</td>
 				</tr>
 			</table>
 
-			$(# 変数展開でクエリを加工,デコードしxargsでmpcに渡し,エラー出力以外を/dev/nullへ
-			echo "${QUERY_STRING#*\=}" | sed -e "s/+-/ -/g" -e "s/+\%2B/ +/g" | xargs mpc -q > /dev/null
+			$(# 変数展開でクエリを加工,"_"を" "に置換しxargsでmpcに渡し,エラー出力以外を/dev/nullへ
+			echo "${QUERY_STRING#*\=}" | tr "_" " " | xargs mpc -q > /dev/null
 			)
 
         </form>
