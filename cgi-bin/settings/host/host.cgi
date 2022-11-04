@@ -45,7 +45,7 @@ cat << EOS
 			awk -F"=" '/[0-9]/ || /localhost/ || /.\.local/{
 
 				# メッセージを表示	
-				print "<p>changed host:"$2"</p>"
+				print "changed host:"$2
 
 				# ファイルに上書き
 				print $2 > "../hostname"
@@ -56,7 +56,7 @@ cat << EOS
 			!/[0-9]/ && !/localhost/ && !/.\.local/{
 
 				# メッセージを表示	
-				print "<p>please enter hostname or local IP adress!</p>"
+				print "please enter hostname or local IP adress!"
 				
 			}'
 			)</p>

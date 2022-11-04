@@ -43,7 +43,7 @@ cat << EOS
  			cat | awk -F"=" '/[0-9]/{
  
  					# メッセージを表示	
- 					print "<p>changed port:"$2"</p>"
+ 					print "changed port:"$2
  
  					# ファイルに上書き
  					print $2 > "../port_conf"
@@ -54,7 +54,7 @@ cat << EOS
  				!/[0-9]/{
  
  					# メッセージを表示
- 					print "<p>please enter port number!</p>"
+ 					print "please enter port number!"
  
  				}'
 			)</p>
