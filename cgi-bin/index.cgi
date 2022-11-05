@@ -120,8 +120,8 @@ MPD UI using shellscript and CGi
 				</tr>
 			</table>
 
-			$(# 変数展開でクエリを加工,"_"を" "に置換しxargsでmpcに渡し,エラー出力以外を/dev/nullへ
-			echo "${QUERY_STRING#*\=}" | tr "_" " " | xargs mpc -q > /dev/null
+			$(# 変数展開でクエリを加工,デコードしてxargsでmpcに渡し,エラー出力以外を/dev/nullへ
+			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q > /dev/null
 			)
 
         </form>
