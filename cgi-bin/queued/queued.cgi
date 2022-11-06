@@ -97,13 +97,13 @@ cat << EOS
 			if echo "${cat_post#*\=}" | grep -q -E "^http|^https" ; then
 
 				# 真の場合,デコードし次の曲に追加,成功時のみ再生
-				echo ${cat_post#*\=} | mpc insert && mpc next
+				echo "${cat_post#*\=}" | mpc insert && mpc next
 
 			# 偽の場合,IDの有無を判断,真の場合のみmpcに渡す
 			elif echo "${cat_post#*\=}" | grep -q [0-9] ; then
 
 				# 偽の場合,POSTを変数展開で加工,デコードしてmpcに渡す
-				echo ${cat_post#*\=} | xargs mpc play 
+				echo "${cat_post#*\=}" | xargs mpc play 
 
 			fi | sed "s/$/<br>/g" 2>&1
 
@@ -118,22 +118,23 @@ cat << EOS
 			$(# キュー内の曲をプレイリストに保存
 			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /") &
 
-			# コマンドのグルーピング
+			#--- コマンドのグルーピング ---
 			# キューされた曲からアーティスト,タイトルを抽出
 			{ mpc playlist -f "[[[%artist% - ]%album% - ]%title%]" | 
 
-			# nlでIDを付与,空白行を削除
-			nl -s " == " | grep -v '^\s*$' ;
+			# nlでIDを付与し区切り文字を" seperate "に指定,空白行を削除
+			nl -n rz -s " seperate " | grep -v '^\s*$' ;
 
 			# URLを抽出	
 			mpc playlist | grep -E "^http\:|^https\:" ; } | 
+			#--- グルーピングの終了 ---
 
 			grep -i "${SEARCH_VAR}" |
  
  			awk '{
  				
-				# 区切り文字を" == "に指定
-				FS = " == "
+				# 区切り文字を" seperate "に指定
+				FS = " seperate "
 
  				# POSTでIDのみを渡せるようボタン化
  				print "<p><button name=button value="$1">"$NF"</button></p>"
