@@ -92,19 +92,21 @@ cat << EOS
 
 			# POSTで受け取った文字列をデコード,変数に代入
 			cat_post=$(cat | urldecode)
-		
+			
 			# POSTに"http"が含まれていれば真,なければ偽
 			if echo "${cat_post#*\=}" | grep -q "http" ; then
 
 				# 真の場合,デコードし次の曲に追加,成功時のみ再生
-				echo ${cat_post#*\=} | mpc insert && mpc next 			
+				echo ${cat_post#*\=} | mpc insert && mpc next
 
-			else
+			# 偽の場合,文字の有無を判断,真の場合のみmpcに渡す
+			elif echo "${cat_post#*\=}" | grep -q . ; then
 
 				# 偽の場合,POSTを変数展開で加工,デコードしてmpcに渡す
-				echo ${cat_post#*\=} | xargs mpc searchplay 
+				echo ${cat_post#*\=} | xargs mpc play 
 
 			fi | sed "s/$/<br>/g" 2>&1
+
 			)</p>
 
 			<!-- リンク -->
@@ -116,29 +118,30 @@ cat << EOS
 			$(# キュー内の曲をプレイリストに保存
 			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /") &
 
-			# キューされた曲をgrepで検索し結果を表示
-			mpc playlist | grep -i "${SEARCH_VAR}" | 
+			# キューされた曲からアーティスト,タイトルを抽出,IDを付与
+ 			mpc playlist -f "[[[%artist% - ]%album% - ]%title%]" | nl -s " == " | grep -i "${SEARCH_VAR}" | 
+ 
+ 			# 区切り文字を" == "に指定,ボタン化
+ 			awk -F" == " '{
+ 				
+ 				# POSTでIDのみを渡せるようにする
+ 				print "<p><button name=button value="$1">"$NF"</button>"
+ 
+ 			}' 
 
-			# "/"と" - "を区切り文字に指定,先頭が"http:","https:"の両方にマッチしない文字列をボタン化
-			awk -F'/| - ' '!/^http:/ && !/^https:/{
-
-				# １番目のフィールドをボタン化
-				print "<p><button name=button value="$1">"$1"</button>",
-
-				# 最終フィールドをボタン化
-				"<button name=button value="$NF">"$NF"</button></p>"
-			}
-
-			# 先頭が"http:","https:"のどちらかにマッチする文字列をボタン化
-			/^http:/ || /^https:/{
-
-				print "<p><button name=button value="$0">"$0"</button></p>"
-
-			}' |
-
-			# 重複行を削除
-			awk '!a[$0]++{print $0}'
-			)
+ 			mpc playlist | grep -i "${SEARCH_VAR}" | 
+ 
+ 			# 先頭が"http:","https:"のどちらかにマッチする文字列をボタン化
+   			awk '/^http:/ || /^https:/{
+   
+   				print "<p><button name=button value="$0">"$0"</button></p>"
+   
+   			}' |
+ 
+ 			# 重複行を削除
+ 			awk '!a[$0]++{print $0}' 
+ 
+			 )
 
 		</form>
 	</body>
