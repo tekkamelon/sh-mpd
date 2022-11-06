@@ -9,6 +9,8 @@
 # 接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
+
+# "SAVE_PLAYLIST","SEARCH_VAR"を設定
 export $(# クエリ内の文字列をawkで判定し,処理を分け環境変数へ代入
 
 	# クエリを変数展開で加工,デコード
@@ -93,17 +95,16 @@ cat << EOS
 			# POSTで受け取った文字列をデコード,変数に代入
 			cat_post=$(cat | urldecode)
 			
-			# POSTに"http"が含まれていれば真,なければ偽
-			if echo "${cat_post#*\=}" | grep -q -E "^http|^https" ; then
+			# POSTにIDが含まれていれば真,なければ偽
+			if echo "${cat_post#*\=}" | grep -q ^[0-9] ; then
 
-				# 真の場合,デコードし次の曲に追加,成功時のみ再生
-				echo "${cat_post#*\=}" | mpc insert && mpc next
-
-			# 偽の場合,IDの有無を判断,真の場合のみmpcに渡す
-			elif echo "${cat_post#*\=}" | grep -q [0-9] ; then
-
-				# 偽の場合,POSTを変数展開で加工,デコードしてmpcに渡す
+				# 真の場合,POSTを変数展開で加工しmpcに渡す
 				echo "${cat_post#*\=}" | xargs mpc play 
+
+			elif echo "${cat_post#*\=}" | grep -q -E "^http|^https" ; then
+
+				# 偽の場合,デコードし次の曲に追加,成功時のみ再生
+				echo "${cat_post#*\=}" | mpc insert && mpc next
 
 			fi | sed "s/$/<br>/g" 2>&1
 
@@ -118,8 +119,9 @@ cat << EOS
 			$(# キュー内の曲をプレイリストに保存
 			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /") &
 
-			#--- コマンドのグルーピング ---
-			# キューされた曲からアーティスト,タイトルを抽出
+			# ------ コマンドのグルーピング ------
+
+			# キューされた曲からアーティスト,アルバム,タイトルを抽出
 			{ mpc playlist -f "[[[%artist% - ]%album% - ]%title%]" | 
 
 			# nlでIDを付与し区切り文字を" seperate "に指定,空白行を削除
@@ -127,7 +129,8 @@ cat << EOS
 
 			# URLを抽出	
 			mpc playlist | grep -E "^http\:|^https\:" ; } | 
-			#--- グルーピングの終了 ---
+
+			# ------ グルーピングの終了 ------
 
 			grep -i "${SEARCH_VAR}" |
  
