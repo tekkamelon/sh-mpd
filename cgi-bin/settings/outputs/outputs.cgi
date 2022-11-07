@@ -44,24 +44,21 @@ cat << EOS
 			if [ -n "${cat_post#*\=}" ] ; then
 
 				# 真の場合,変数展開でPOSTを加工,xargsでmpcに渡す
-				echo ${cat_post#*\=} | xargs mpc toggleoutput | 
-
-				# "Output"を含む行を抽出,ボタン化し出力
-				awk '/Output/{
-					print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
-				}'  
+				echo ${cat_post#*\=} | xargs mpc toggleoutput 
 
 			else
 
 				# 偽の場合,出力デバイスの一覧をボタン化
-				mpc outputs |
+				mpc outputs 
 
-				# "Output"を含む行を抽出,ボタン化し出力
-	 			awk '/Output/{
-	 				print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
-	 			}' 
+			fi | 
 
-			fi
+			# "Output"を含む行をボタン化
+			awk '/Output/{
+
+				print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
+
+ 			}' 
 			)
 
 		</form>
