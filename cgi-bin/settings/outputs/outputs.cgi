@@ -1,4 +1,4 @@
-#!/bin/sh -euxv
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -40,18 +40,19 @@ cat << EOS
 			# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
 
-			# POSTに文字列が含まれていれば真,なければ偽
-			if [ -n "${cat_post#*\=}" ] ; then
+			echo "${cat_post#*\=}" | 
 
-				# 真の場合,変数展開でPOSTを加工,xargsでmpcに渡す
-				echo ${cat_post#*\=} | xargs mpc toggleoutput 
+			# POSTに文字列がある場合の処理
+			awk '/./{
+				
+				print "toggleoutput "$0
 
-			else
+			}
 
-				# 偽の場合,出力デバイスの一覧をボタン化
-				mpc outputs 
+			# 文字列が無い場合の処理
+			!/./{
 
-			fi | 
+				print "outputs"}' | xargs mpc |
 
 			# "Output"を含む行をボタン化
 			awk '/Output/{
