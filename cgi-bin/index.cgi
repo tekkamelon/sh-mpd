@@ -121,7 +121,9 @@ MPD UI using shellscript and CGi
 			</table>
 
 			$(# 変数展開でクエリを加工,デコードしてxargsでmpcに渡し,エラー出力以外を/dev/nullへ
+
 			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q > /dev/null
+
 			)
 
         </form>
@@ -134,12 +136,14 @@ MPD UI using shellscript and CGi
 	
 	                <option value="searchplay">fuzzy</option>
 
-	                <option value="searchplay title">title</option>
-
 	                <option value="searchplay artist">artist</option>
 
 	                <option value="searchplay album">album</option>
+					
+	                <option value="searchplay title">title</option>
 							
+	                <option value="searchplay filename">filename</option>
+
 					</form>
 					<form method="POST">
 						<p>
@@ -162,6 +166,7 @@ MPD UI using shellscript and CGi
 
 						# xargsでmpcに渡し,エラー出力のみ捨てる
 						xargs mpc -q 2> /dev/null
+
 						)</p>
 
 				    </form>
