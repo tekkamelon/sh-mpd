@@ -18,7 +18,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf | grep . || echo "stylesheet.css")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf | grep . || echo "stylesheet.css" &)">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
@@ -31,6 +31,8 @@ cat << EOS
     <body>
 		<form name="setting" method="POST" >
 			
+			<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>" &)</h4>
+
 			<!-- 出力先デバイスの設定 -->
 			<h3>ountput devices list</h3>
 			$(# POSTで受け取った文字列が空かどうかを判定し処理を分岐
