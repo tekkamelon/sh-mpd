@@ -121,8 +121,8 @@ cat << EOS
 
 			# ------ コマンドのグルーピング ------
 
-			# キューされた曲からアーティスト,アルバム,タイトルを抽出
-			{ mpc playlist -f "[[[%artist% - ]%album% - ]%title%]" | 
+			# キューされた曲を出力
+			{ mpc playlist | 
 
 			# nlでIDを付与し区切り文字を" seperate "に指定,空白行を削除
 			nl -n rz -s " seperate " | grep -v '^\s*$' ;
@@ -132,8 +132,8 @@ cat << EOS
 
 			# ------ グルーピングの終了 ------
 
-			grep -i "${SEARCH_VAR}" |
- 
+			grep -i "${SEARCH_VAR}" | 
+
  			awk '{
  				
 				# 区切り文字を" seperate "に指定
