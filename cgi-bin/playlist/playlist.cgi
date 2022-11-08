@@ -43,10 +43,27 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<!-- ステータスを表示 -->
-				<p>$(# POSTをデコード,変数展開で加工しmpcに渡す
-				cat_post=$(cat | urldecode)
+				<p>$(# POSTをデコード,awkに渡す
+				cat | urldecode | 
 
-				echo "${cat_post#*\=}" | mpc load | sed "s/$/<br>/g" 2>&1
+				# 区切り文字を"="に指定,POSTの1フィールド目が"lsplaylist"の場合
+				awk -F"=" '$1=="lsplaylist"{
+
+					# "load "と2フィールド目を出力
+					print "load "$NF
+
+				}
+
+				# POSTの1フィールド目が"dir"の場合
+				$1=="dir"{
+
+					# "add "と2フィールド目を出力
+					print "add "$NF
+
+				}' | 
+
+				# 出力をmpcに渡し,エラー出力ごと表示
+				xargs mpc | sed "s/$/<br>/g" 2>&1
 				
 				)</p>
 
@@ -62,10 +79,19 @@ cat << EOS
 				# プレイリストをgrepで検索
 				mpc lsplaylist | grep -i "${search_var}" | 
 
-				# ボタン化
 				awk '{
 						
-					print "<p><button name=button value="$0">"$0"</button></p>"
+					# 1フィールド目に"lsplaylist"を指定
+					print "<p><button name=lsplaylist value="$0">"$0"</button></p>"
+
+				}' 
+				
+				# "listall"で全ファイルを取得,cutとawkで親ディレクトリのみを出力
+				mpc listall | cut -d"/" -f1 | awk '!a[$0]++{print $0}' | grep -i "${search_var}" | 
+				awk '{
+
+					# 1フィールド目に"dir"を指定
+					print "<p><button name=dir value="$0">"$0"</button></p>"
 
 				}'
 				)
