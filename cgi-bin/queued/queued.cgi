@@ -117,7 +117,7 @@ cat << EOS
 
 			<!-- キュー内の曲を表示 -->
 			$(# キュー内の曲をプレイリストに保存
-			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /") &
+			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /" &)
 
 			# ------ コマンドのグルーピング ------
 

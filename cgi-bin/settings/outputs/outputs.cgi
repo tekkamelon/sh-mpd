@@ -42,17 +42,22 @@ cat << EOS
 
 			echo "${cat_post#*\=}" | 
 
-			# POSTに文字列がある場合の処理
+			# POSTに文字列がある場合は"toggleoutput "と全体を出力
 			awk '/./{
 				
 				print "toggleoutput "$0
 
 			}
 
-			# 文字列が無い場合の処理
+			# 文字列が無い場合は"outputs"のみ出力
 			!/./{
 
-				print "outputs"}' | xargs mpc |
+				print "outputs"
+
+			}' |
+
+			# 出力をmpcに渡す
+			xargs mpc |
 
 			# "Output"を含む行をボタン化
 			awk '/Output/{
