@@ -42,6 +42,7 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 	
 	# 並列化し環境変数へ代入
 	xargs -L 1 -P 2
+
 )
 
 echo "Content-type: text/html"
@@ -102,8 +103,7 @@ cat << EOS
 				echo "${cat_post#*\=}" | xargs mpc play 
 
 			# 偽の場合は文字列があれば真
-			# elif echo "${cat_post#*\=}" | grep -q . ; then
-			elif [ "${cat_post#*\=}" ]; then
+			elif test -n "${cat_post#*\=}" ; then
 
 				#真の場合,次の曲に追加し再生
 				echo "${cat_post#*\=}" | mpc insert && mpc next
@@ -155,6 +155,7 @@ cat << EOS
 
 			# 重複行を削除
 			awk '!a[$0]++{print $0}'
+
 			)
 
 		</form>
