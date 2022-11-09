@@ -8,6 +8,7 @@
 # 環境変数で接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
+export LANG=C
 
 echo "Content-type: text/html"
 echo ""
@@ -88,6 +89,7 @@ cat << EOS
 				
 				# "listall"で全ファイルを取得,cutとawkで親ディレクトリのみを出力
 				mpc listall | cut -d"/" -f1 | awk '!a[$0]++{print $0}' | grep -i "${search_var}" | 
+
 				awk '{
 
 					# 1フィールド目に"dir"を指定

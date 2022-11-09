@@ -16,12 +16,10 @@ cat << EOS
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/
 		$(# クエリを変数展開で加工,文字列があれば真,なければ偽
+		test -n "${QUERY_STRING#*\=}" ||
 
-			# 真の場合,クエリを変数展開で加工し出力
-			echo "${QUERY_STRING#*\=}" | grep . ||
-
-			# 偽の場合は"css_conf"の中身を出力,なければ"stylesheet.css"を指定
-			cat ../css_conf | grep . || echo "stylesheet.css"
+		# 偽の場合は"css_conf"の中身を出力,なければ"stylesheet.css"を指定
+		cat ../css_conf | grep . || echo "stylesheet.css"
 
 		)">
 		<link rel="icon" ref="image/favicon.svg">
