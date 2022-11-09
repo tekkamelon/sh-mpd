@@ -9,6 +9,7 @@
 # 接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
+export LANG=C
 
 # "SAVE_PLAYLIST","SEARCH_VAR"を設定
 export $(# クエリ内の文字列をawkで判定し,処理を分け環境変数へ代入
@@ -103,7 +104,7 @@ cat << EOS
 				echo "${cat_post#*\=}" | xargs mpc play 
 
 			# 偽の場合は文字列があれば真
-			elif test -n "${cat_post#*\=}" ; then
+			elif [ -n "${cat_post#*\=}" ] ; then
 
 				#真の場合,次の曲に追加し再生
 				echo "${cat_post#*\=}" | mpc insert && mpc next
@@ -121,20 +122,20 @@ cat << EOS
 			$(# キュー内の曲をプレイリストに保存
 			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /" &)
 
-			# ------ コマンドのグルーピング ------
+			# ------ 関数の定義:通常の曲とurlの出力を並列化 ------
+			mpc_playlist() {
 
-			# キューされた曲を出力
-			{ mpc playlist | 
-
-			# nlでIDを付与し区切り文字を" seperate "に指定,空白行を削除
-			nl -n rz -s " ---seperate--- " | grep -v '^\s*$' ;
+			# nlでIDを付与し区切り文字を" ---seperate--- "に指定,空白行を削除
+			mpc playlist | nl -n rz -s " ---seperate--- " | grep -v '^\s*$' &
 
 			# URLを抽出	
-			mpc playlist | grep -e "^http://" -e "^https://" ; } | 
+			mpc playlist | grep -e "^http://" -e "^https://"
+			
+			}
 
-			# ------ グルーピングの終了 ------
+			# ------ 関数の定義の終了 ------
 
-			grep -i "${SEARCH_VAR}" | 
+			mpc_playlist | grep -i "${SEARCH_VAR}" | 
 
  			awk '{
  				
