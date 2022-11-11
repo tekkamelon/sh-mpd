@@ -41,8 +41,8 @@ MPD UI using shellscript and CGi
 	</header>
 
     <body>
-		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>")</h4>
-		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}')</p>
+		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>" &)</h4>
+		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}' &)</p>
 		
 		<!-- 入力フォーム -->
 		<form name="FORM" method="GET" >
@@ -124,7 +124,7 @@ MPD UI using shellscript and CGi
 
 			$(# 変数展開でクエリを加工,デコードしてxargsでmpcに渡し,エラー出力以外を/dev/nullへ
 
-			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q > /dev/null
+			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q > /dev/null &
 
 			)
 
@@ -167,7 +167,7 @@ MPD UI using shellscript and CGi
 						}' | 
 
 						# xargsでmpcに渡し,エラー出力のみ捨てる
-						xargs mpc -q 2> /dev/null
+						xargs mpc -q 2> /dev/null &
 
 						)</p>
 
@@ -203,12 +203,13 @@ MPD UI using shellscript and CGi
 
 					print $0"<br>"
 
-				}'
+				}' &
+
 				)</p>
 	
 			<!-- 次の曲 -->
 			<h3>next song</h3>
-			<p><button name=button value=next>$(mpc queued | grep . || echo "next song not found")</button></p>
+			<p><button name=button value=next>$(mpc queued | grep . || echo "next song not found" &)</button></p>
 	
 		</form>
 
