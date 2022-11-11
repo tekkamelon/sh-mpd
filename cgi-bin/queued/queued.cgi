@@ -120,13 +120,22 @@ cat << EOS
 
 			<!-- キュー内の曲を表示 -->
 			$(# キュー内の曲をプレイリストに保存
-			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /" &)
+
+			# "SAVE_PLAYLIST"が"-q"出ない場合に真
+			echo "${SAVE_PLAYLIST}" | grep -q -v "\-q" &&
+
+			# 真の場合,キュー内の曲をプレイリストに保存
+			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /" ) &&
+
+			# メッセージを表示
+			echo "<p>saved playlist</p>"
 
 			# ------ 関数の定義:通常の曲とurlの出力を並列化 ------
+
 			mpc_playlist() {
 
 			# nlでIDを付与し区切り文字を" ---seperate--- "に指定,空白行を削除
-			mpc playlist | nl -n rz -s " ---seperate--- " | grep -v '^\s*$' &
+			mpc playlist | nl -n rz -s " ---seperate--- " | sed '/^$/d' &
 
 			# URLを抽出	
 			mpc playlist | grep -e "^http://" -e "^https://"
