@@ -7,8 +7,8 @@
 
 # 環境変数の設定
 # 環境変数で接続先ホストを設定,ファイルがない場合はローカルホスト
-export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
-export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
+export MPD_HOST=$(cat ../hostname | grep . || echo "localhost") 
+export MPD_PORT=$(cat ../port_conf | grep . || echo "6600") 
 export LANG=C
 
 echo "Content-type: text/html"
@@ -44,8 +44,8 @@ cat << EOS
 
 			echo "${cat_post#*\=}" | 
 
-			# POSTに文字列がある場合は"toggleoutput "と全体を出力
-			awk '/./{
+			# POSTに数字がある場合は"toggleoutput "と全体を出力
+			awk '/[0-9]/{
 				
 				print "toggleoutput "$0
 
@@ -66,7 +66,8 @@ cat << EOS
 
 				print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
 
- 			}' 
+ 			}' &
+
 			)
 
 		</form>
