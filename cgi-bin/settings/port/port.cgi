@@ -41,14 +41,14 @@ cat << EOS
 				</span>
 			
 			<!-- 実行結果を表示 -->
-			<p>$(# POSTを取得,区切り文字を"="に指定,数値にマッチする場合の処理
+			<p>$(# POSTを取得,区切り文字を"="に指定,数値が1回以上の繰り返しにマッチする場合の処理
  			cat | awk -F"=" '/[0-9]{1}/{
  
  					# メッセージを表示	
- 					print "changed port:"$2
+ 					print "changed port:"$NF
  
  					# ファイルに上書き
- 					print $2 > "../port_conf"
+ 					print $NF > "../port_conf"
  
  				}
  
@@ -59,7 +59,6 @@ cat << EOS
  					print "please enter port number!"
  
  				}'
-
 			)</p>
 			
 		</form>
