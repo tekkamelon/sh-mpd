@@ -124,7 +124,7 @@ cat << EOS
 			# キュー内の曲を表示
 
 			# キューされた曲を表示,検索しnlでidと区切り文字" ---::--- "を付与	
-			mpc playlist | grep -i "${SEARCH_VAR}" | nl -n rz -s " ---::--- " |
+			mpc playlist | nl -n rz -s " ---::--- " | grep -i "${SEARCH_VAR}" |
 
  			awk -F" ---::--- " '{
 
