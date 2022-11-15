@@ -94,23 +94,14 @@ cat << EOS
 			
 			<p>$(# 曲の再生部分
 
-			# POSTで受け取った文字列をデコード,変数に代入
-			cat_post=$(cat | urldecode)
-			
-			# POSTにIDが含まれていれば真,なければ偽
-			if echo "${cat_post#*\=}" | grep -q ^[0-9] ; then
+			# POSTで受け取った文字列をデコード
+			cat | urldecode | 
 
-				# 真の場合,POSTを変数展開で加工しmpcに渡す
-				echo "${cat_post#*\=}" | xargs mpc play 
+			# idにマッチする場合のみ"play"と最終フィールドを出力
+			awk -F"=" '/[0-9]{1}/{print "play",$NF}' | 
 
-			# 偽の場合は文字列があれば真
-			elif [ -n "${cat_post#*\=}" ] ; then
-
-				#真の場合,次の曲に追加し再生
-				echo "${cat_post#*\=}" | mpc insert && mpc next
-
-			fi | sed "s/$/<br>/g" 2>&1
-
+			# mpcに渡し,出力を改行
+			xargs mpc | sed "s/$/<br>/g" 2>&1
 			)</p>
 
 			<!-- リンク -->
@@ -121,7 +112,7 @@ cat << EOS
 			<!-- キュー内の曲を表示 -->
 			$(# キュー内の曲をプレイリストに保存
 
-			# "SAVE_PLAYLIST"が"-q"出ない場合に真
+			# "SAVE_PLAYLIST"が"-q"でない場合に真
 			echo "${SAVE_PLAYLIST}" | grep -q -v "\-q" &&
 
 			# 真の場合,キュー内の曲をプレイリストに保存
@@ -130,42 +121,20 @@ cat << EOS
 			# メッセージを表示
 			echo "<p>saved playlist</p>"
 
-			# ------ 関数の定義:通常の曲とurlの出力を並列化 ------
+			# キュー内の曲を表示
 
-			mpc_playlist() {
+			# キューされた曲を表示,検索しnlでidと区切り文字" ---::--- "を付与	
+			mpc playlist | grep -i "${SEARCH_VAR}" | nl -n rz -s " ---::--- " |
 
-			# nlでIDを付与し区切り文字を" ---seperate--- "に指定,空白行を削除
-			mpc playlist | nl -n rz -s " ---seperate--- " | sed '/^$/d' &
-
-			# URLを抽出	
-			mpc playlist | grep -e "^http://" -e "^https://"
-			
-			}
-
-			# ------ 関数の定義の終了 ------
-
-			mpc_playlist | grep -i "${SEARCH_VAR}" | 
-
- 			awk '{
- 				
-				# 区切り文字を" ---seperate--- "に指定
-				FS = " ---seperate--- "
+ 			awk -F" ---::--- " '{
 
  				# POSTでIDのみを渡せるようボタン化
  				print "<p><button name=button value="$1">"$NF"</button></p>"
 
-			 }
- 
- 			# URLのみボタン化
-    		/^http:/ || /^https:/{
-    
-    			print "<p><button name=button value="$0">"$0"</button></p>"
-   
    			}' | 
 
 			# 重複行を削除
 			awk '!a[$0]++{print $0}'
-
 			)
 
 		</form>
