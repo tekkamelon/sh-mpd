@@ -97,8 +97,8 @@ cat << EOS
 			# POSTで受け取った文字列をデコード
 			cat | urldecode | 
 
-			# idにマッチする場合のみ"play"と最終フィールドを出力
-			awk -F"=" '/[0-9]/{print "play",$NF}' | 
+			# 2フィールド目が数字にマッチする場合のみ"play"と最終フィールドを出力
+			awk -F"=" '$2 ~ /[0-9]/{print "play",$NF}' | 
 
 			# mpcに渡し,出力を改行
 			xargs mpc | sed "s/$/<br>/g" 2>&1
@@ -131,10 +131,8 @@ cat << EOS
  				# POSTでIDのみを渡せるようボタン化
  				print "<p><button name=button value="$1">"$NF"</button></p>"
 
-   			}' | 
+   			}' 
 
-			# 重複行を削除
-			awk '!a[$0]++{print $0}'
 			)
 
 		</form>
