@@ -11,7 +11,7 @@ export MPD_HOST=$(cat settings/hostname | grep . || echo "localhost")
 export MPD_PORT=$(cat settings/port_conf | grep . || echo "6600") 
 
 # POSTを取得,デコード
-export CAT_POST=$(cat | urldecode) 
+export CAT_POST=$(cat | urldecode &) 
 export LANG=C
 
 echo "Content-type: text/html"
@@ -127,12 +127,19 @@ MPD UI using shellscript and CGi
 
 			$(# 変数展開でクエリを加工,デコードしてxargsでmpcに渡し,エラー出力以外を/dev/nullへ
 
-			# POSTの有無を確認,あれば"QUERY_STRING"に"status"を代入
-			test -n "${CAT_POST#*\&*\=}" && QUERY_STRING="status" &&
+			# POSTの有無を確認,あれば真,なければ偽
+			if [ -n "${CAT_POST#*\&*\=}" ] ; then
 
-			# クエリを変数展開で加工,sedでデコードしxargsでmpcに渡す
-			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q &
+			# 真の場合は何もしない
+			:
 
+			else
+			
+			# 偽の場合はクエリを変数展開で加工,sedでデコードしxargsでmpcに渡す
+			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q 
+
+			fi &
+			
 			)
 
         </form>
@@ -184,7 +191,6 @@ MPD UI using shellscript and CGi
 
 			<!-- 現在の曲 -->
 			<h3>current song</h3>
-
 				<p>$(mpc status | sed "s/$/<br>/g" &)</p>
 	
 			<!-- 次の曲 -->
