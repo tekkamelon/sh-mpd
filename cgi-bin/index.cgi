@@ -9,6 +9,9 @@
 # 環境変数で接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
 export MPD_HOST=$(cat settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat settings/port_conf | grep . || echo "6600") 
+
+# POSTを取得,デコード
+export CAT_POST=$(cat | urldecode) 
 export LANG=C
 
 echo "Content-type: text/html"
@@ -124,7 +127,11 @@ MPD UI using shellscript and CGi
 
 			$(# 変数展開でクエリを加工,デコードしてxargsでmpcに渡し,エラー出力以外を/dev/nullへ
 
-			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q > /dev/null &
+			# POSTの有無を確認,あれば"QUERY_STRING"に"status"を代入
+			test -n "${CAT_POST#*\&*\=}" && QUERY_STRING="status" &&
+
+			# クエリを変数展開で加工,sedでデコードしxargsでmpcに渡す
+			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q &
 
 			)
 
@@ -154,10 +161,9 @@ MPD UI using shellscript and CGi
 							</span>
 						</p>
 						<p>$(# POSTで受け取った文字列を変数に代入
-						cat_post=$(cat)					
 
 						# POSTを変数展開で加工,デコード
-						echo ${cat_post#*\=} | urldecode |
+						echo ${CAT_POST#*\=} |
 
 						# awkで1フィールド目,3フィールド目をシングルクォート付きで出力
 						awk -F'[=&]' '{
@@ -178,34 +184,8 @@ MPD UI using shellscript and CGi
 
 			<!-- 現在の曲 -->
 			<h3>current song</h3>
-				<p>$(# ステータスの"playing"及び"paused"をボタン化
-				mpc status |
 
-				# "playing"若しくは"paused"をボタン化
-				awk '/playing|paused/{
-
-					# "playing"若しくは"paused"を区切り文字に指定
-					FS = "playing|paused"
-
-					# "toggle"ボタン化して出力
-					print "<button name=button value=toggle>"$1"</button>"
-
-					# 2番目以降のフィールドを表示
-					for(i=2;i<NF;++i){printf("%s ",$i)}
-
-					# 行末を改行し表示
-					print $NF"<br>"
-
-				}
-
-				# "playing"若しくは"paused"にマッチしない行を改行し表示
-				! /playing|paused/{
-
-					print $0"<br>"
-
-				}' &
-
-				)</p>
+				<p>$(mpc status | sed "s/$/<br>/g" &)</p>
 	
 			<!-- 次の曲 -->
 			<h3>next song</h3>
