@@ -11,7 +11,7 @@ export MPD_HOST=$(cat settings/hostname | grep . || echo "localhost")
 export MPD_PORT=$(cat settings/port_conf | grep . || echo "6600") 
 
 # POSTを取得,デコード
-export CAT_POST=$(cat | urldecode &) 
+export CAT_POST=$(cat | urldecode) 
 export LANG=C
 
 echo "Content-type: text/html"
@@ -126,7 +126,7 @@ MPD UI using shellscript and CGi
 			</table>
 
 			$(# 変数展開でクエリを加工,デコードしてxargsでmpcに渡し,エラー出力以外を/dev/nullへ
-
+			
 			# POSTの有無を確認,あれば真,なければ偽
 			if [ -n "${CAT_POST#*\&*\=}" ] ; then
 
@@ -169,15 +169,15 @@ MPD UI using shellscript and CGi
 						</p>
 						<p>$(# POSTで受け取った文字列を変数に代入
 
-						# POSTを変数展開で加工,デコード
-						echo ${CAT_POST#*\=} |
+						# POSTを変数展開で加工
+						echo "${CAT_POST#*\=}" |
 
-						# awkで1フィールド目,3フィールド目をシングルクォート付きで出力
-						awk -F'[=&]' '{
+						# awkで1フィールド目,最終フィールドをシングルクォート付きで出力
+						awk -F'[=&]' '/./{
 
 							print $1,"\047"$3"\047"
 
-						}' | 
+						}' |
 
 						# xargsでmpcに渡し,エラー出力のみ捨てる
 						xargs mpc -q 2> /dev/null &
