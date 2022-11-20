@@ -125,20 +125,13 @@ MPD UI using shellscript and CGi
 				</tr>
 			</table>
 
-			$(# 変数展開でクエリを加工,デコードしてxargsでmpcに渡し,エラー出力以外を/dev/nullへ
+			$(# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
 			
-			# POSTの有無を確認,あれば真,なければ偽
-			if [ -n "${CAT_POST#*\&*\=}" ] ; then
-
-			# 真の場合は何もしない
-			:
-
-			else
+			# POSTの有無を確認,なければ真
+			test -z "${CAT_POST#*\&*\=}" &&
 			
-			# 偽の場合はクエリを変数展開で加工,sedでデコードしxargsでmpcに渡す
-			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q 
-
-			fi &
+			# 真の場合はクエリを変数展開で加工,sedでデコードしxargsでmpcに渡す
+			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q &
 			
 			)
 
