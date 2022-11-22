@@ -113,10 +113,19 @@ cat << EOS
 			$(# キュー内の曲をプレイリストに保存
 
 			# "SAVE_PLAYLIST"が"-q"でない場合に真
-			echo "${SAVE_PLAYLIST}" | grep -q -v "\-q" &&
+			echo "${SAVE_PLAYLIST}" |
 
-			# 真の場合,キュー内の曲をプレイリストに保存
-			mpc $(echo "${SAVE_PLAYLIST}" | sed "s/_/ /" ) &&
+			awk '{if ($0 == "-q")
+
+					print "status"
+
+				else
+
+					sub("_" , " " , $0) ; print $0
+
+				}' | xargs mpc -q &&
+
+			echo "${SAVE_PLAYLIST}" | grep -q -v "\-q" &&
 
 			# メッセージを表示
 			echo "<p>saved playlist</p>"
