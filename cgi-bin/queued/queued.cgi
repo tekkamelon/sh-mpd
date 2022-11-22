@@ -92,16 +92,41 @@ cat << EOS
 
 		<form name="music" method="POST" >
 			
-			<p>$(# 曲の再生部分
+			<!-- ステータスの表示 -->
+			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 
-			# POSTで受け取った文字列をデコード
-			cat | urldecode | 
+			# "SAVE_PLAYLIST"とPOSTで受け取った文字列をデコード
+			{  echo "${SAVE_PLAYLIST#\-q}" & cat | urldecode ; } |
 
-			# 2フィールド目が数字にマッチする場合のみ"play"と最終フィールドを出力
-			awk -F"=" '$2 ~ /[0-9]/{print "play",$NF}' | 
+			# "button="(数字)にマッチする行のみ処理
+			awk '/^button=[0-9]/{
+				
+				# "button="を削除し"play"を付与し出力
+				sub("button=" , "" ,$0)
+
+				print "play",$0
+
+			}
+
+			# "save_"(任意の1文字以上)にマッチする行のみ処理
+			/^save_./{
+
+				# "save_"を"save "に置換し出力
+				sub("save_" , "save " ,$0)
+
+				print $0
+
+			}' | 
 
 			# mpcに渡し,出力を改行
 			xargs mpc | sed "s/$/<br>/g" 2>&1
+
+			# "SAVE_PLAYLIST"が"-q"ではない場合に真
+ 			echo "${SAVE_PLAYLIST}" | grep -q -v -w "\-q" &&
+
+			# 真の場合,ステータスとメッセージを表示
+			mpc status | sed "s/$/<br>/g" 2>&1 && echo "<p>saved playlist</p>"
+
 			)</p>
 
 			<!-- リンク -->
@@ -110,29 +135,8 @@ cat << EOS
 			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 			<!-- キュー内の曲を表示 -->
-			$(# キュー内の曲をプレイリストに保存
+			$(# キューされた曲を表示,検索しnlでidと区切り文字" ---::--- "を付与	
 
-			# "SAVE_PLAYLIST"が"-q"でない場合に真
-			echo "${SAVE_PLAYLIST}" |
-
-			awk '{if ($0 == "-q")
-
-					print "status"
-
-				else
-
-					sub("_" , " " , $0) ; print $0
-
-				}' | xargs mpc -q &&
-
-			echo "${SAVE_PLAYLIST}" | grep -q -v "\-q" &&
-
-			# メッセージを表示
-			echo "<p>saved playlist</p>"
-
-			# キュー内の曲を表示
-
-			# キューされた曲を表示,検索しnlでidと区切り文字" ---::--- "を付与	
 			mpc playlist | nl -n rz -s " ---::--- " | grep -i "${SEARCH_VAR}" | 
 
  			awk -F" ---::--- " '{
