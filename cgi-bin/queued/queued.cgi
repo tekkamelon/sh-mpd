@@ -28,7 +28,7 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 	# 検索の処理,"search&input_string=(任意の1文字以上)"にマッチした場合の処理
 	/search&input_string=./{
 
-		print "SAVE_PLAYLIST=-q"
+		print "SAVE_PLAYLIST="
 		print "SEARCH_VAR="$NF
 
 	}
@@ -36,7 +36,7 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 	# "&input_string=(任意の1文字以上)"にマッチしなかった場合の処理
 	!/&input_string=./{
 
-		print "SAVE_PLAYLIST=-q"
+		print "SAVE_PLAYLIST="
 		print "SEARCH_VAR=."
 
 	}' |
@@ -96,7 +96,7 @@ cat << EOS
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 
 			# "SAVE_PLAYLIST"とPOSTで受け取った文字列をデコード
-			{  echo "${SAVE_PLAYLIST#\-q}" & cat | urldecode ; } |
+			{  echo "${SAVE_PLAYLIST}" & cat | urldecode ; } |
 
 			# "button="(数字)にマッチする行のみ処理
 			awk '/^button=[0-9]/{
@@ -111,8 +111,8 @@ cat << EOS
 			# "save_"(任意の1文字以上)にマッチする行のみ処理
 			/^save_./{
 
-				# "save_"を"save "に置換し出力
-				sub("save_" , "save " ,$0)
+				# "_"を" "に置換し出力
+				sub("_" , " " ,$0)
 
 				print $0
 
@@ -122,7 +122,7 @@ cat << EOS
 			xargs mpc | sed "s/$/<br>/g" 2>&1
 
 			# "SAVE_PLAYLIST"が"-q"ではない場合に真
- 			echo "${SAVE_PLAYLIST}" | grep -q -v -w "\-q" &&
+ 			test -n "${SAVE_PLAYLIST}" &&
 
 			# 真の場合,ステータスとメッセージを表示
 			mpc status | sed "s/$/<br>/g" 2>&1 && echo "<p>saved playlist</p>"
