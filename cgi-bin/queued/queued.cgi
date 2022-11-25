@@ -98,25 +98,8 @@ cat << EOS
 			# "SAVE_PLAYLIST"とPOSTで受け取った文字列をデコード
 			printf "${SAVE_PLAYLIST}\n$(cat | urldecode)\n" |
 
-			# "button="(数字)にマッチする行のみ処理
-			awk '/^button=[0-9]/{
-				
-				# "button="を削除し"play"を付与し出力
-				sub("button=" , "" , $0)
-
-				print "play" , $0
-
-			}
-
-			# "save_"(任意の1文字以上)にマッチする行のみ処理
-			/^save_./{
-
-				# "_"を" "に置換し出力
-				sub("_" , " " , $0)
-
-				print $0
-
-			}' |
+			# "button="を"play "に,"save_"を"save "にそれぞれ置換
+			sed -e "s/button\=/play /" -e "s/save_/save /" |
 
 			# mpcに渡し,出力を改行
 			xargs mpc | sed "s/$/<br>/g" 2>&1
