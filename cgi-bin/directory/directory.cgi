@@ -44,6 +44,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<p>$(# POSTで受け取った文字列をデコード,変数に代入
+
 				cat_post=$(cat | urldecode)
 
 				# POSTを変数展開で加工,空でない場合に真,空の場合に偽
@@ -54,6 +55,7 @@ cat << EOS
 	
 				# "mpc insert"で挿入した曲を再生
 				mpc next | sed "s/$/<br>/g" 2>&1
+
 				)</p>
 
 				<!-- リンク -->
@@ -63,13 +65,19 @@ cat << EOS
 
 				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
 				$(# クエリを変数展開で加工,デコード,文字列があれば変数に代入,なければ"."を代入
+
 				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | awk '/./{print $0}; !/./{print "."}')
 				
 				# 曲の一覧をgrepで検索
 				mpc listall | grep -i "${search_var}" |
 
 				# 出力をボタン化
-				awk '{print "<p><button name=button value="$0">"$0"</button></p>"}'
+				awk '{
+
+					print "<p><button name=button value="$0">"$0"</button></p>"
+
+				}'
+
 				)
 
 		</form>
@@ -84,3 +92,4 @@ cat << EOS
 
 </html>
 EOS
+

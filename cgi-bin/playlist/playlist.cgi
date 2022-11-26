@@ -40,15 +40,16 @@ cat << EOS
 
 		</form>
 	
-		<!-- mpd.confで設定されたプレイリスト一覧を表示 --> 
+		<!-- mpd.confで設定されたプレイリスト一覧を表示 -->
 		<form name="music" method="POST" >
 
 				<!-- ステータスを表示 -->
 				<p>$(# POSTをデコード,awkに渡す
-				cat | urldecode | 
+
+				cat | urldecode |
 
 				# 区切り文字を"="に指定,POSTの1フィールド目が"lsplaylist"の場合
-				awk -F"=" '$1=="lsplaylist"{
+				awk -F"=" '$1 == "lsplaylist"{
 
 					# "load "と2フィールド目を出力
 					print "load "$NF
@@ -56,12 +57,12 @@ cat << EOS
 				}
 
 				# POSTの1フィールド目が"dir"の場合
-				$1=="dir"{
+				$1 == "dir"{
 
 					# "add "と2フィールド目を出力
-					print "add "$NF
+					print "add" , $NF
 
-				}' | 
+				}' |
 
 				# 出力をmpcに渡し,エラー出力ごと表示
 				xargs mpc | sed "s/$/<br>/g" 2>&1
@@ -75,19 +76,20 @@ cat << EOS
 
 				<!-- mpc管理下のプレイリストを表示 -->
 				$(# 変数展開でクエリを加工,デコードし,文字列の有無を判定
+
 				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo ".")
 
 				# プレイリストをgrepで検索
-				mpc lsplaylist | grep -i "${search_var}" | 
+				mpc lsplaylist | grep -i "${search_var}" |
 
 				awk '{
 						
 					# 1フィールド目に"lsplaylist"を指定
 					print "<p><button name=lsplaylist value="$0">"$0"</button></p>"
 
-				}' 
+				}'
 				
-				# "listall"で全ファイルを取得,cutとawkで親ディレクトリのみを出力
+				# mpd管理下のファイルを出力,cutで親ディレクトリを抽出,awkで重複を削除
 				mpc listall | cut -d"/" -f1 | awk '!a[$0]++{print $0}' | grep -i "${search_var}" | 
 
 				awk '{
@@ -96,7 +98,9 @@ cat << EOS
 					print "<p><button name=dir value="$0">"$0"</button></p>"
 
 				}'
+
 				)
+
 		</form>
 	</body>
 
@@ -109,3 +113,4 @@ cat << EOS
 
 </html>
 EOS
+
