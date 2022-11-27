@@ -88,23 +88,22 @@ cat << EOS
 				# grepで検索,awkで重複を削除
 				grep -i "${search_var}" | awk '!a[$0]++{print $0}' |
 
-				# 行頭が" -- "にマッチする行の処理
-				awk '/^ -- /{
+				awk '{
+					
+					# 先頭に" -- "がある場合は真,なければ偽
+					if(/^ -- /){
 
-					# " -- "を削除
-					sub(" -- " , "" , $0)
+						# 真の場合は" -- "を削除,POSTの1フィールド目に"dir"を指定しボタン化
+						sub(" -- " , "" , $0)
 
-					# POSTの1フィールド目に"dir"を指定しボタン化
-					print "<p><button name=dir value="$0">"$0"</button></p>"
+						print "<p><button name=dir value="$0">"$0"</button></p>"
 
- 				}
+ 					}else{
  
-				# 行頭が" -- "にマッチしない行の処理
- 				!/^ -- /{
-
-					# POSTの1フィールド目に"lsplaylist"を指定しボタン化
- 					print "<p><button name=lsplaylist value="$0">"$0"</button></p>"
-
+						# 偽の場合はPOSTの1フィールド目に"lsplaylist"を指定しボタン化
+	 					print "<p><button name=lsplaylist value="$0">"$0"</button></p>"
+					}
+				
 				}'
 				
 				)
