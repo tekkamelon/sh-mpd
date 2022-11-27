@@ -79,26 +79,34 @@ cat << EOS
 
 				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo ".")
 
-				# プレイリストをgrepで検索
-				mpc lsplaylist | grep -i "${search_var}" |
+				# プレイリスト一覧を出力
+				{ mpc lsplaylist ; 
 
-				awk '{
-						
-					# 1フィールド目に"lsplaylist"を指定
-					print "<p><button name=lsplaylist value="$0">"$0"</button></p>"
+				# mpd管理下ディレクトリを" -- "付きで出力,cutで親ディレクトリのみを出力
+				mpc listall -f "[ -- %file%]" | cut -d"/" -f1 ; } |
+
+				# grepで検索,awkで重複を削除
+				grep -i "${search_var}" | awk '!a[$0]++{print $0}' |
+
+				# 行頭が" -- "にマッチする行の処理
+				awk '/^ -- /{
+
+					# " -- "を削除
+					sub(" -- " , "" , $0)
+
+					# POSTの1フィールド目に"dir"を指定しボタン化
+					print "<p><button name=dir value="$0">"$0"</button></p>"
+
+ 				}
+ 
+				# 行頭が" -- "にマッチしない行の処理
+ 				!/^ -- /{
+
+					# POSTの1フィールド目に"lsplaylist"を指定しボタン化
+ 					print "<p><button name=lsplaylist value="$0">"$0"</button></p>"
 
 				}'
 				
-				# mpd管理下のファイルを出力,cutで親ディレクトリを抽出,awkで重複を削除
-				mpc listall | cut -d"/" -f1 | awk '!a[$0]++{print $0}' | grep -i "${search_var}" | 
-
-				awk '{
-
-					# 1フィールド目に"dir"を指定
-					print "<p><button name=dir value="$0">"$0"</button></p>"
-
-				}'
-
 				)
 
 		</form>
