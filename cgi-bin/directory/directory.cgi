@@ -48,13 +48,17 @@ cat << EOS
 				cat_post=$(cat | urldecode)
 
 				# POSTを変数展開で加工,空でない場合に真,空の場合に偽
-				test -n "${cat_post#*\=}" && 
+				if [ -n "${cat_post#*\=}" ] ; then
 
-				# 真の場合,POSTを変数展開で加工,デコードしxargsでmpcに渡しキューに追加
-				echo "${cat_post#*\=}" | mpc insert && 
-	
-				# "mpc insert"で挿入した曲を再生
-				mpc next | sed "s/$/<br>/g" 2>&1
+					# 真の場合,POSTを変数展開で加工,デコードしてmpcに渡しキューに追加,再生
+					echo "${cat_post#*\=}" | mpc insert && mpc next
+
+				else
+
+					# ステータスを表示
+					mpc status
+
+				fi | sed "s/$/<br>/g" 2>&1
 
 				)</p>
 
@@ -66,7 +70,26 @@ cat << EOS
 				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
 				$(# クエリを変数展開で加工,デコード,文字列があれば変数に代入,なければ"."を代入
 
-				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | awk '/./{print $0}; !/./{print "."}')
+				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | 
+
+				# awkで文字列の有無を判定,あれば真,なければ偽
+				awk '{
+
+					if(/./){
+
+						# 真の場合は加工されたクエリを出力
+						print $0
+
+					}else{
+
+						# 偽の場合は"."を出力
+						print "."
+
+					}
+
+				}'
+
+				)
 				
 				# 曲の一覧をgrepで検索
 				mpc listall | grep -i "${search_var}" |
