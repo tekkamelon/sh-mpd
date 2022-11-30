@@ -1,0 +1,150 @@
+@charset "UTF-8";
+/* stylesheet.css: 標準のスタイル,ダークテーマのcss */
+
+/* 見出しの色 */
+:root{
+    --main-bg-color: rgb(130, 150, 60);
+    --letter-color: rgb(30, 65, 45);
+}
+
+/* アスキーアート */
+pre{
+	color: var(--main-bg-color);
+    text-align:left
+}
+
+/* サブタイトル */
+span{
+	color: var(--main-bg-color);
+}
+
+/* リンクの文字色 */
+a{
+    color: var(--main-bg-color);
+}
+
+/* ヘッダー */
+header{
+    color: var(--main-bg-color);
+    text-align:left
+}
+
+/* 背景色 */
+body{
+    background-color: var(--letter-color);
+    text-align:left
+}
+
+/* 大見出し */
+h1{
+    color: var(--main-bg-color);
+    font-size: 35px;
+    text-align:left
+}
+ 
+/* 中見出し */
+h2{
+    color: var(--main-bg-color);
+    text-align:left
+}
+
+/* 小見出し */
+h3{
+    color: var(--main-bg-color);
+    text-align:left
+}
+
+h4{
+    color: var(--main-bg-color);
+    text-align:left
+}
+
+l1{
+    color:white ;
+    text-align:left
+}
+
+l2{
+    color:white ;
+    text-align:left
+}
+
+/* 本文 */
+p{
+    color: white;
+    font-size: 15px;
+    text-align:left
+}
+
+select{
+	color: var(--main-bg-color);
+	background-color: rgb(35, 50, 30);
+	border: 1px solid teal;
+	border-radius: 6px;
+    text-align:center
+}
+
+/* 折りたたみ */
+details{
+	color: rgb(35, 50, 30);
+}
+
+summary{
+    font-size: 15px;
+}
+
+input{
+	margin-top: 20px;
+	color: var(--letter-color);
+	background-color: rgb(35, 50, 30);
+	border: 1px solid teal;
+	border-radius: 6px;
+}
+
+table {
+	border-collapse:collapse;
+	border-color: rgb(130, 140, 60);
+}
+
+/* table */
+table th{
+	border-color: rgb(130, 140, 60);
+	color: white;
+	text-align: center
+}
+
+tr {
+	border-color: rgb(130, 140, 60);
+}
+	 
+table td{
+	border-color: rgb(130, 140, 60);
+	color: white;
+	text-align: center
+}
+
+/* button */
+button{
+	margin: 3px;
+	padding: 7px 14px;
+	color: white;
+	background-color: rgb(35, 50, 30);
+	border: 1px solid teal;
+	border-radius: 12px;
+	text-align: center;
+}
+
+button:hover{
+	margin: 3px;
+	padding: 7px 14px;
+	color: var(--main-bg-color);
+	background-color: rgb(75, 105, 65);
+	border: 1px solid orange;
+	border-radius: 12px;
+	text-align: center;
+}
+
+/* div class */
+.link{
+	margin-top: 15px;
+}
