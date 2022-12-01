@@ -41,27 +41,36 @@ cat << EOS
 				</span>
 			
 			<!-- 実行結果を表示 -->
-			<p>$(# POSTをデコード
-			cat | urldecode |
+			<p>$(# POSTを変数に代入
 
-			# 区切り文字を"="に指定,数値,"localhost","任意の1文字以上.local"にマッチする場合の処理
-			awk -F"=" '/[0-9]/ || /localhost/ || /.\.local/{
+			cat_post=$(cat)
 
-				# メッセージを表示	
-				print "changed host:"$2
+			# POSTの有無を確認
+			test -n "${cat_post}" &&
 
-				# ファイルに上書き
-				print $2 > "../hostname"
+			# POSTを変数展開で加工,ホスト名が有効であれば真,無効であれば偽
+			if echo "${cat_post#*\=}" | xargs -I{} mpc -q --host={} ; then
 
-			}
+				# POSTを変数展開で加工,awkでメッセージの出力,設定ファイルへのリダイレクト
+				echo "${cat_post#*\=}" |
 
-			# いずれにもマッチしない場合の処理
-			!/[0-9]/ && !/localhost/ && !/.\.local/{
-
-				# メッセージを表示	
-				print "please enter hostname or local IP adress!"
+				awk '{
+	
+					# メッセージを表示	
+					print "changed host:"$0
+	
+					# ファイルに上書き
+					print $0 > "../hostname"
+ 					
+				}'
 				
-			}'
+			else
+				
+				# 偽であればメッセージを表示
+				echo "failed to resolve hostname<br>please enter hostname or local IP adress!<br>"
+				
+			fi
+				
 			)</p>
 			
 		</form>
