@@ -41,24 +41,36 @@ cat << EOS
 				</span>
 			
 			<!-- 実行結果を表示 -->
-			<p>$(# POSTを取得,区切り文字を"="に指定,数値が1回以上の繰り返しにマッチする場合の処理
- 			cat | awk -F"=" '/[0-9]{1}/{
- 
- 					# メッセージを表示	
- 					print "changed port:"$NF
- 
- 					# ファイルに上書き
- 					print $NF > "../port_conf"
- 
- 				}
- 
- 				# 数値にマッチしない場合の処理
- 				!/[0-9]{1}/{
- 
- 					# メッセージを表示
- 					print "please enter port number!"
- 
- 				}'
+			<p>$(# POSTを変数に代入
+
+			cat_post=$(cat)
+
+			# POSTの有無を確認
+			test -n "${cat_post}" &&
+
+			# POSTを変数展開で加工,ポート番号が有効であれば真,無効であれば偽
+			if echo "${cat_post#*\=}" | xargs -I{} mpc -q --port={} ; then
+
+				# POSTを変数展開で加工,awkでメッセージの出力,設定ファイルへのリダイレクト
+				echo "${cat_post#*\=}" |
+
+				awk '{
+	
+					# メッセージを表示	
+					print "changed port number:"$0
+	
+					# ファイルに上書き
+					print $0 > "../port_conf"
+ 					
+				}'
+				
+			else
+				
+				# 偽であればメッセージを表示
+				echo "connection refused<br>"
+				
+			fi
+				
 			)</p>
 			
 		</form>
