@@ -6,11 +6,10 @@
 # v 変数の表示
 
 # 環境変数の設定
-export LANG=C
-
-# 環境変数で接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
+# ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 export MPD_HOST=$(cat ../hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../port_conf | grep . || echo "6600") 
+export LANG=C
 
 echo "Content-type: text/html"
 echo ""
@@ -49,7 +48,7 @@ cat << EOS
 			test -n "${cat_post}" &&
 
 			# POSTを変数展開で加工,ホスト名が有効であれば真,無効であれば偽
-			if echo "${cat_post#*\=}" | xargs -I{} mpc -q --host={} ; then
+			if mpc -q --host="${cat_post#*\=}" ; then
 
 				# POSTを変数展開で加工,awkでメッセージの出力,設定ファイルへのリダイレクト
 				echo "${cat_post#*\=}" |
