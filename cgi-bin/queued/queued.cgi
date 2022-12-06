@@ -70,8 +70,6 @@ cat << EOS
 		<!-- playlistの処理 -->
 		<form name="FORM" method="GET" >
 
-			<!-- クエリの表示 -->
-			<p>debug:$(echo "${QUERY_STRING}")</p>
 				<p>
 					<!-- ドロップダウンリスト -->
 	             	<select name="button">

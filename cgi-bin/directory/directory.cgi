@@ -33,8 +33,6 @@ cat << EOS
 		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>" &)</h4>
 		<form name="FORM" method="GET" >
 
-			debug_info:$(echo "${QUERY_STRING}" | urldecode)
-				
 					<!-- 検索ワードの入力欄 -->
 					<p>search_word:<input type="text" name="search_word"></p>
 				
