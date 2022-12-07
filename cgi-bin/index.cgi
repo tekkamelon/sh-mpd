@@ -117,10 +117,10 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="update">update</button>
 					</td>
 					<td>
-				 		<button name="button" value="seek_-5%">seek -5%</button>
+				 		<button name="button" value="seek_-5">seek -5%</button>
 					</td>
 					<td>
-				 		<button name="button" value="seek_+5%">seek +5%</button>
+				 		<button name="button" value="seek_+5">seek +5%</button>
 					</td>
 				</tr>
 			</table>
@@ -130,8 +130,35 @@ MPD UI using shellscript and CGi
 			# POSTの有無を確認,なければ真
 			test -z "${CAT_POST#*\&*\=}" &&
 			
-			# 真の場合はクエリを変数展開で加工,sedでデコードしxargsでmpcに渡す
-			echo "${QUERY_STRING#*\=}" | sed -e "s/_/ /g" -e "s/%2B/ +/g" | xargs mpc -q &
+			# 真の場合はクエリを変数展開で加工
+			echo "${QUERY_STRING#*\=}" | 
+
+			# クエリ内にvolume,seekがある場合に文字列をデコード
+ 			awk '/volume/{
+ 
+ 				# マイナスの場合の処理
+ 				sub("_-" , " -")
+
+				# プラスの場合の処理
+ 				sub("_%2B" , " +")
+				
+				print $0
+
+ 			}
+ 
+ 			/seek/{
+ 
+ 				# マイナスの場合の処理
+ 				sub("_-" , " -")
+
+				# プラスの場合の処理
+ 				sub("_%2B" , " +")
+				
+				# "%"付きで出力
+ 				print $0"%"
+				
+			# xargsでmpcに渡す
+			}' | xargs mpc -q &
 			
 			)
 
@@ -170,10 +197,8 @@ MPD UI using shellscript and CGi
 
 							print $1,"\047"$3"\047"
 
-						}' |
-
 						# xargsでmpcに渡し,エラー出力のみ捨てる
-						xargs mpc -q 2> /dev/null &
+						}' | xargs mpc -q 2> /dev/null &
 
 						)</p>
 
