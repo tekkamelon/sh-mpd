@@ -9,10 +9,10 @@
 # 環境変数で接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
 export MPD_HOST=$(cat settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat settings/port_conf | grep . || echo "6600") 
+export LANG=C
 
 # POSTを取得,デコード
 export CAT_POST=$(cat | urldecode) 
-export LANG=C
 
 echo "Content-type: text/html"
 echo ""
@@ -131,15 +131,15 @@ MPD UI using shellscript and CGi
 			test -z "${CAT_POST#*\&*\=}" &&
 			
 			# 真の場合はクエリを変数展開で加工
-			echo "${QUERY_STRING#*\=}" | 
+			echo "${QUERY_STRING#*\=}" |
 
 			# クエリ内にvolume,seekがある場合に文字列をデコード
  			awk '/volume/{
  
- 				# マイナスの場合の処理
+ 				# マイナスの場合
  				sub("_-" , " -")
 
-				# プラスの場合の処理
+				# プラスの場合
  				sub("_%2B" , " +")
 				
 				print $0
@@ -148,15 +148,22 @@ MPD UI using shellscript and CGi
  
  			/seek/{
  
- 				# マイナスの場合の処理
+ 				# マイナスの場合
  				sub("_-" , " -")
 
-				# プラスの場合の処理
+				# プラスの場合
  				sub("_%2B" , " +")
 				
 				# "%"付きで出力
  				print $0"%"
-				
+
+			}
+
+			# "volume","seek"のどちらもマッチしない場合
+			!/volume/ && !/seek/{
+
+				print $0
+
 			# xargsでmpcに渡す
 			}' | xargs mpc -q &
 			
