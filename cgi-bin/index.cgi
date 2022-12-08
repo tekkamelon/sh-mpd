@@ -117,57 +117,13 @@ MPD UI using shellscript and CGi
 				 		<button name="button" value="update">update</button>
 					</td>
 					<td>
-				 		<button name="button" value="seek_-5">seek -5%</button>
+				 		<button name="button" value="seek_-5%">seek -5%</button>
 					</td>
 					<td>
-				 		<button name="button" value="seek_+5">seek +5%</button>
+				 		<button name="button" value="seek_+5%">seek +5%</button>
 					</td>
 				</tr>
 			</table>
-
-			$(# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
-			
-			# POSTの有無を確認,なければ真
-			test -z "${CAT_POST#*\&*\=}" &&
-			
-			# 真の場合はクエリを変数展開で加工
-			echo "${QUERY_STRING#*\=}" |
-
-			# クエリ内にvolume,seekがある場合に文字列をデコード
- 			awk '/volume/{
- 
- 				# マイナスの場合
- 				sub("_-" , " -")
-
-				# プラスの場合
- 				sub("_%2B" , " +")
-				
-				print $0
-
- 			}
- 
- 			/seek/{
- 
- 				# マイナスの場合
- 				sub("_-" , " -")
-
-				# プラスの場合
- 				sub("_%2B" , " +")
-				
-				# "%"付きで出力
- 				print $0"%"
-
-			}
-
-			# "volume","seek"のどちらもマッチしない場合
-			!/volume/ && !/seek/{
-
-				print $0
-
-			# xargsでmpcに渡す
-			}' | xargs mpc -q &
-			
-			)
 
         </form>
 
@@ -175,6 +131,7 @@ MPD UI using shellscript and CGi
 			<span>
 				searchplay queued song :
 			</span>
+
 	            <select name="args">
 	
 	                <option value="searchplay">fuzzy</option>
@@ -194,30 +151,43 @@ MPD UI using shellscript and CGi
 								<input type="text" name="search">
 							</span>
 						</p>
-						<p>$(# POSTで受け取った文字列を変数に代入
-
-						# POSTを変数展開で加工
-						echo "${CAT_POST#*\=}" |
-
-						# awkで1フィールド目,最終フィールドをシングルクォート付きで出力
-						awk -F'[=&]' '/./{
-
-							print $1,"\047"$3"\047"
-
-						# xargsでmpcに渡し,エラー出力のみ捨てる
-						}' | xargs mpc -q 2> /dev/null &
-
-						)</p>
-
 				    </form>
 	            </select>
 
 		<form name="FORM" method="GET" >
 
-			<!-- 現在の曲 -->
+			<!-- 現在のステータス -->
 			<h3>current song</h3>
-				<p>$(mpc status | sed "s/$/<br>/g" &)</p>
 	
+			<p>$(# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
+			
+			# POSTの有無を確認,あれば真,なければ偽
+			if [ -n "${CAT_POST#*\&*\=}" ] ; then
+			
+				# 真の場合はPOSTを変数展開で加工
+				echo "${CAT_POST#*\=}" |
+
+				# 区切り文字を"=","&"に指定,文字列がある場合のみ処理
+				awk -F'[=&]' '{
+					
+					# "searchplay",シングルクォート付きで最終フィールドを出力
+					print $1,"\047"$NF"\047"
+
+				}' 
+
+			else
+
+				# 偽の場合はクエリを変数展開で加工
+				echo "${QUERY_STRING#*\=}" |
+	
+				# "volume","seek","mute"時の文字列をデコード
+				sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"
+			
+			# mpcのエラー出力ごとsedに渡す
+			fi | xargs mpc 2>&1 | sed "s/$/<br>/g" &
+
+			)</p>
+
 			<!-- 次の曲 -->
 			<h3>next song</h3>
 			<p><button name=button value=next>$(mpc queued | grep . || echo "next song not found" &)</button></p>
