@@ -62,10 +62,8 @@ cat << EOS
 					# "add "と2フィールド目を出力
 					print "add" , $NF
 
-				}' |
-
-				# 出力をmpcに渡し,エラー出力ごと表示
-				xargs mpc | sed "s/$/<br>/g" 2>&1
+				# 出力をmpcに渡し,改行を付与し出力
+				}' | xargs mpc | sed "s/$/<br>/g"
 				
 				)</p>
 
@@ -79,13 +77,15 @@ cat << EOS
 
 				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo ".")
 
+				##### コマンドのグルーピング #####
 				# プレイリスト一覧を出力
 				{ mpc lsplaylist ; 
 
 				# mpd管理下ディレクトリを" -- "付きで出力,cutで親ディレクトリのみを出力
 				mpc listall -f "[ -- %file%]" | cut -d"/" -f1 ; } |
+				##### グルーピングの終了 #####
 
-				# grepで検索,awkで重複を削除
+				# grepで検索,重複を削除
 				grep -i "${search_var}" | awk '!a[$0]++{print $0}' |
 
 				awk '{

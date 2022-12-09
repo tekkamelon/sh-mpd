@@ -96,8 +96,8 @@ cat << EOS
 			# "SAVE_PLAYLIST"とPOSTで受け取った文字列をデコード
 			printf "${SAVE_PLAYLIST}\n$(cat | urldecode)\n" |
 
-			# "button="を"play "に,"save_"を"save "にそれぞれ置換
-			sed -e "s/button\=/play /" -e "s/save_/save /" |
+			# "button="を"play "に,"_"を" "にそれぞれ置換
+			sed -e "s/button\=/play /" -e "s/_/ /" |
 
 			# mpcに渡し,出力を改行
 			xargs mpc | sed "s/$/<br>/g" 2>&1
@@ -106,7 +106,7 @@ cat << EOS
  			test -n "${SAVE_PLAYLIST}" &&
 
 			# 真の場合,ステータスとメッセージを表示
-			mpc status | sed "s/$/<br>/g" 2>&1 && echo "<p>saved playlist</p>"
+			mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist</p>"
 
 			)</p>
 
