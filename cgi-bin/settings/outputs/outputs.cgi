@@ -44,22 +44,23 @@ cat << EOS
 
 			echo "${cat_post#*\=}" | 
 
-			# POSTに数字がある場合は"toggleoutput "と全体を出力
-			awk '/[0-9]/{
-				
-				print "toggleoutput "$0
+			# POSTの数字の有無を判定,あれば真,なければ偽
+			awk '{
+	
+				if(/[0-9]/){
 
-			}
-
-			# 文字列が無い場合は"outputs"のみ出力
-			!/./{
-
-				print "outputs"
-
-			}' |
+					# 真の場合は"toggleoutput "と全体を出力
+					print "toggleoutput "$0
+	
+				}else{
+	
+					# 偽の場合は"outputs"のみ出力
+					print "outputs"
+	
+				}
 
 			# 出力をmpcに渡す
-			xargs mpc |
+			}' | xargs mpc |
 
 			# "Output"を含む行をボタン化
 			awk '/Output/{
