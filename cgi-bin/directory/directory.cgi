@@ -38,7 +38,7 @@ cat << EOS
 				
 		</form>
 	
-		<!-- mpd.confで設定されたディレクトリ配下を表示 --> 
+		<!-- ステータスを表示 --> 
 		<form name="music" method="POST" >
 
 				<p>$(# POSTで受け取った文字列をデコード,変数に代入
@@ -56,7 +56,7 @@ cat << EOS
 					# ステータスを表示
 					mpc status
 
-				fi | sed "s/$/<br>/g" 2>&1
+				fi | sed "s/$/<br>/g"
 
 				)</p>
 
@@ -70,25 +70,25 @@ cat << EOS
 
 				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | 
 
-				# awkで文字列の有無を判定,あれば真,なければ偽
-				awk '{
-
-					if(/./){
-
-						# 真の場合は加工されたクエリを出力
-						print $0
-
-					}else{
-
-						# 偽の場合は"."を出力
-						print "."
-
-					}
-
-				}'
-
-				)
-				
+					# awkで文字列の有無を判定,あれば真,なければ偽
+					awk '{
+	
+						if(/./){
+	
+							# 真の場合は加工されたクエリを出力
+							print $0
+	
+						}else{
+	
+							# 偽の場合は"."を出力
+							print "."
+	
+						}
+	
+					}'
+	
+					)
+					
 				# 曲の一覧をgrepで検索
 				mpc listall | grep -i "${search_var}" |
 
