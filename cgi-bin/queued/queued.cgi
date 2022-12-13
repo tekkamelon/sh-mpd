@@ -93,14 +93,14 @@ cat << EOS
 			<!-- ステータスの表示 -->
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 
-			# "SAVE_PLAYLIST"とPOSTで受け取った文字列をデコード
+			# "SAVE_PLAYLIST"とデコードされたPOSTを出力
 			printf "${SAVE_PLAYLIST}\n$(cat | urldecode)\n" |
 
-			# "button="を"play "に,"_"を" "にそれぞれ置換
-			sed -e "s/button\=/play /" -e "s/_/ /" |
+			# 最初の"=","_"をスペースに置換
+			sed "s/\=\|_/ /" |
 
 			# mpcに渡し,出力を改行
-			xargs mpc | sed "s/$/<br>/g" 2>&1
+			xargs mpc | sed "s/$/<br>/g"
 
 			# "SAVE_PLAYLIST"が空ではない場合に真
  			test -n "${SAVE_PLAYLIST}" &&
@@ -123,7 +123,7 @@ cat << EOS
  			awk -F" ---::--- " '{
 
  				# POSTでIDのみを渡せるようボタン化
- 				print "<p><button name=button value="$1">"$NF"</button></p>"
+ 				print "<p><button name=play value="$1">"$NF"</button></p>"
 
    			}' 
 
