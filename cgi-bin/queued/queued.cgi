@@ -94,10 +94,10 @@ cat << EOS
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 
 			# "SAVE_PLAYLIST"とデコードされたPOSTを出力
-			printf "${SAVE_PLAYLIST}\n$(cat | urldecode)\n" |
+			printf "${SAVE_PLAYLIST}\n$(cat)\n" |
 
 			# 最初の"=","_"をスペースに置換
-			sed "s/\=\|_/ /" |
+			sed "s/\=\|_/ /" | urldecode |
 
 			# mpcに渡し,出力を改行
 			xargs mpc | sed "s/$/<br>/g"

@@ -44,26 +44,24 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<!-- ステータスを表示 -->
-				<p>$(# POSTをデコード,awkに渡す
-
-				cat | urldecode |
+				<p>$(# POSTをawkに渡す
 
 				# 区切り文字を"="に指定,POSTの1フィールド目が"lsplaylist"の場合
-				awk -F"=" '$1 == "lsplaylist"{
+				cat | awk -F"=" '$1 == "load"{
 
-					# "load "と2フィールド目を出力
-					print "load "$NF
+					# 1フィールド目と最終フィールド目を出力
+					print $1 , $NF
 
 				}
 
-				# POSTの1フィールド目が"dir"の場合
-				$1 == "dir"{
+				# POSTの1フィールド目が"add"の場合
+				$1 == "add"{
 
-					# "add "と2フィールド目を出力
-					print "add" , $NF
+					# 1フィールド目と最終フィールド目を出力
+					print $1 , $NF
 
-				# 出力をmpcに渡し,改行を付与し出力
-				}' | xargs mpc | sed "s/$/<br>/g"
+				# 出力をデコード,mpcに渡し,改行を付与し出力
+				}' | urldecode | xargs mpc | sed "s/$/<br>/g"
 				
 				)</p>
 
@@ -93,15 +91,18 @@ cat << EOS
 					# 先頭に" -- "がある場合は真,なければ偽
 					if(/^ -- /){
 
-						# 真の場合は" -- "を削除,POSTの1フィールド目に"dir"を指定しボタン化
+						# 真の場合は" -- "を削除,POSTの1フィールド目に"add"を指定しボタン化
 						sub(" -- " , "" , $0)
 
-						print "<p><button name=dir value="$0">"$0"</button></p>"
+						print "<p><button name=add value="$0">"$0"</button></p>"
 
- 					}else{
+ 					}
+
+					else{
  
 						# 偽の場合はPOSTの1フィールド目に"lsplaylist"を指定しボタン化
-	 					print "<p><button name=lsplaylist value="$0">"$0"</button></p>"
+	 					print "<p><button name=load value="$0">"$0"</button></p>"
+
 					}
 				
 				}'

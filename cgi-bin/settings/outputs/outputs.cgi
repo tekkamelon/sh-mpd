@@ -52,7 +52,9 @@ cat << EOS
 					# 真の場合は"toggleoutput "と全体を出力
 					print "toggleoutput "$0
 	
-				}else{
+				}
+
+				else{
 	
 					# 偽の場合は"outputs"のみ出力
 					print "outputs"

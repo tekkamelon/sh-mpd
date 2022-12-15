@@ -41,15 +41,15 @@ cat << EOS
 		<!-- ステータスを表示 --> 
 		<form name="music" method="POST" >
 
-				<p>$(# POSTで受け取った文字列をデコード,変数に代入
+				<p>$(# POSTで受け取った文字列を変数に代入
 
-				cat_post=$(cat | urldecode)
+				cat_post=$(cat)
 
 				# POSTを変数展開で加工,空でない場合に真,空の場合に偽
 				if [ -n "${cat_post#*\=}" ] ; then
 
 					# 真の場合,POSTを変数展開で加工,デコードしてmpcに渡しキューに追加,再生
-					echo "${cat_post#*\=}" | mpc insert && mpc next
+					echo "${cat_post#*\=}" | urldecode | mpc insert && mpc next
 
 				else
 
@@ -65,10 +65,10 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
-				<!-- mpc管理下のディレクトリを再帰的に表示,awkで出力をボタン化 -->
+				<!-- mpc管理下のディレクトリを再帰的に表示 -->
 				$(# クエリを変数展開で加工,デコード,文字列があれば変数に代入,なければ"."を代入
 
-				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | 
+				search_var=$(echo "${QUERY_STRING#*\=}" |
 
 					# awkで文字列の有無を判定,あれば真,なければ偽
 					awk '{
@@ -78,14 +78,17 @@ cat << EOS
 							# 真の場合は加工されたクエリを出力
 							print $0
 	
-						}else{
+						}
+
+						else{
 	
 							# 偽の場合は"."を出力
 							print "."
 	
 						}
 	
-					}'
+					# 文字列をデコード
+					}' | urldecode 
 	
 					)
 					
