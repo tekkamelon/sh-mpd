@@ -11,9 +11,6 @@ export MPD_HOST=$(cat settings/hostname | grep . || echo "localhost")
 export MPD_PORT=$(cat settings/port_conf | grep . || echo "6600") 
 export LANG=C
 
-# POSTを取得,デコード
-export CAT_POST=$(cat | urldecode) 
-
 echo "Content-type: text/html"
 echo ""
 
@@ -160,12 +157,15 @@ MPD UI using shellscript and CGi
 			<h3>current song</h3>
 	
 			<p>$(# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
+
+			# POSTを変数に代入
+			cat_post=$(cat) 
 			
 			# POSTの有無を確認,あれば真,なければ偽
-			if [ -n "${CAT_POST#*\&*\=}" ] ; then
+			if [ -n "${cat_post#*\&*\=}" ] ; then
 			
 				# 真の場合はPOSTを変数展開で加工
-				echo "${CAT_POST#*\=}" |
+				echo "${cat_post#*\=}" |
 
 				# 区切り文字を"=","&"に指定,文字列がある場合のみ処理
 				awk -F'[=&]' '{
@@ -173,7 +173,8 @@ MPD UI using shellscript and CGi
 					# "searchplay",シングルクォート付きで最終フィールドを出力
 					print $1,"\047"$NF"\047"
 
-				}' 
+				# 文字列をデコード
+				}' | urldecode 
 
 			else
 
