@@ -84,7 +84,7 @@ cat << EOS
 				##### グルーピングの終了 #####
 
 				# grepで検索,重複を削除
-				grep -i "${search_var}" | awk '!a[$0]++{print $0}' |
+				grep -F -i "${search_var}" | awk '!a[$0]++{print $0}' |
 
 				awk '{
 					

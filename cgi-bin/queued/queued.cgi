@@ -93,14 +93,14 @@ cat << EOS
 			<!-- ステータスの表示 -->
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 
-			# "SAVE_PLAYLIST"とデコードされたPOSTを出力
+			# "SAVE_PLAYLIST"とPOSTを出力
 			printf "${SAVE_PLAYLIST}\n$(cat)\n" |
 
-			# 最初の"=","_"をスペースに置換
+			# 最初の"=","_"をスペースに置換,デコード
 			sed "s/\=\|_/ /" | urldecode |
 
 			# mpcに渡し,出力を改行
-			xargs mpc | sed "s/$/<br>/g"
+			xargs mpc 2>&1 | sed "s/$/<br>/g"
 
 			# "SAVE_PLAYLIST"が空ではない場合に真
  			test -n "${SAVE_PLAYLIST}" &&
@@ -116,11 +116,11 @@ cat << EOS
 			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 			<!-- キュー内の曲を表示 -->
-			$(# キューされた曲を表示,検索しnlでidと区切り文字" ---::--- "を付与	
+			$(# キューされた曲を表示,検索しnlでidと区切り文字" --::-- "を付与	
 
-			mpc playlist | nl -s " ---::--- " | grep -i "${SEARCH_VAR}" | 
+			mpc playlist | nl -s " --::-- " | grep -F -i "${SEARCH_VAR}" | 
 
- 			awk -F" ---::--- " '{
+ 			awk -F" --::-- " '{
 
  				# POSTでIDのみを渡せるようボタン化
  				print "<p><button name=play value="$1">"$NF"</button></p>"

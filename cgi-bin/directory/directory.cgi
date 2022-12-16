@@ -93,7 +93,7 @@ cat << EOS
 					)
 					
 				# 曲の一覧をgrepで検索
-				mpc listall | grep -i "${search_var}" |
+				mpc listall | grep -F -i "${search_var}" |
 
 				# 出力をボタン化
 				awk '{
