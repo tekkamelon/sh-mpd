@@ -21,7 +21,7 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 	awk -F'[=&]' '/save&input_string=./{
 
 		print "SAVE_PLAYLIST="$1"_"$NF
-		print "SEARCH_VAR=."
+		print "SEARCH_VAR=\"\""
 
 	}
 
@@ -37,7 +37,7 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 	!/&input_string=./{
 
 		print "SAVE_PLAYLIST="
-		print "SEARCH_VAR=."
+		print "SEARCH_VAR=\"\""
 
 	}' |
 	

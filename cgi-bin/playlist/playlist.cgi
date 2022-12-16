@@ -73,7 +73,7 @@ cat << EOS
 				<!-- mpc管理下のプレイリストを表示 -->
 				$(# 変数展開でクエリを加工,デコードし,文字列の有無を判定
 
-				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo ".")
+				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo "")
 
 				##### コマンドのグルーピング #####
 				# プレイリスト一覧を出力
