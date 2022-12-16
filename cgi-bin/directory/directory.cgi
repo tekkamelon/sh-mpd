@@ -66,34 +66,9 @@ cat << EOS
 				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 				<!-- mpc管理下のディレクトリを再帰的に表示 -->
-				$(# クエリを変数展開で加工,デコード,文字列があれば変数に代入,なければ"."を代入
+				$(# 曲の一覧をgrepで検索
 
-				search_var=$(echo "${QUERY_STRING#*\=}" |
-
-					# awkで文字列の有無を判定,あれば真,なければ偽
-					awk '{
-	
-						if(/./){
-	
-							# 真の場合は加工されたクエリを出力
-							print $0
-	
-						}
-
-						else{
-	
-							# 偽の場合は空白行を出力
-							print ""
-	
-						}
-	
-					# 文字列をデコード
-					}' | urldecode 
-	
-					)
-					
-				# 曲の一覧をgrepで検索
-				mpc listall | grep -F -i "${search_var}" |
+				mpc listall | grep -F -i "${QUERY_STRING#*\=}" |
 
 				# 出力をボタン化
 				awk '{

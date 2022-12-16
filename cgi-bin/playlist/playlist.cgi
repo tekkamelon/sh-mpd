@@ -44,24 +44,9 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<!-- ステータスを表示 -->
-				<p>$(# POSTをawkに渡す
+				<p>$(#POSTの"="をスペースに置換,デコードしmpcに渡し出力を改行
 
-				# 区切り文字を"="に指定,POSTの1フィールド目が"lsplaylist"の場合
-				cat | awk -F"=" '$1 == "load"{
-
-					# 1フィールド目と最終フィールド目を出力
-					print $1 , $NF
-
-				}
-
-				# POSTの1フィールド目が"add"の場合
-				$1 == "add"{
-
-					# 1フィールド目と最終フィールド目を出力
-					print $1 , $NF
-
-				# 出力をデコード,mpcに渡し,改行を付与し出力
-				}' | urldecode | xargs mpc | sed "s/$/<br>/g"
+				cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
 				
 				)</p>
 
