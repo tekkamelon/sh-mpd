@@ -68,11 +68,11 @@ cat << EOS
 				<!-- mpc管理下のディレクトリを再帰的に表示 -->
 				$(# 曲の一覧をgrepで検索
 
-				mpc listall | grep -F -i "${QUERY_STRING#*\=}" |
+				mpc listall | grep -F -i "$(echo "${QUERY_STRING#*\=}" | urldecode)" |
 
-				# 出力をボタン化
 				awk '{
 
+					# 出力をボタン化
 					print "<p><button name=button value="$0">"$0"</button></p>"
 
 				}'
