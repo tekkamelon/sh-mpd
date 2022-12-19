@@ -167,7 +167,7 @@ MPD UI using shellscript and CGi
 				# 真の場合はPOSTを変数展開で加工
 				echo "${cat_post#*\=}" |
 
-				# 区切り文字を"=","&"に指定,文字列がある場合のみ処理
+				# 区切り文字を"=","&"に指定
 				awk -F'[=&]' '{
 					
 					# "searchplay",シングルクォート付きで最終フィールドを出力

@@ -51,10 +51,14 @@ cat << EOS
 			}'
 
 			# css一覧を表示
-			ls  ../../stylesheet | 
+			ls ../../stylesheet | 
 			
-			# xargsとechoでボタン化
-			xargs -I{} echo "<p><button name=css value="{}">"{}"</button></p>" 
+			# 出力をボタン化
+			awk '{
+
+				print "<p><button name=css value="$0">"$0"</button></p>" 
+
+			}'
 			
 			)
  

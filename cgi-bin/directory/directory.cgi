@@ -54,7 +54,7 @@ cat << EOS
 				else
 
 					# ステータスを表示
-					mpc status
+					mpc status 2>&1
 
 				fi | sed "s/$/<br>/g"
 
