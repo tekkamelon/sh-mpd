@@ -19,10 +19,18 @@ cat << EOS
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/
 		$(# クエリを変数展開で加工,文字列があれば真,なければ偽
-		echo "${QUERY_STRING#*\=}" | grep . ||
 
-		# 偽の場合は"css_conf"の中身を出力,なければ"stylesheet.css"を指定
-		cat ../css_conf | grep . || echo "stylesheet.css"
+		if [ -n "${QUERY_STRING#*\=}" ] ; then
+
+			# 真の場合は設定ファイルにリダイレクト,クエリを出力
+			echo "${QUERY_STRING#*\=}" >| ../css_conf & echo "${QUERY_STRING#*\=}"
+
+		else
+
+			# 偽の場合は"css_conf"の中身を出力,なければ"stylesheet.css"を指定
+			cat ../css_conf | grep . || echo "stylesheet.css"
+
+		fi
 
 		)">
 		<link rel="icon" ref="image/favicon.svg">
@@ -36,12 +44,8 @@ cat << EOS
 
 			<!-- CSSの設定 -->
 			<h3>CSS setting</h3>
-			$(# クエリを変数展開で加工
+			$(# クエリがあればメッセージを出力
 
-			# POSTを変数展開で加工,設定ファイルへのリダイレクト
-			echo "${QUERY_STRING#*\=}" >| ../css_conf &
-
-			# クエリがあればメッセージを出力
 			test -n "${QUERY_STRING#*\=}" && echo "<p>changed css:${QUERY_STRING#*\=}</p>"
 
 			# css一覧を表示
