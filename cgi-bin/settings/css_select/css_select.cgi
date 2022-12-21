@@ -37,26 +37,20 @@ cat << EOS
 			<!-- CSSの設定 -->
 			<h3>CSS setting</h3>
 			$(# クエリを変数展開で加工
-			echo "${QUERY_STRING#*\=}" | 
 
-			# ".css"にマッチする場合に処理
-			awk '/.\.css/{
-			
-				# メッセージを表示
-				print "<p>changed css:"$0"</p>"
+			# POSTを変数展開で加工,設定ファイルへのリダイレクト
+			echo "${QUERY_STRING#*\=}" >| ../css_conf &
 
-				# ファイルに上書き
-				print $0 > "../css_conf"
-
-			}'
+			# クエリがあればメッセージを出力
+			test -n "${QUERY_STRING#*\=}" && echo "<p>changed css:${QUERY_STRING#*\=}</p>"
 
 			# css一覧を表示
-			ls ../../stylesheet | 
+			ls ../../stylesheet |
 			
-			# 出力をボタン化
 			awk '{
 
-				print "<p><button name=css value="$0">"$0"</button></p>" 
+				# 出力をボタン化
+				print "<p><button name=css value="$0">"$0"</button></p>"
 
 			}'
 			

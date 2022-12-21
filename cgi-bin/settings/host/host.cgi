@@ -50,18 +50,11 @@ cat << EOS
 			# POSTを変数展開で加工,ホスト名が有効であれば真,無効であれば偽
 			if mpc -q --host="${cat_post#*\=}" ; then
 
-				# POSTを変数展開で加工,awkでメッセージの出力,設定ファイルへのリダイレクト
-				echo "${cat_post#*\=}" |
+				# POSTを変数展開で加工,設定ファイルへのリダイレクト
+				echo "${cat_post#*\=}" >| ../hostname &
 
-				awk '{
-	
-					# メッセージを表示	
-					print "changed host:"$0
-	
-					# ファイルに上書き
-					print $0 > "../hostname"
- 					
-				}'
+				# メッセージの出力
+				echo "<p>changed host:${cat_post#*\=}</p>" 
 				
 			else
 				
