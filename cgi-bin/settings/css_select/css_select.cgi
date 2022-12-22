@@ -6,7 +6,30 @@
 # v 変数の表示
 
 # 環境変数の設定
+
 export LANG=C
+
+# クエリを変数展開で加工,文字列があれば真,なければ偽
+if [ -n "${QUERY_STRING#*\=}" ] ; then
+
+	# 真の場合は設定ファイルにリダイレクト
+	echo "${QUERY_STRING#*\=}" >| ../css_conf &
+
+	# メッセージを代入
+	export ECHO_MESSAGE="<p>changed css:$(echo "${QUERY_STRING#*\=}")</p>"
+
+	# 選択されたcssを代入
+	export SELECTED_CSS=$(echo "${QUERY_STRING#*\=}")
+
+else
+
+	# 設定ファイル内のcssを代入,なければstylesheet.css
+	export SELECTED_CSS=$(cat ../css_conf | grep . || echo "stylesheet.css")
+
+	# 空文字を代入
+	export ECHO_MESSAGE=""
+
+fi
 
 echo "Content-type: text/html"
 echo ""
@@ -17,22 +40,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/
-		$(# クエリを変数展開で加工,文字列があれば真,なければ偽
-
-		if [ -n "${QUERY_STRING#*\=}" ] ; then
-
-			# 真の場合は設定ファイルにリダイレクト,クエリを出力
-			echo "${QUERY_STRING#*\=}" >| ../css_conf & echo "${QUERY_STRING#*\=}"
-
-		else
-
-			# 偽の場合は"css_conf"の中身を出力,なければ"stylesheet.css"を指定
-			cat ../css_conf | grep . || echo "stylesheet.css"
-
-		fi
-
-		)">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(echo "${SELECTED_CSS}")">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
@@ -44,9 +52,9 @@ cat << EOS
 
 			<!-- CSSの設定 -->
 			<h3>CSS setting</h3>
-			$(# クエリがあればメッセージを出力
+			$(# 環境変数に代入されたメッセージを出力
 
-			test -n "${QUERY_STRING#*\=}" && echo "<p>changed css:${QUERY_STRING#*\=}</p>"
+			echo "${ECHO_MESSAGE}"
 
 			# css一覧を表示
 			ls ../../stylesheet |
