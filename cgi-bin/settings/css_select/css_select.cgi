@@ -6,7 +6,6 @@
 # v 変数の表示
 
 # 環境変数の設定
-
 export LANG=C
 
 # クエリを変数展開で加工,文字列があれば真,なければ偽
@@ -16,10 +15,10 @@ if [ -n "${QUERY_STRING#*\=}" ] ; then
 	echo "${QUERY_STRING#*\=}" >| ../css_conf &
 
 	# メッセージを代入
-	export ECHO_MESSAGE="<p>changed css:$(echo "${QUERY_STRING#*\=}")</p>"
+	export ECHO_MESSAGE="<p>changed css:"${QUERY_STRING#*\=}"</p>"
 
 	# 選択されたcssを代入
-	export SELECTED_CSS=$(echo "${QUERY_STRING#*\=}")
+	export SELECTED_CSS="${QUERY_STRING#*\=}"
 
 else
 
@@ -40,7 +39,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(echo "${SELECTED_CSS}")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/${SELECTED_CSS}">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
@@ -52,11 +51,12 @@ cat << EOS
 
 			<!-- CSSの設定 -->
 			<h3>CSS setting</h3>
-			$(# 環境変数に代入されたメッセージを出力
 
-			echo "${ECHO_MESSAGE}"
+			<!-- css変更時のメッセージを表示 -->
+			${ECHO_MESSAGE}
 
-			# css一覧を表示
+			$(# css一覧を表示
+
 			ls ../../stylesheet |
 			
 			awk '{
