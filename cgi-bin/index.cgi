@@ -5,11 +5,10 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# 環境変数の設定
 # 環境変数で接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
+export LANG=C
 export MPD_HOST=$(cat settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat settings/port_conf | grep . || echo "6600") 
-export LANG=C
 
 echo "Content-type: text/html"
 echo ""
