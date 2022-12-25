@@ -32,7 +32,7 @@ cat << EOS
 
     <body>
 		<!-- ホスト名,ポート番号の表示-->
-		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>" &)</h4>
+		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
 		<form name="setting" method="POST" >
 
 				<span>
@@ -54,7 +54,7 @@ cat << EOS
 				echo "${cat_post#*\=}" >| ../hostname &
 
 				# メッセージの出力
-				echo "<p>changed host:${cat_post#*\=}</p>" 
+				echo "<p>changed host:${cat_post#*\=}</p>" &
 				
 			else
 				

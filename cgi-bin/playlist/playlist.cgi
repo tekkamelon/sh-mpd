@@ -30,7 +30,7 @@ cat << EOS
 	</header>
 
     <body>
-		<h4>$(echo "host:$MPD_HOST<br>port:$MPD_PORT<br>" &)</h4>
+		<h4>${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
 
 		<!-- 入力欄の設定 -->
 		<form name="FORM" method="GET" >
