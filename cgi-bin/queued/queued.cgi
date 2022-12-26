@@ -13,8 +13,8 @@ export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600")
 # "SAVE_PLAYLIST","SEARCH_VAR"を設定
 export $(# クエリ内の文字列をawkで判定し,処理を分け環境変数へ代入
 
-	# クエリを変数展開で加工,デコード
-	echo "${QUERY_STRING#*\=}" | urldecode | 
+	# クエリを変数展開で加工
+	echo "${QUERY_STRING#*\=}" | 
 
 	# プレイリストのセーブの処理,"save&input_string=(任意の1文字以上)"にマッチした場合の処理
 	awk -F'[=&]' '/save&input_string=./{
@@ -29,7 +29,6 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 
 		print "SAVE_PLAYLIST="
 		print "SEARCH_VAR="$NF
-
 	}
 	
 	# "&input_string=(任意の1文字以上)"にマッチしなかった場合の処理
@@ -37,11 +36,9 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 
 		print "SAVE_PLAYLIST="
 		print "SEARCH_VAR=\"\""
-
-	}' |
-	
-	# 並列化し環境変数へ代入
-	xargs -L 1 -P 2
+		
+	# デコード,並列化し環境変数へ代入
+	}' | urldecode | xargs -L 1 -P 2
 
 )
 
@@ -57,7 +54,7 @@ cat << EOS
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf | grep . || echo "stylesheet.css")">
 		<link rel="icon" ref="image/favicon_ios.ico">
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
-        <title>sh-MPD</title>
+		<title>sh-MPD</title>
     </head>
 
 	<header>
@@ -92,20 +89,20 @@ cat << EOS
 			<!-- ステータスの表示 -->
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 
-			# "SAVE_PLAYLIST"とPOSTを出力
-			printf "${SAVE_PLAYLIST}\n$(cat)\n" |
+			# "SAVE_PLAYLIST"とデコードされたPOSTを出力
+			printf "${SAVE_PLAYLIST}\n$(cat | urldecode)\n" |
 
-			# 最初の"=","_"をスペースに置換,デコード
-			sed "s/\=\|_/ /" | urldecode |
+			# 最初の"=","_"をスペースに置換
+			sed "s/\=\|_/ /" |
 
-			# mpcに渡し,出力を改行
+			# mpcに渡し出力を改行
 			xargs mpc 2>&1 | sed "s/$/<br>/g"
 
-			# "SAVE_PLAYLIST"が空ではない場合に真
- 			test -n "${SAVE_PLAYLIST}" &&
+			# プレイリストのセーブの処理,"SAVE_PLAYLIST"が空ではない場合に真
+			test -n "${SAVE_PLAYLIST}" &&
 
 			# 真の場合,ステータスとメッセージを表示
-			mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist</p>"
+			mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:"${SAVE_PLAYLIST#*\_}"</p>"
 
 			)</p>
 
@@ -117,26 +114,26 @@ cat << EOS
 			<!-- キュー内の曲を表示 -->
 			$(# キューされた曲を表示,検索しnlでidと区切り文字" --::-- "を付与	
 
-			mpc playlist | nl -s " --::-- " | grep -F -i "${SEARCH_VAR}" | 
+			mpc playlist | nl -s " --::-- " | grep -F -i "${SEARCH_VAR}" |
 
  			awk -F" --::-- " '{
 
  				# POSTでIDのみを渡せるようボタン化
  				print "<p><button name=play value="$1">"$NF"</button></p>"
 
-   			}' 
+   			}'
 
 			)
 
 		</form>
 	</body>
 
-	<footer>	
+	<footer>
 		<!-- リンク -->
 		<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
-	</footer>	
+	</footer>
 
 </html>
 EOS
