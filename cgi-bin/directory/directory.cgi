@@ -45,18 +45,30 @@ cat << EOS
 
 				cat_post=$(cat)
 
-				# POSTを変数展開で加工,空でない場合に真,空の場合に偽
-				if [ -n "${cat_post#*\=}" ] ; then
+				echo "${cat_post#*\=}" | 
 
-					# 真の場合,POSTを変数展開で加工,デコードしてmpcに渡しキューに追加,再生
-					echo "${cat_post#*\=}" | urldecode | mpc insert && mpc next
+				awk '{
 
-				else
+					# POSTがあれば真,なければ偽
+					if(/./){
 
-					# ステータスを表示
-					mpc status 2>&1
+						# 真の場合は"insert -q"とPOSTを出力
+						print "insert -q",$0
 
-				fi | sed "s/$/<br>/g"
+					}
+
+					else{
+
+						# 偽の場合は"status"を出力
+						print "status"
+
+					}
+
+				# POSTをデコード,mpcにエラー出力ごと渡し改行
+				}' | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
+
+				# POSTがある場合はinsertされた曲を再生
+				test -n "${cat_post#*\=}" && mpc next | sed "s/$/<br>/g"
 
 				)</p>
 
