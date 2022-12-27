@@ -19,7 +19,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat settings/css_conf | grep . || echo "stylesheet.css" &)">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat settings/css_conf | grep . || echo "stylesheet.css")">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
@@ -36,12 +36,11 @@ cat << EOS
 MPD UI using shellscript and CGi
 </span>
 	    </pre>
-
 	</header>
 
     <body>
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
-		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}' &)</p>
+		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}')</p>
 		
 		<!-- 入力フォーム -->
 		<form name="FORM" method="GET" >
@@ -184,13 +183,13 @@ MPD UI using shellscript and CGi
 				sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"
 			
 			# mpcのエラー出力ごとsedに渡す
-			fi | xargs mpc 2>&1 | sed "s/$/<br>/g" &
+			fi | xargs mpc 2>&1 | sed "s/$/<br>/g"
 
 			)</p>
 
 			<!-- 次の曲 -->
 			<h3>next song</h3>
-			<p><button name=button value=next>$(mpc queued | grep . || echo "next song not found" &)</button></p>
+			<p><button name=button value=next>$(mpc queued | grep . || echo "next song not found")</button></p>
 	
 		</form>
 

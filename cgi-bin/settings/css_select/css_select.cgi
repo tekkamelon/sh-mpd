@@ -17,13 +17,10 @@ if [ -n "${QUERY_STRING#*\=}" ] ; then
 	# メッセージを代入
 	export ECHO_MESSAGE="<p>changed css:"${QUERY_STRING#*\=}"</p>"
 
-	# 選択されたcssを代入
-	export SELECTED_CSS="${QUERY_STRING#*\=}"
-
 else
 
 	# 設定ファイル内のcssを代入,なければstylesheet.css
-	export SELECTED_CSS=$(cat ../css_conf | grep . || echo "stylesheet.css")
+	export QUERY_STRING=$(cat ../css_conf | grep . || echo "stylesheet.css")
 
 	# 空文字を代入
 	export ECHO_MESSAGE=""
@@ -39,7 +36,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/${SELECTED_CSS}">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/${QUERY_STRING#*\=}">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>

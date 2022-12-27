@@ -98,7 +98,7 @@ cat << EOS
 			# mpcに渡し出力を改行
 			xargs mpc 2>&1 | sed "s/$/<br>/g"
 
-			# プレイリストのセーブの処理,"SAVE_PLAYLIST"が空ではない場合に真
+			# プレイリストのセーブ時のステータスの表示,"SAVE_PLAYLIST"が空ではない場合に真
 			test -n "${SAVE_PLAYLIST}" &&
 
 			# 真の場合,ステータスとメッセージを表示
