@@ -47,24 +47,12 @@ cat << EOS
 
 				echo "${cat_post#*\=}" | 
 
-				awk '{
+				# POSTがある場合は"insert -q"とPOSTを出力
+				awk '/./{
 
-					# POSTがあれば真,なければ偽
-					if(/./){
+					print "insert -q",$0
 
-						# 真の場合は"insert -q"とPOSTを出力
-						print "insert -q",$0
-
-					}
-
-					else{
-
-						# 偽の場合は"status"を出力
-						print "status"
-
-					}
-
-				# POSTをデコード,mpcにエラー出力ごと渡し改行
+				# 文字列をデコード,mpcにエラー出力ごと渡し改行
 				}' | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
 
 				# POSTがある場合はinsertされた曲を再生
