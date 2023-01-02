@@ -47,10 +47,10 @@ cat << EOS
 
 				echo "${cat_post#*\=}" | 
 
-				# POSTがある場合は"insert -q"とPOSTを出力
+				# POSTがある場合は"insert -q"とPOSTをダブルクォート付きで出力
 				awk '/./{
 
-					print "insert -q",$0
+					print "insert -q","\""$0"\""
 
 				# 文字列をデコード,mpcにエラー出力ごと渡し改行
 				}' | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
