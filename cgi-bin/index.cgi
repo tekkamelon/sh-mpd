@@ -25,6 +25,8 @@ cat << EOS
         <title>sh-MPD</title>
     </head>
 
+<body>
+<div class="layout">
 	<header>
 		<pre> 
          __          __  _______  ____ 
@@ -32,13 +34,13 @@ cat << EOS
   / ___/ __ \______/ /|_/ / /_/ / / / /
  (__  ) / / /_____/ /  / / ____/ /_/ / 
 /____/_/ /_/     /_/  /_/_/   /_____/  
+	    </pre>
 <span>
 MPD UI using shellscript and CGi
 </span>
-	    </pre>
 	</header>
 
-    <body>
+    <main>
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
 		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}')</p>
 		
@@ -193,21 +195,23 @@ MPD UI using shellscript and CGi
 	
 		</form>
 
+	<aside>
+		<h2>MENU</h2>
 		<!-- リンク -->
 		<button><a href="queued/queued.cgi">Queued</a></button>
 		<button><a href="directory/directory.cgi">Directoty</a></button>
 		<button><a href="playlist/playlist.cgi">Playlist</a></button>
 		<button><a href="settings/settings.cgi">Settings</a></button>
 
-    </body>
+		<footer>
+			<h4>source code</h4>
+			<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
+			<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode" reference source</a></p>
+		</footer>
+	</aside>
 
-	<footer>
-
-		<h4>source code</h4>
-		<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
-		<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode" reference source</a></p>
-
-	</footer>
+</div>
+</body>
 
 </html>
 EOS

@@ -7,6 +7,16 @@
     --letter-color: rgb(35, 35, 35);
 }
 
+.layout{
+   display:flex;
+   flex-wrap:wrap;
+   justify-content:space-between;
+}
+
+header,main,aside,footer{
+   padding:10px 0;
+}
+
 /* アスキーアート */
 pre{
 	color: var(--main-bg-color);
@@ -25,6 +35,7 @@ a{
 
 /* ヘッダー */
 header{
+	width:100%;
     color: var(--main-bg-color);
     text-align:left
 }
@@ -144,7 +155,25 @@ button:hover{
 	text-align: center;
 }
 
+main{
+	width:70%;
+}
+
+aside{
+	width:30%;
+}
+
+footer{
+	width:100%;
+}
 /* div class */
 .link{
 	margin-top: 15px;
 }
+
+@media (max-width:500px){
+  header,main,aside,footer{
+    width:100%;
+  }
+}
+
