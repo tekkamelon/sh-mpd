@@ -20,7 +20,7 @@ header,main,aside,footer{
 /* アスキーアート */
 pre{
 	color: var(--main-bg-color);
-    text-align:left
+    text-align:center
 }
 
 /* サブタイトル */
@@ -35,9 +35,9 @@ a{
 
 /* ヘッダー */
 header{
-	width:100%;
+	width:70%;
     color: var(--main-bg-color);
-    text-align:left
+    text-align:center
 }
 
 /* 背景色 */
@@ -160,12 +160,15 @@ main{
 }
 
 aside{
+	height:0%;
 	width:30%;
+	background-color: rgb(15, 15, 15);
 }
 
 footer{
 	width:100%;
 }
+
 /* div class */
 .link{
 	margin-top: 15px;
