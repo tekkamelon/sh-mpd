@@ -6,18 +6,6 @@
     --main-bg-color: rgb(0, 255, 10);
     --letter-color: rgb(35, 35, 35);
 }
-
-.layout{
-   display:flex;
-   flex-wrap:wrap;
-   flex-direction: row-reverse;
-   justify-content:space-between;
-}
-
-header,main,aside,footer{
-   padding:10px 0;
-}
-
 /* アスキーアート */
 pre{
 	color: var(--main-bg-color);
@@ -44,48 +32,48 @@ header{
 /* 背景色 */
 body{
     background-color: rgb(10, 10, 10);
-    text-align:left
+    text-align: left;
 }
 
 /* 大見出し */
 h1{
     color: var(--main-bg-color);
     font-size: 35px;
-    text-align:left
+    text-align: left;
 }
  
 /* 中見出し */
 h2{
     color: var(--main-bg-color);
-    text-align:left
+    text-align: left;
 }
 
 /* 小見出し */
 h3{
     color: var(--main-bg-color);
-    text-align:left
+    text-align: left;
 }
 
 h4{
     color: teal;
-    text-align:left
+    text-align: left;
 }
 
 l1{
     color:white ;
-    text-align:left
+    text-align: left;
 }
 
 l2{
     color:white ;
-    text-align:left
+    text-align: left;
 }
 
 /* 本文 */
 p{
     color: white;
     font-size: 15px;
-    text-align:left
+    text-align: left;
 }
 
 select{
@@ -93,7 +81,7 @@ select{
 	background-color: black;
 	border: 1px solid teal;
 	border-radius: 6px;
-    text-align:center
+    text-align: center;
 }
 
 /* 折りたたみ */
@@ -146,6 +134,23 @@ button{
 	text-align: center;
 }
 
+/* div class */
+.link{
+	margin-top: 15px;
+}
+
+/* index.cgi */
+.layout{
+   display:flex;
+   flex-wrap:wrap;
+   flex-direction: row-reverse;
+   justify-content:space-between;
+}
+
+header,main,aside,footer{
+   padding:10px 0;
+}
+
 button:hover{
 	margin: 3px;
 	padding: 7px 14px;
@@ -167,11 +172,6 @@ aside{
 
 footer{
 	width:100%;
-}
-
-/* div class */
-.link{
-	margin-top: 15px;
 }
 
 @media (max-width:500px){
