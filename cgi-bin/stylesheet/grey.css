@@ -141,7 +141,7 @@ button:hover{
 	margin: 3px;
 	padding: 7px 14px;
 	color: rgb(25, 30, 30);
-	background-color: rgb(195, 200, 200);
+	background-color: rgb(45, 50, 50);
 	border: 1px solid rgb(180, 185, 185);
 	border-radius: 12px;
 	text-align: center;
@@ -162,16 +162,6 @@ button:hover{
 
 header,main,aside,footer{
    padding:10px 0;
-}
-
-button:hover{
-	margin: 3px;
-	padding: 7px 14px;
-	color: var(--main-bg-color);
-	background-color: black;
-	border: 1px solid orange;
-	border-radius: 12px;
-	text-align: center;
 }
 
 main{

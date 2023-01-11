@@ -163,16 +163,6 @@ header,main,aside,footer{
    padding:10px 0;
 }
 
-button:hover{
-	margin: 3px;
-	padding: 7px 14px;
-	color: var(--main-bg-color);
-	background-color: black;
-	border: 1px solid orange;
-	border-radius: 12px;
-	text-align: center;
-}
-
 main{
 	width:70%;
 }
