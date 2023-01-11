@@ -164,12 +164,11 @@ header,main,aside,footer{
 }
 
 main{
-	width:70%;
+	width:75%;
 }
 
 aside{
-	height:0%;
-	width:30%;
+	width:25%;
 }
 
 footer{
