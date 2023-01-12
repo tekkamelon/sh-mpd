@@ -201,9 +201,9 @@ MPD UI using shellscript and CGi
 		<h3>MENU</h3>
 		<!-- リンク -->
 		<button><a href="queued/queued.cgi">Queued</a></button>
-		<button><a href="directory/directory.cgi">Directoty</a></button><br>
+		<button><a href="directory/directory.cgi">Directoty</a></button>
 		<button><a href="playlist/playlist.cgi">Playlist</a></button>
-		<button><a href="settings/settings.cgi">Settings</a></button><br>
+		<button><a href="settings/settings.cgi">Settings</a></button>
 
 		<footer>
 			<h4>source code</h4>
