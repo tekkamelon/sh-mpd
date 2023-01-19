@@ -112,9 +112,9 @@ cat << EOS
 			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 			<!-- キュー内の曲を表示 -->
-			$(# キューされた曲を表示,検索しnlでidと区切り文字";;"を付与	
+			$(# キューされた曲をgrepで検索,idと区切り文字";;"を付与
 
-			mpc playlist | nl -s ";;" | grep -F -i "${SEARCH_VAR}" |
+			mpc playlist | grep -F -i -n "${SEARCH_VAR}" | sed "s/:/;;/" |
 
  			awk -F";;" '{
 
