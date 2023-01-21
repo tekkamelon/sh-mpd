@@ -112,19 +112,12 @@ cat << EOS
 			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
 			<!-- キュー内の曲を表示 -->
-			$(# キューされた曲をgrepで検索,idと区切り文字";;"を付与
-			
-			mpc playlist | grep -F -i -n "${SEARCH_VAR}" |
+			$(# キューされた曲をgrepで検索,idと区切り文字":"を付与
 
- 			awk -F":" '{
+			mpc playlist | grep -F -i -n "${SEARCH_VAR}" | 
 
-				# 各フィールドを変数に代入
-				for (i = 2; i <= NF; i++)
-
- 				# POSTでIDのみを渡せるようボタン化
- 				print "<p><button name=play value="$1">"$i"</button></p>"
-
-   			}'
+			# 行頭が任意の1文字以上+":"+任意の1文字以上にマッチするものをタグ付きで出力,最初の":"を削除
+			sed -e "s/\(^.\+:\)/<p><button name\=play value\=\1/" -e "s/\(:.\+\)/>\1<\/button><\/p>/" -e "s/://"
 
 			)
 
