@@ -113,13 +113,16 @@ cat << EOS
 
 			<!-- キュー内の曲を表示 -->
 			$(# キューされた曲をgrepで検索,idと区切り文字";;"を付与
+			
+			mpc playlist | grep -F -i -n "${SEARCH_VAR}" |
 
-			mpc playlist | grep -F -i -n "${SEARCH_VAR}" | sed "s/:/;;/" |
+ 			awk -F":" '{
 
- 			awk -F";;" '{
+				# 各フィールドを変数に代入
+				for (i = 2; i <= NF; i++)
 
  				# POSTでIDのみを渡せるようボタン化
- 				print "<p><button name=play value="$1">"$NF"</button></p>"
+ 				print "<p><button name=play value="$1">"$i"</button></p>"
 
    			}'
 
