@@ -116,8 +116,14 @@ cat << EOS
 
 			mpc playlist | grep -F -i -n "${SEARCH_VAR}" | 
 
-			# 行頭が任意の1文字以上+":"+任意の1文字以上にマッチするものをタグ付きで出力,最初の":"を削除
-			sed -e "s/\(^.\+:\)/<p><button name\=play value\=\1/" -e "s/\(:.\+\)/>\1<\/button><\/p>/" -e "s/://"
+			# ":"を">"に置換,標準入力をタグ付きで出力
+			awk '{
+
+				sub(":" , ">")
+
+				print "<p><button name=play value="$0"</button></p>"
+
+			}'
 
 			)
 
