@@ -36,35 +36,17 @@ cat << EOS
 
 			<!-- 出力先デバイスの設定 -->
 			<h3>ountput devices list</h3>
-			$(# POSTで受け取った文字列が空かどうかを判定し処理を分岐
+			$(# sedでの空文字の判定の為にPOSTを変数に代入
 
-			# POSTで受け取った文字列を変数に代入
 			cat_post=$(cat)
 
-			echo "${cat_post#*\=}" | 
-
-			# POSTの数字の有無を判定,あれば真,なければ偽
-			awk '{
+			echo "${cat_post}" |
 	
-				if(/[0-9]/){
-
-					# 真の場合は"toggleoutput "と全体を出力
-					print "toggleoutput "$0
-	
-				}
-
-				else{
-	
-					# 偽の場合は"outputs"のみ出力
-					print "outputs"
-	
-				}
-
-			# 出力をmpcに渡す
-			}' | xargs mpc |
+			# "="を" "に,空白行を"outputs"に置換,mpcに渡す
+			sed -e "s/=/ /g" -e "s/^$/outputs/g" | xargs mpc |
 
 			# "Output"を含む行をボタン化
-			awk '/Output/{
+			awk -F" " '/Output/{
 
 				print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
 
