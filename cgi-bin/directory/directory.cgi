@@ -45,15 +45,11 @@ cat << EOS
 
 				cat_post=$(cat)
 
-				echo "${cat_post#*\=}" | 
+				# POSTの"="を" -q "に置換
+				echo "${cat_post}" | sed "s/=/ -q /" |
 
-				# POSTがある場合は"insert -q"とPOSTをダブルクォート付きで出力
-				awk '/./{
-
-					print "insert -q","\""$0"\""
-
-				# 文字列をデコード,mpcにエラー出力ごと渡し改行
-				}' | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
+				# デコードしmpcに渡し.エラー出力ごと改行
+				urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
 
 				# POSTがある場合はinsertされた曲を再生
 				test -n "${cat_post#*\=}" && mpc next | sed "s/$/<br>/g"
@@ -73,7 +69,7 @@ cat << EOS
 				awk '{
 
 					# 出力をボタン化
-					print "<p><button name=button value="$0">"$0"</button></p>"
+					print "<p><button name=insert value="$0">"$0"</button></p>"
 
 				}'
 
