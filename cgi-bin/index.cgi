@@ -164,17 +164,11 @@ MPD UI using shellscript and CGi
 			# POSTの有無を確認,あれば真,なければ偽
 			if [ -n "${cat_post#*\&*\=}" ] ; then
 			
-				# 真の場合はPOSTを変数展開で加工
-				echo "${cat_post#*\=}" |
+				# 真の場合はPOSTを変数展開で加工,行末にシングルクォートを付与し出力
+				echo "${cat_post#*\=}'" |
 
-				# 区切り文字を"=","&"に指定
-				awk -F'[=&]' '{
-					
-					# "searchplay",シングルクォート付きで最終フィールドを出力
-					print $1,"\047"$NF"\047"
-
-				# 文字列をデコード
-				}' | urldecode 
+				# "&search"をスペースとシングルクォートに置換,デコード
+				sed "s/&search=/ '/g" | urldecode
 
 			else
 
@@ -208,7 +202,7 @@ MPD UI using shellscript and CGi
 		<footer>
 			<h4>source code</h4>
 			<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
-			<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urlcode" reference source</a></p>
+			<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urldecode" reference source</a></p>
 		</footer>
 	</aside>
 
