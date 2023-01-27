@@ -42,11 +42,11 @@ cat << EOS
 
 			echo "${cat_post}" |
 	
-			# "="を" "に,空白行を"outputs"に置換,mpcに渡す
+			# "="を" "に,空白行の場合は"outputs"を出力しmpcに渡す
 			sed -e "s/=/ /g" -e "s/^$/outputs/g" | xargs mpc |
 
-			# "Output"を含む行をボタン化
-			awk -F" " '/Output/{
+			# スペースを区切り文字に設定,1フィールド目が"Output"の行をボタン化
+			awk -F" " '$1 == "Output"{
 
 				print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
 

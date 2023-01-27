@@ -20,7 +20,7 @@ if [ -n "${QUERY_STRING#*\=}" ] ; then
 else
 
 	# 設定ファイル内のcssを代入,なければstylesheet.css
-	export QUERY_STRING=$(cat ../css_conf | grep . || echo "stylesheet.css")
+	export QUERY_STRING=$(cat ../css_conf)
 
 	# 空文字を代入
 	export ECHO_MESSAGE=""
@@ -36,7 +36,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/${QUERY_STRING#*\=}">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo "stylesheet.css")>
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
