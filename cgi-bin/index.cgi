@@ -161,25 +161,33 @@ MPD UI using shellscript and CGi
 			# POSTを変数に代入
 			cat_post=$(cat) 
 			
-			# POSTの有無を確認,あれば真,なければ偽
-			if [ -n "${cat_post#*\&*\=}" ] ; then
-			
-				# 真の場合はPOSTを変数展開で加工,行末にシングルクォートを付与し出力
-				echo "${cat_post#*\=}'" |
+			# POSTとクエリを出力,sedで空白行を削除
+			{ echo "${cat_post#*\=}" ; echo "${QUERY_STRING}" ; } | sed "/^$/d" |
 
-				# "&search"をスペースとシングルクォートに置換,デコード
-				sed "s/&search=/ '/g" | urldecode
+			# 区切り文字を"=","&"に設定,1行目のみに処理
+			awk -F"[=&]" 'NR == 1{
 
-			else
+				# 1フィールド目に"button"があれば真,なければ偽
+				if($1 == "button"){
 
-				# 偽の場合はクエリを変数展開で加工
-				echo "${QUERY_STRING#*\=}" |
-	
-				# "volume","seek","mute"時の文字列をデコード
-				sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"
-			
-			# mpcのエラー出力ごとsedに渡す
-			fi | xargs mpc 2>&1 | sed "s/$/<br>/g"
+					# 真の場合は"_"をスペースに置換,最終フィールドを出力
+					sub("_" , " ")
+					
+					print $NF
+
+				}
+
+				else{
+
+					# 偽の場合は1フィールド目,最終フィールドを出力
+					print $1,$NF
+
+				}
+
+			}' | 
+
+			# デコードしmpcのエラー出力ごとsedに渡す
+			urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
 
 			)</p>
 
