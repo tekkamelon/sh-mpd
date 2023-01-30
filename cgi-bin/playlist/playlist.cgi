@@ -44,7 +44,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<!-- ステータスを表示 -->
-				<p>$(#POSTの"="をスペースに置換,デコードしmpcに渡し出力を改行
+				<p>$(# POSTの"="をスペースに置換,デコードしmpcに渡し出力を改行
 
 				cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
 				
@@ -56,25 +56,41 @@ cat << EOS
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
 				<!-- mpc管理下のプレイリストを表示 -->
-				$(# 変数展開でクエリを加工,デコードし,文字列の有無を判定
+				$(# 変数展開でクエリを加工,文字列の有無を判定,あれば真,無ければ偽
 
-				search_var=$(echo "${QUERY_STRING#*\=}" | urldecode | grep . || echo "")
+				# 検索ワードを変数に代入
+				search_var=$(
+
+					if [ -n "${QUERY_STRING#*\=}" ] ; then
+	
+						# 真の場合はクエリを加工し出力,デコード
+						echo "${QUERY_STRING#*\=}" | urldecode
+	
+					else
+	
+						# 偽の場合は空白行を出力
+						echo ""
+	
+					fi
+
+				)
 
 				##### コマンドのグルーピング #####
 				# プレイリスト一覧を出力
 				{ mpc lsplaylist ; 
 
 				# mpd管理下ディレクトリを";;"付きで出力,cutで親ディレクトリのみを出力
-				mpc listall -f "[;;%file%]" | cut -d"/" -f1 ; } |
+				mpc listall -f "[;; %file%]" | cut -d"/" -f1 ; } |
 				##### グルーピングの終了 #####
 
 				# grepで検索,重複を削除
 				grep -F -i "${search_var}" | awk '!a[$0]++{print $0}' |
 
-				awk '{
+				# 区切り文字をスペースに指定
+				awk -F" " '{
 					
-					# 先頭に";;"がある場合は真,なければ偽
-					if(/^;;/){
+					# 1フィールド目にに";;"がある場合は真,なければ偽
+					if($1 == ";;"){
 
 						# 真の場合は";;"を削除,POSTの1フィールド目に"add"を指定しボタン化
 						sub(";;" , "" , $0)
