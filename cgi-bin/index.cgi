@@ -42,7 +42,6 @@ MPD UI using shellscript and CGi
 
     <main>
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
-		<p>used RAM: $(free -h | awk -F" " 'NR == 2 {print $3}')</p>
 		
 		<!-- 入力フォーム -->
 		<form name="FORM" method="GET" >
