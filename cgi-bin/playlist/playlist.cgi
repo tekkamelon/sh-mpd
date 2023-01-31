@@ -19,7 +19,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf | grep . || echo "stylesheet.css")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf)">
 		<link rel="icon" ref="image/favicon_ios.ico">
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
         <title>sh-MPD</title>
@@ -55,45 +55,28 @@ cat << EOS
 				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 
-				<!-- mpc管理下のプレイリストを表示 -->
-				$(# 変数展開でクエリを加工,文字列の有無を判定,あれば真,無ければ偽
-
-				# 検索ワードを変数に代入
-				search_var=$(
-
-					if [ -n "${QUERY_STRING#*\=}" ] ; then
-	
-						# 真の場合はクエリを加工し出力,デコード
-						echo "${QUERY_STRING#*\=}" | urldecode
-	
-					else
-	
-						# 偽の場合は空白行を出力
-						echo ""
-	
-					fi
-
-				)
+				<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
+				$(# プレイリスト及びディレクトリの検索などの処理
 
 				##### コマンドのグルーピング #####
 				# プレイリスト一覧を出力
 				{ mpc lsplaylist ; 
 
-				# mpd管理下ディレクトリを";;"付きで出力,cutで親ディレクトリのみを出力
+				# mpd管理下ディレクトリを";; "付きで出力,cutで親ディレクトリのみを出力
 				mpc listall -f "[;; %file%]" | cut -d"/" -f1 ; } |
 				##### グルーピングの終了 #####
 
-				# grepで検索,重複を削除
-				grep -F -i "${search_var}" | awk '!a[$0]++{print $0}' |
+				# grepで検索,デコードし重複を削除
+				grep -F -i "${QUERY_STRING#*\=}" | urldecode | awk '!a[$0]++{print $0}' |
 
 				# 区切り文字をスペースに指定
 				awk -F" " '{
 					
-					# 1フィールド目にに";;"がある場合は真,なければ偽
+					# 1フィールド目に";;"がある場合は真,なければ偽
 					if($1 == ";;"){
 
-						# 真の場合は";;"を削除,POSTの1フィールド目に"add"を指定しボタン化
-						sub(";;" , "" , $0)
+						# 真の場合は";; "を削除,POSTのvalueに"add"を指定しボタン化
+						sub(";; " , "" , $0)
 
 						print "<p><button name=add value="$0">"$0"</button></p>"
 
