@@ -20,7 +20,7 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 	awk -F'[=&]' '/save&input_string=./{
 
 		print "SAVE_PLAYLIST="$1"_"$NF
-		print "SEARCH_VAR=\"\""
+		print "SEARCH_VAR="
 
 	}
 
@@ -35,7 +35,7 @@ export $(# クエリ内の文字列をawkで判定し,処理を分け環境変�
 	!/&input_string=./{
 
 		print "SAVE_PLAYLIST="
-		print "SEARCH_VAR=\"\""
+		print "SEARCH_VAR="
 		
 	# デコード,並列化し環境変数へ代入
 	}' | urldecode | xargs -L 1 -P 2
@@ -51,7 +51,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf | grep . || echo "stylesheet.css")">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf)">
 		<link rel="icon" ref="image/favicon_ios.ico">
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
 		<title>sh-MPD</title>
@@ -89,8 +89,8 @@ cat << EOS
 			<!-- ステータスの表示 -->
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 
-			# "SAVE_PLAYLIST"とデコードされたPOSTを出力
-			printf "${SAVE_PLAYLIST}\n$(cat | urldecode)\n" |
+			# コマンドをグルーピングし"$SAVE_PLAYLIST"とデコードされたPOSTを出力
+			{ echo "${SAVE_PLAYLIST}" & cat | urldecode ; } |
 
 			# 最初の"=","_"をスペースに置換
 			sed "s/\=\|_/ /" |
