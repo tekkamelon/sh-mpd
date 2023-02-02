@@ -36,7 +36,7 @@ cat << EOS
 /____/_/ /_/     /_/  /_/_/   /_____/  
 	    </pre>
 <span>
-MPD UI using shellscript and CGi
+MPD UI using shellscript and CGI
 </span>
 	</header>
 
