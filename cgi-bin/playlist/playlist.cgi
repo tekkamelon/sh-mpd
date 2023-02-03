@@ -58,27 +58,36 @@ cat << EOS
 				<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
 				$(# プレイリスト及びディレクトリの検索などの処理
 
-				##### コマンドのグルーピング #####
-				# プレイリスト一覧を出力
+				# クエリを変数展開で加工,文字列があれば真,なければ偽
+				if [ -n "${QUERY_STRING#*\=}" ] ; then
+
+					# 真の場合はクエリをデコード,変数に代入
+					search_var=$(echo "${QUERY_STRING#*\=}" | urldecode)
+
+				else
+
+					# 偽の場合は空文字を変数に代入
+					search_var=""
+
+				fi
+
+				# コマンドをグルーピング,プレイリスト一覧を出力
 				{ mpc lsplaylist ; 
+				
+				# ディレクトリを再帰的に出力,"/+任意の1文字以上"を"/"に置換
+				mpc listall | sed "s;/.*;/;g" ; } |
 
-				# mpd管理下ディレクトリを";; "付きで出力,cutで親ディレクトリのみを出力
-				mpc listall -f "[;; %file%]" | cut -d"/" -f1 ; } |
-				##### グルーピングの終了 #####
+				# grepで固定文字列を大文字,小文字を区別せずに検索
+				grep -F -i "${search_var}" |
 
-				# grepで検索,デコードし重複を削除
-				grep -F -i "${QUERY_STRING#*\=}" | urldecode | awk '!a[$0]++{print $0}' |
-
-				# 区切り文字をスペースに指定
-				awk -F" " '{
+				# 区切り文字を"/"に指定
+				awk -F"/" '{
 					
-					# 1フィールド目に";;"がある場合は真,なければ偽
-					if($1 == ";;"){
+					# "/"がある場合は真,なければ偽
+					if(/.\//){
 
-						# 真の場合は";; "を削除,POSTのvalueに"add"を指定しボタン化
-						sub(";; " , "" , $0)
-
-						print "<p><button name=add value="$0">"$0"</button></p>"
+						# 真の場合はPOSTのvalueに"add"を指定しボタン化
+						print "<p><button name=add value="$1">"$1"</button></p>"
 
  					}
 
@@ -89,8 +98,11 @@ cat << EOS
 
 					}
 				
-				}'
-				
+				}' |
+
+				# 重複を削除
+				awk '!a[$0]++{print $0}'
+
 				)
 
 		</form>

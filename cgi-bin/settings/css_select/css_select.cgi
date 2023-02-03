@@ -19,8 +19,8 @@ if [ -n "${QUERY_STRING#*\=}" ] ; then
 
 else
 
-	# 設定ファイル内のcssを代入,なければstylesheet.css
-	export QUERY_STRING=$(cat ../css_conf | grep . || echo "stylesheet.css")
+	# 設定ファイル内のcssを代入
+	export QUERY_STRING=$(cat ../css_conf)
 
 	# 空文字を代入
 	export ECHO_MESSAGE=""
