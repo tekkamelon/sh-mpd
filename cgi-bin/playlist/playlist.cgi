@@ -71,14 +71,14 @@ cat << EOS
 
 				fi
 			
-				# コマンドをグルーピング,プレイリスト一覧を出力
-				{ mpc lsplaylist ; 
+				# プレイリスト一覧を出力,名前付きパイプにリダイレクト
+				mpc lsplaylist >| fifo_lsplaylist &
 				
-				# ディレクトリを再帰的に出力,"/+任意の1文字以上"を"/"に置換
-				mpc listall | awk -F"/" '{print $1"/"}' ; } |
+				# ディレクトリを再帰的に出力,1フィールド目と"/"を出力,名前付きパイプにリダイレクト
+				mpc listall | awk -F"/" '{print $1"/"}' >| fifo_listall &
 
-				# grepで固定文字列を大文字,小文字を区別せずに検索
-				grep -F -i "${search_var}" |
+				# 名前付きパイプ内のデータを出力,grepで固定文字列を大文字,小文字を区別せずに検索
+				cat fifo_lsplaylist fifo_listall | grep -F -i "${search_var}" |
 
 				# 区切り文字を"/"に指定
 				awk -F"/" '{
@@ -101,7 +101,7 @@ cat << EOS
 				}' |
 
 				# 重複を削除
-				awk '!a[$0]++{print $0}'
+				awk '!a[$0]++{print $0}' &
 
 				)
 
