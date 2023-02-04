@@ -70,12 +70,12 @@ cat << EOS
 					search_var=""
 
 				fi
-
+			
 				# コマンドをグルーピング,プレイリスト一覧を出力
 				{ mpc lsplaylist ; 
 				
 				# ディレクトリを再帰的に出力,"/+任意の1文字以上"を"/"に置換
-				mpc listall | sed "s;/.*;/;g" ; } |
+				mpc listall | awk -F"/" '{print $1"/"}' ; } |
 
 				# grepで固定文字列を大文字,小文字を区別せずに検索
 				grep -F -i "${search_var}" |
