@@ -24,11 +24,18 @@ $ cd sh-mpd
 # "urldecode"コマンドに実行権限を付与
 $ chmod 755 urldecode
 
+# 名前付きパイプを作成
+$ mkfifo fifo_listall && mkfifo fifo_lsplaylist
+
+# 読み書きの権限を付与
+$ sudo chmod a+w fifo_listall && sudo chmod a+w fifo_lsplaylist
+
 # "urldecode"をパスの通ったディレクトリに配置
 $ sudo cp /usr/local/bin # ※一例
 
 #  各cgiファイルに実行権限を付与
 $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
+
 ```
 
 ### css,ホスト名の変更が出来ない場合(apache2)
