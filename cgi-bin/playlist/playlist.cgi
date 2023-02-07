@@ -86,7 +86,7 @@ cat << EOS
 					# "/"がある場合は真,なければ偽
 					if(/.\//){
 
-						# 真の場合はPOSTのvalueに"add"を指定しボタン化
+						# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
 						print "<p><button name=add value="$1">"$1"</button></p>"
 
  					}

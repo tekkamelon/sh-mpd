@@ -7,9 +7,9 @@
 
 # 環境変数の設定
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
+export LANG=C
 export MPD_HOST=$(cat ../hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../port_conf | grep . || echo "6600") 
-export LANG=C
 
 echo "Content-type: text/html"
 echo ""
@@ -46,7 +46,7 @@ cat << EOS
 			cat_post=$(cat)
 
 			# POSTの有無を確認
-			test -n "${cat_post}" &&
+			test -n "${cat_post#*\=}" &&
 
 			# POSTを変数展開で加工,ポート番号が有効であれば真,無効であれば偽
 			if mpc -q --port="${cat_post#*\=}" ; then
@@ -55,12 +55,12 @@ cat << EOS
 				echo "${cat_post#*\=}" >| ../port_conf &
 
 				# メッセージの出力
-				echo "<p>changed host:${cat_post#*\=}</p>" 
+				echo "<p>changed port number:${cat_post#*\=}</p>"
 				
 			else
 				
 				# 偽であればメッセージを表示
-				echo "connection refused<br>"
+				echo "connection refused!<br>please enter port number!<br>"
 				
 			fi
 				
