@@ -10,38 +10,6 @@ export LANG=C
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
 
-# "SAVE_PLAYLIST","SEARCH_VAR"を設定
-export $(# クエリ内の文字列をawkで判定し,処理を分け環境変数へ代入
-
-	# クエリを変数展開で加工
-	echo "${QUERY_STRING#*\=}" | 
-
-	# プレイリストのセーブの処理,"save&input_string=(任意の1文字以上)"にマッチした場合の処理
-	awk -F'[=&]' '/save&input_string=./{
-
-		print "SAVE_PLAYLIST="$1"_"$NF
-		print "SEARCH_VAR="
-
-	}
-
-	# 検索の処理,"search&input_string=(任意の1文字以上)"にマッチした場合の処理
-	/search&input_string=./{
-
-		print "SAVE_PLAYLIST="
-		print "SEARCH_VAR="$NF
-	}
-	
-	# "&input_string=(任意の1文字以上)"にマッチしなかった場合の処理
-	!/&input_string=./{
-
-		print "SAVE_PLAYLIST="
-		print "SEARCH_VAR="
-		
-	# デコード,並列化し環境変数へ代入
-	}' | urldecode | xargs -L 1 -P 2
-
-)
-
 echo "Content-type: text/html"
 echo ""
 
@@ -88,21 +56,33 @@ cat << EOS
 			
 			<!-- ステータスの表示 -->
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
+			
+			# クエリを変数展開で加工,awkでの処理結果を変数に代入
+			save_playlist=$(
 
-			# コマンドをグルーピングし"$SAVE_PLAYLIST"とデコードされたPOSTを出力
-			{ echo "${SAVE_PLAYLIST}" & cat | urldecode ; } |
+			echo "${QUERY_STRING#*\=}" | 
 
-			# 最初の"=","_"をスペースに置換
-			sed "s/\=\|_/ /" |
+			# "=","&"を区切り文字に指定,1フィールド目の"save"の有無を判定
+			awk -F'[=&]' '$1 == "save"{
+
+					# 1フィールド目と最終フィールドを出力
+					print $1,$NF
+
+			}'
+
+			)
+
+			# コマンドをグルーピングし"$save_playlist"とPOSTをデコードし出力
+			{ echo "${save_playlist}" & cat | urldecode ; } |
 
 			# mpcに渡し出力を改行
 			xargs mpc 2>&1 | sed "s/$/<br>/g"
 
-			# プレイリストのセーブ時のステータスの表示,"SAVE_PLAYLIST"が空ではない場合に真
-			test -n "${SAVE_PLAYLIST}" &&
+			# プレイリストのセーブ時のステータスの表示,"save_playlist"が空ではない場合に真
+			test -n "${save_playlist}" &&
 
 			# 真の場合,ステータスとメッセージを表示
-			mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:"${SAVE_PLAYLIST#*\_}"</p>"
+			mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:"${save_playlist#* }"</p>"
 
 			)</p>
 
@@ -114,7 +94,10 @@ cat << EOS
 			<!-- キュー内の曲を表示 -->
 			$(# キューされた曲をgrepで検索,idと区切り文字":"を付与
 
-			mpc playlist | grep -F -i -n "${SEARCH_VAR}" | 
+			# クエリを変数展開で加工,デコード,変数に代入
+			search_str=$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)
+
+			mpc playlist | grep -F -i -n "${search_str}" | 
 
 			# ":"を">"に置換,標準入力をタグ付きで出力
 			awk '{
