@@ -74,7 +74,7 @@ cat << EOS
 
 			)
 
-			# コマンドをグルーピングし"save_playlist"を出力,POSTをデコードし出力
+			# コマンドをグルーピングし"save_playlist"を出力,POSTの"="を削除
 			{ echo "${save_playlist}" & cat | sed "s/=/ /" ; } |
 
 			# mpcに渡し出力を改行
