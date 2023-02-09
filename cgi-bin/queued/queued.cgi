@@ -69,12 +69,13 @@ cat << EOS
 					# 1フィールド目と最終フィールドを出力
 					print $1,$NF
 
-			}'
+			# 出力をデコード
+			}' | urldecode
 
 			)
 
-			# コマンドをグルーピングし"save_playlist"とPOSTをデコードし出力
-			{ echo "${save_playlist}" & cat | urldecode ; } |
+			# コマンドをグルーピングし"save_playlist"を出力,POSTをデコードし出力
+			{ echo "${save_playlist}" & cat | sed "s/=/ /" ; } |
 
 			# mpcに渡し出力を改行
 			xargs mpc 2>&1 | sed "s/$/<br>/g"
