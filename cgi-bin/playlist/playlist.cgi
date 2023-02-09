@@ -63,12 +63,12 @@ cat << EOS
 				if [ -n "${QUERY_STRING#*\=}" ] ; then
 
 					# 真の場合はクエリをデコード,変数に代入
-					search_var=$(echo "${QUERY_STRING#*\=}" | urldecode)
+					search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
 				else
 
 					# 偽の場合は空文字を変数に代入
-					search_var=""
+					search_str=""
 
 				fi
 			
