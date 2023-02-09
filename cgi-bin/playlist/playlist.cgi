@@ -5,7 +5,8 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# 環境変数で接続先ホスト,ポート番号を設定,データがない場合は"localhost","6600"
+# 環境変数の設定
+# ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 export LANG=C
 export MPD_HOST=$(cat ../settings/hostname | grep . || echo "localhost") 
 export MPD_PORT=$(cat ../settings/port_conf | grep . || echo "6600") 
@@ -78,7 +79,7 @@ cat << EOS
 				mpc listall | awk -F"/" '{print $1"/"}' >| fifo_listall &
 
 				# 名前付きパイプ内のデータを出力,grepで固定文字列を大文字,小文字を区別せずに検索
-				cat fifo_lsplaylist fifo_listall | grep -F -i "${search_var}" |
+				cat fifo_lsplaylist fifo_listall | grep -F -i "${search_str}" |
 
 				# 区切り文字を"/"に指定
 				awk -F"/" '{
