@@ -58,24 +58,27 @@ cat << EOS
 			<!-- ステータスの表示 -->
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 			
+			# POSTを変数に代入
+			cat_post=$(cat)
+
 			# クエリを変数展開で加工,awkでの処理結果を変数に代入
 			save_playlist=$(
 
-			echo "${QUERY_STRING#*\=}" | 
-
-			# "=","&"を区切り文字に指定,1フィールド目の"save"の有無を判定
-			awk -F'[=&]' '$1 == "save"{
-
-					# 1フィールド目と最終フィールドを出力
-					print $1,$NF
-
-			# 出力をデコード
-			}' | urldecode
+				echo "${QUERY_STRING#*\=}" | 
+	
+				# "=","&"を区切り文字に指定,1フィールド目の"save"の有無を判定
+				awk -F'[=&]' '$1 == "save"{
+	
+						# 1フィールド目と最終フィールドを出力
+						print $1,$NF
+	
+				# 出力をデコード
+				}' | urldecode
 
 			)
 
-			# コマンドをグルーピングし"save_playlist"を出力,POSTの"="を削除
-			{ echo "${save_playlist}" & cat | sed "s/=/ /" ; } |
+			# POSTを変数展開で加工,"save_playlist"を出力
+			echo "${cat_post%%\=*}" "${cat_post#*\=}""${save_playlist}" |
 
 			# mpcに渡し出力を改行
 			xargs mpc 2>&1 | sed "s/$/<br>/g"
