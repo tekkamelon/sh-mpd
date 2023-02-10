@@ -46,8 +46,8 @@ cat << EOS
 
 				cat_post=$(cat)
 
-				# POSTの"="を" -q "に置換
-				echo "${cat_post}" | sed "s/=/ -q /" |
+				# POSTを変数展開で"="を" -q "に置換
+				echo "${cat_post%%\=*}" -q "${cat_post#*\=}"|
 
 				# デコードしmpcに渡し.エラー出力ごと改行
 				urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
