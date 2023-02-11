@@ -45,9 +45,12 @@ cat << EOS
 		<form name="music" method="POST" >
 
 				<!-- ステータスを表示 -->
-				<p>$(# POSTの"="をスペースに置換,デコードしmpcに渡し出力を改行
+				<p>$(# POSTを変数に代入
 
-				cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
+				cat_post=$(cat)
+
+				# POSTを変数展開で"="をスペースに置換,デコードしmpcに渡し出力を改行
+				echo "${cat_post%%\=*}" "${cat_post#*\=}" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
 				
 				)</p>
 

@@ -37,14 +37,25 @@ cat << EOS
 
 			<!-- 出力先デバイスの設定 -->
 			<h3>ountput devices list</h3>
-			$(# sedでの空文字の判定の為にPOSTを変数に代入
+			$(# POSTを変数に代入
 
 			cat_post=$(cat)
 
-			echo "${cat_post}" |
-	
-			# "="を" "に,空白行の場合は"outputs"を出力しmpcに渡す
-			sed -e "s/=/ /g" -e "s/^$/outputs/g" | xargs mpc |
+			# POSTの有無を確認,あれば真,無ければ偽
+			if [ -n "${cat_post}" ] ; then
+			
+				# 真の場合はPOSTを変数展開で"="をスペースに置換
+				echo "${cat_post%%\=*}" "${cat_post#*\=}" 
+				
+			else
+
+				# 偽の場合は"outputs"を出力
+				echo "outputs"
+
+			fi | 
+
+			# 出力をmpcに渡す
+			xargs mpc |
 
 			# スペースを区切り文字に設定,1フィールド目が"Output"の行をボタン化
 			awk -F" " '$1 == "Output"{
