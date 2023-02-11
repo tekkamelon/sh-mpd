@@ -61,19 +61,13 @@ cat << EOS
 			# POSTを変数に代入
 			cat_post=$(cat)
 
-			# クエリを変数展開で加工,awkでの処理結果を変数に代入
+			# クエリを変数展開で加工,sedでの処理結果を変数に代入
 			save_playlist=$(
 
-				echo "${QUERY_STRING#*\=}" | 
+				echo "${QUERY_STRING#*\=}" |
 	
-				# "=","&"を区切り文字に指定,1フィールド目の"save"の有無を判定
-				awk -F'[=&]' '$1 == "save"{
-	
-						# 1フィールド目と最終フィールドを出力
-						print $1,$NF
-	
-				# 出力をデコード
-				}' | urldecode
+				# "&input_string"をスペースに,"search[任意の１文字以上]"を置換しデコード
+				sed -e "s/&input_string=/ /" -e "s/search.*//g" | urldecode
 
 			)
 
@@ -102,7 +96,7 @@ cat << EOS
 			# クエリを変数展開で加工,デコード,変数に代入
 			search_str=$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)
 
-			mpc playlist | grep -F -i -n "${search_str}" | 
+			mpc playlist | grep -F -i -n "${search_str}" |
 
 			# ":"を">"に置換,標準入力をタグ付きで出力
 			awk '{
