@@ -47,21 +47,24 @@ cat << EOS
 			# POSTの有無を確認
 			test -n "${cat_post}" &&
 
-			# POSTを変数展開で加工,ホスト名が有効であれば真,無効であれば偽
-			if mpc -q --host="${cat_post#*\=}" ; then
+				# POSTを変数展開で加工,ホスト名が有効であれば真,無効であれば偽
+				if mpc -q --host="${cat_post#*\=}" ; then
+	
+					# POSTを変数展開で加工,設定ファイルへのリダイレクト
+					echo "${cat_post#*\=}" >| ../hostname &
+	
+					# メッセージの出力
+					echo "<p>changed host:${cat_post#*\=}</p>"
+					
+				else
+					
+					# 偽であればメッセージを表示
+					echo "failed to resolve hostname!<br>"
+					
+				fi ||
 
-				# POSTを変数展開で加工,設定ファイルへのリダイレクト
-				echo "${cat_post#*\=}" >| ../hostname &
-
-				# メッセージの出力
-				echo "<p>changed host:${cat_post#*\=}</p>"
-				
-			else
-				
-				# 偽であればメッセージを表示
-				echo "failed to resolve hostname<br>please enter hostname or local IP adress!<br>"
-				
-			fi
+			# POSTがない場合はメッセージを出力
+			echo "please enter hostname or local IP adress"
 				
 			)</p>
 			

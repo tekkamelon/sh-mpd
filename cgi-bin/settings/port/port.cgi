@@ -48,21 +48,24 @@ cat << EOS
 			# POSTの有無を確認
 			test -n "${cat_post#*\=}" &&
 
-			# POSTを変数展開で加工,ポート番号が有効であれば真,無効であれば偽
-			if mpc -q --port="${cat_post#*\=}" ; then
-
-				# POSTを変数展開で加工,設定ファイルへのリダイレクト
-				echo "${cat_post#*\=}" >| ../port_conf &
-
-				# メッセージの出力
-				echo "<p>changed port number:${cat_post#*\=}</p>"
-				
-			else
-				
-				# 偽であればメッセージを表示
-				echo "connection refused!<br>please enter port number!<br>"
-				
-			fi
+				# POSTを変数展開で加工,ポート番号が有効であれば真,無効であれば偽
+				if mpc -q --port="${cat_post#*\=}" ; then
+	
+					# POSTを変数展開で加工,設定ファイルへのリダイレクト
+					echo "${cat_post#*\=}" >| ../port_conf &
+	
+					# メッセージの出力
+					echo "<p>changed port number:${cat_post#*\=}</p>"
+					
+				else
+					
+					# 偽であればメッセージを表示
+					echo "connection refused!<br>"
+					
+				fi ||
+	
+			# POSTがない場合はメッセージを出力
+			echo "please enter port number<br>"
 				
 			)</p>
 			
