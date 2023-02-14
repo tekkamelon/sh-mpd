@@ -8,8 +8,8 @@
 # 環境変数の設定
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 export LANG=C
-export MPD_HOST=$(cat settings/hostname | grep . || echo "localhost") 
-export MPD_PORT=$(cat settings/port_conf | grep . || echo "6600") 
+export MPD_HOST=$(cat settings/hostname) 
+export MPD_PORT=$(cat settings/port_conf) 
 
 echo "Content-type: text/html"
 echo ""
@@ -187,7 +187,25 @@ MPD UI using shellscript and CGI
 
 			<!-- 次の曲 -->
 			<h3>next song</h3>
-			<p><button name=button value=next>$(mpc queued | grep . || echo "next song not found")</button></p>
+			<p><button name=button value=next>$(
+
+			# mpc queuedの結果を変数に代入
+			queued_song=$(mpc queued)
+
+			# "queued_song"があれば真,無ければ偽
+			if [ -n "${queued_song}" ] ; then
+
+				# 真の場合は"queued_song"を出力
+				echo "${queued_song}"
+
+			else
+				
+				# 偽の場合はメッセージを出力
+				echo "next song not found"
+				
+			fi
+
+			)</button></p>
 	
 		</form>
 
