@@ -192,18 +192,8 @@ MPD UI using shellscript and CGI
 			# mpc queuedの結果を変数に代入
 			queued_song=$(mpc queued)
 
-			# "queued_song"があれば真,無ければ偽
-			if [ -n "${queued_song}" ] ; then
-
-				# 真の場合は"queued_song"を出力
-				echo "${queued_song}"
-
-			else
-				
-				# 偽の場合はメッセージを出力
-				echo "next song not found"
-				
-			fi
+			# "queued_song"があれば出力,無ければメッセージを出力
+			test -n "${queued_song}" && echo "${queued_song}" || echo "next song not found"
 
 			)</button></p>
 	
