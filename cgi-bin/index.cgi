@@ -164,11 +164,11 @@ MPD UI using shellscript and CGI
 			# POSTの有無を確認,あれば真,なければ偽
 			if [ -n "${cat_post#*\&*\=}" ] ; then
 			
-				# 真の場合はPOSTを変数展開で加工,行末にシングルクォートを付与し出力
-				echo "${cat_post#*\=}'" |
+				# 真の場合はPOSTを変数展開で加工,再度代入
+				cat_post=$(echo "${cat_post#*\=}")
 
-				# "&search"をスペースとシングルクォートに置換,デコード
-				sed "s/&search=/ '/g" | urldecode
+				# POSTを変数展開で加工,最後の引数をシングルクォート付きで出力,デコード
+				echo "${cat_post%%\&*}" "'${cat_post#*\&*\=}'" | urldecode
 
 			else
 
@@ -178,8 +178,10 @@ MPD UI using shellscript and CGI
 				# "volume","seek","mute"時の文字列をデコード
 				sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"
 			
+			fi |
+
 			# mpcのエラー出力ごとsedに渡す
-			fi | xargs mpc 2>&1 | sed "s/$/<br>/g"
+			xargs mpc 2>&1 | sed "s/$/<br>/g"
 
 			)</p>
 
