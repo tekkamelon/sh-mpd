@@ -10,6 +10,7 @@
 export LANG=C
 export MPD_HOST=$(cat ../hostname) 
 export MPD_PORT=$(cat ../port_conf)
+
 echo "Content-type: text/html"
 echo ""
 

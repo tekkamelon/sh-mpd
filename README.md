@@ -30,7 +30,7 @@ $ mkfifo fifo_listall && mkfifo fifo_lsplaylist
 # 読み書きの権限を付与
 $ sudo chmod a+w fifo_listall && sudo chmod a+w fifo_lsplaylist
 
-# "urldecode"をパスの通ったディレクトリに配置
+# "urldecode"をパスの通ったディレクトリに配置 
 $ sudo cp /usr/local/bin # ※一例
 
 #  各cgiファイルに実行権限を付与
@@ -72,12 +72,12 @@ $ sudo chwon www-data settings/
 
 - ksh ver. 93u+ 2012-08-01
 
+- yash ver. 2.50
+
 ##### 一部不具合あり
 
-- yash ver. 2.50 ("+ xargs mpc -q"の文字列が表示される,シバンの"x"オプションの削除で非表示)
+- busybox ash ver. 1.30.1 (シバンのオプションを指定しない場合のみ動作)
 
-- busybox ash ver. 1.30.1 ("シバンのオプションを指定しない場合のみ動作)
-
-## 引用元
+## "urldecode"コマンド引用元
 
 - urldecode:https://github.com/ShellShoccar-jpn/misc-tools
