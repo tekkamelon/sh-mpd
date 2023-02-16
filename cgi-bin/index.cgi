@@ -21,8 +21,8 @@ cat << EOS
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat settings/css_conf)">
-		<link rel="icon" ref="image/favicon.svg">
-		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
+		<link rel="icon" ref="image/favicon.png">
+		<link rel="apple-touch-icon" href="image/favicon.png">
         <title>sh-MPD</title>
     </head>
 
@@ -189,11 +189,8 @@ MPD UI using shellscript and CGI
 			<h3>next song</h3>
 			<p><button name=button value=next>$(
 
-			# mpc queuedの結果を変数に代入
-			queued_song=$(mpc queued)
-
-			# "queued_song"があれば出力,無ければメッセージを出力
-			test -n "${queued_song}" && echo "${queued_song}" || echo "next song not found"
+			# "mpc queued"の実行結果があればそれを出力,無ければメッセージを出力
+			test -n "$(mpc queued)" && echo "$(mpc queued)" || echo "next song not found"
 
 			)</button></p>
 	
