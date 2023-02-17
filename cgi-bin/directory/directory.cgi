@@ -34,47 +34,47 @@ cat << EOS
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
 		<form name="FORM" method="GET" >
 
-					<!-- 検索ワードの入力欄 -->
-					<p>search_word:<input type="text" name="search_word"></p>
+			<!-- 検索ワードの入力欄 -->
+			<p>search_word:<input type="text" name="search_word"></p>
 				
 		</form>
 	
 		<!-- ステータスを表示 --> 
 		<form name="music" method="POST" >
 
-				<p>$(# POSTで受け取った文字列を変数に代入
+			<p>$(# POSTで受け取った文字列を変数に代入
 
-				cat_post=$(cat)
+			cat_post=$(cat)
 
-				# POSTを変数展開で"="を" -q "に置換
-				echo "${cat_post%%\=*}" -q "${cat_post#*\=}"|
+			# POSTを変数展開で"="を" -q "に置換
+			echo "${cat_post%%\=*}" -q "${cat_post#*\=}"|
 
-				# デコードしmpcに渡し.エラー出力ごと改行
-				urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
+			# デコードしmpcに渡し.エラー出力ごと改行
+			urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
 
-				# POSTがある場合はinsertされた曲を再生
-				test -n "${cat_post#*\=}" && mpc next | sed "s/$/<br>/g"
+			# POSTがある場合はinsertされた曲を再生
+			test -n "${cat_post#*\=}" && mpc next | sed "s/$/<br>/g"
 
-				)</p>
+			)</p>
 
-				<!-- リンク -->
-				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
-				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-				<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
+			<!-- リンク -->
+			<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
+			<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 
-				<!-- mpc管理下のディレクトリを再帰的に表示 -->
-				$(# 曲の一覧をgrepで検索
+			<!-- mpc管理下のディレクトリを再帰的に表示 -->
+			$(# 曲の一覧をgrepで検索
 
-				mpc listall | grep -F -i "$(echo "${QUERY_STRING#*\=}" | urldecode)" |
+			mpc listall | grep -F -i "$(echo "${QUERY_STRING#*\=}" | urldecode)" |
 
-				awk '{
+			awk '{
 
-					# 出力をボタン化
-					print "<p><button name=insert value="$0">"$0"</button></p>"
+				# 出力をボタン化
+				print "<p><button name=insert value="$0">"$0"</button></p>"
 
-				}'
+			}'
 
-				)
+			)
 
 		</form>
 	</body>

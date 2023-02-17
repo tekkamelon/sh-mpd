@@ -44,70 +44,70 @@ cat << EOS
 		<!-- mpd.confで設定されたプレイリスト一覧を表示 -->
 		<form name="music" method="POST" >
 
-				<!-- ステータスを表示 -->
-				<p>$(# POSTを変数に代入
+			<!-- ステータスを表示 -->
+			<p>$(# POSTを変数に代入
 
-				cat_post=$(cat)
+			cat_post=$(cat)
 
-				# POSTを変数展開で"="をスペースに置換,デコードしmpcに渡し出力を改行
-				echo "${cat_post%%\=*}" "${cat_post#*\=}" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
-				
-				)</p>
-
-				<!-- リンク -->
-				<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
-				<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-				<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
-
-				<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
-				$(# プレイリスト及びディレクトリの検索などの処理
-
-				# クエリを変数展開で加工,文字列があれば真,なければ偽
-				if [ -n "${QUERY_STRING#*\=}" ] ; then
-
-					# 真の場合はクエリをデコード,変数に代入
-					search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
-
-				else
-
-					# 偽の場合は空文字を変数に代入
-					search_str=""
-
-				fi
+			# POSTを変数展開で"="をスペースに置換,デコードしmpcに渡し出力を改行
+			echo "${cat_post%%\=*}" "${cat_post#*\=}" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
 			
-				# プレイリスト一覧を出力,名前付きパイプにリダイレクト
-				mpc lsplaylist >| fifo_lsplaylist &
+			)</p>
+
+			<!-- リンク -->
+			<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
+			<button><a href="/cgi-bin/index.cgi">HOME</a></button>
+			<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
+
+			<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
+			$(# プレイリスト及びディレクトリの検索などの処理
+
+			# クエリを変数展開で加工,文字列があれば真,なければ偽
+			if [ -n "${QUERY_STRING#*\=}" ] ; then
+
+				# 真の場合はクエリをデコード,変数に代入
+				search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
+
+			else
+
+				# 偽の場合は空文字を変数に代入
+				search_str=""
+
+			fi
+			
+			# プレイリスト一覧を出力,名前付きパイプにリダイレクト
+			mpc lsplaylist >| fifo_lsplaylist &
+			
+			# ディレクトリを再帰的に出力,1フィールド目と"/"を出力,名前付きパイプにリダイレクト
+			mpc listall | awk -F"/" '{print $1"/"}' >| fifo_listall &
+
+			# 名前付きパイプ内のデータを出力,grepで固定文字列を大文字,小文字を区別せずに検索
+			cat fifo_lsplaylist fifo_listall | grep -F -i "${search_str}" |
+
+			# 区切り文字を"/"に指定
+			awk -F"/" '{
 				
-				# ディレクトリを再帰的に出力,1フィールド目と"/"を出力,名前付きパイプにリダイレクト
-				mpc listall | awk -F"/" '{print $1"/"}' >| fifo_listall &
+				# "/"がある場合は真,なければ偽
+				if(/.\//){
 
-				# 名前付きパイプ内のデータを出力,grepで固定文字列を大文字,小文字を区別せずに検索
-				cat fifo_lsplaylist fifo_listall | grep -F -i "${search_str}" |
+					# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
+					print "<p><button name=add value="$1">"$1"</button></p>"
 
-				# 区切り文字を"/"に指定
-				awk -F"/" '{
-					
-					# "/"がある場合は真,なければ偽
-					if(/.\//){
+ 				}
 
-						# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
-						print "<p><button name=add value="$1">"$1"</button></p>"
-
- 					}
-
-					else{
+				else{
  
-						# 偽の場合はPOSTの1フィールド目に"lsplaylist"を指定しボタン化
-	 					print "<p><button name=load value="$0">"$0"</button></p>"
+					# 偽の場合はPOSTの1フィールド目に"lsplaylist"を指定しボタン化
+	 				print "<p><button name=load value="$0">"$0"</button></p>"
 
-					}
-				
-				}' |
+				}
+			
+			}' |
 
-				# 重複を削除
-				awk '!a[$0]++{print $0}' &
+			# 重複を削除
+			awk '!a[$0]++{print $0}' &
 
-				)
+			)
 
 		</form>
 	</body>
