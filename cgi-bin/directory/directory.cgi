@@ -46,11 +46,11 @@ cat << EOS
 
 			cat_post=$(cat)
 
-			# POSTを変数展開で"="を" -q "に置換
-			echo "${cat_post%%\=*}" -q "${cat_post#*\=}"|
+			# POSTを変数展開で"="を" -q "に置換,曲名をダブルクォートで括って出力
+			echo "${cat_post%%\=*} -q ""\"${cat_post#*\=}\"" |
 
-			# デコードしmpcに渡し.エラー出力ごと改行
-			urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
+			# デコード,mpcに渡し,出力を改行
+			urldecode | xargs mpc | sed "s/$/<br>/g"
 
 			# POSTがある場合はinsertされた曲を再生
 			test -n "${cat_post#*\=}" && mpc next | sed "s/$/<br>/g"
