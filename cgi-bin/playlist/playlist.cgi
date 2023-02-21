@@ -85,7 +85,14 @@ cat << EOS
 			cat fifo_lsplaylist fifo_listall | grep -F -i "${search_str}" |
 
 			# 区切り文字を"/"に指定
-			awk -F"/" '{
+			awk -F"/" 'BEGIN{
+
+				# 全ての曲を追加
+				print "<p><button name=add value=/>add all songs</button></p>"
+
+			}
+
+			{
 				
 				# "/"がある場合は真,なければ偽
 				if(/.\//){
