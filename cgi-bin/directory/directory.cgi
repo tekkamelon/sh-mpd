@@ -26,11 +26,16 @@ cat << EOS
         <title>sh-MPD</title>
     </head>
 	
+	<!-- "jump to top"のジャンプ先 -->
+	<div id="top"></div>
+
 	<header>
 		<h1>Directory</h1>
+
 	</header>
 
     <body>
+
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
 		<form name="FORM" method="GET" >
 
@@ -41,6 +46,9 @@ cat << EOS
 	
 		<!-- ステータスを表示 --> 
 		<form name="music" method="POST" >
+
+		<!-- 最下部へのジャンプ -->
+		<p><a href="#bottom">jump to bottom</a></p>
 
 			<p>$(# POSTで受け取った文字列を変数に代入
 
@@ -86,12 +94,18 @@ cat << EOS
 		</form>
 	</body>
 
+	<!-- "jump to bottom"のジャンプ先 -->
+	<div id="bottom"></div>
+
 	<footer>
 		<!-- リンク -->
 		<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
 		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 	</footer>
+
+	<!-- 最上部へのジャンプ -->
+	<p><a href="#top">jump to top</a></p>
 
 </html>
 EOS

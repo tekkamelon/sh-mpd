@@ -26,6 +26,9 @@ cat << EOS
 		<title>sh-MPD</title>
     </head>
 
+	<!-- "jump to top"のジャンプ先 -->
+	<div id="top"></div>
+
 	<header>
 		<h1>Queued</h1>
 	</header>
@@ -52,6 +55,9 @@ cat << EOS
 					</span>
 				</p>
 		</form>
+
+		<!-- 最下部へのジャンプ -->
+		<p><a href="#bottom">jump to bottom</a></p>
 
 		<form name="music" method="POST" >
 			
@@ -112,12 +118,18 @@ cat << EOS
 		</form>
 	</body>
 
+	<!-- "jump to bottom"のジャンプ先 -->
+	<div id="bottom"></div>
+
 	<footer>
 		<!-- リンク -->
 		<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
 		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
 		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
 	</footer>
+
+	<!-- 最上部へのジャンプ -->
+	<p><a href="#top">jump to top</a></p>
 
 </html>
 EOS
