@@ -51,12 +51,9 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- ステータスを表示 -->
-			<p>$(# POSTを変数に代入
+			<p>$(# POSTの"="をスペースに置換,デコードしmpcに渡しエラー出力ごと改行
 
-			cat_post=$(cat)
-
-			# POSTを変数展開で"="をスペースに置換,デコードしmpcに渡し出力を改行
-			echo "${cat_post%%\=*}" "${cat_post#*\=}" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
+			cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
 			
 			)</p>
 
@@ -100,8 +97,8 @@ cat << EOS
 
 			{
 				
-				# "/"がある場合は真,なければ偽
-				if(/.\//){
+				# 行末に"/"がある場合は真,なければ偽
+				if(/.\/$/){
 
 					# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
 					print "<p><button name=add value="$1">"$1"</button></p>"
