@@ -54,24 +54,25 @@ cat << EOS
 
 			cat_post=$(cat)
 
-			# POSTを変数展開で加工,文字列があれば真,無ければ偽,それぞれエラー出力ごと渡す
+			# POSTを変数展開で加工,文字列があれば真,無ければ偽
 			if [ -n "${cat_post#*\=}" ] ; then 
 
 				# 真の場合はPOSTを変数展開で"="をスペースに置換,曲名をダブルクォートで括って出力
 				echo "${cat_post%\=*} ""\"${cat_post#*\=}\"" |
 	
 				# デコード,mpcに渡す
-				urldecode | tbug | xargs mpc &&
+				urldecode | xargs mpc &&
 
 				# 次の曲を再生
-				mpc next 2>&1 
+				mpc next
 
 			else
 
 				# 偽の場合はステータスを表示
-				mpc status 2>&1 
-
-			fi |
+				mpc status
+			
+			# エラー出力ごと渡す
+			fi 2>&1 |
 			
 			# 出力を改行
 			sed "s/$/<br>/g"
