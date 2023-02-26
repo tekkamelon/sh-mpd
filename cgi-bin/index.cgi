@@ -165,7 +165,7 @@ MPD UI using shellscript and CGI
 			if [ -n "${cat_post#*\&*\=}" ] ; then
 			
 				# 真の場合はPOSTを変数展開で加工,再度代入
-				cat_post=$(echo "${cat_post#*\=}")
+				cat_post="${cat_post#*\=}"
 
 				# POSTを変数展開で加工,最後の引数をシングルクォート付きで出力,デコード
 				echo "${cat_post%%\&*}" "'${cat_post#*\&*\=}'" | urldecode
@@ -190,7 +190,7 @@ MPD UI using shellscript and CGI
 			<p><button name=button value=next>$(
 
 			# "mpc queued"の実行結果があればそれを出力,無ければメッセージを出力
-			test -n "$(mpc queued)" && echo "$(mpc queued)" || echo "next song not found"
+			test -n "$(mpc queued)" && mpc queued || echo "next song not found"
 
 			)</button></p>
 	
