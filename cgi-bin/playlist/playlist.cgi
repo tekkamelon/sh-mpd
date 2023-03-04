@@ -65,18 +65,11 @@ cat << EOS
 			<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
 			$(# プレイリスト及びディレクトリの検索などの処理
 
-			# クエリを変数展開で加工,文字列があれば真,なければ偽
-			if [ -n "${QUERY_STRING#*\=}" ] ; then
+ 			# 空文字を変数に代入
+			search_str=""
 
-				# 真の場合はクエリをデコード,変数に代入
-				search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
-
-			else
-
-				# 偽の場合は空文字を変数に代入
-				search_str=""
-
-			fi
+			# クエリがある場合はデコード,変数に代入
+			test -n "${QUERY_STRING#*\=}" && search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 			
 			# プレイリスト一覧を出力,名前付きパイプにリダイレクト
 			mpc lsplaylist >| fifo_lsplaylist &

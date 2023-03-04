@@ -61,18 +61,20 @@ cat << EOS
 				echo "${cat_post%\=*} ""\"${cat_post#*\=}\"" |
 	
 				# デコード,mpcに渡す
-				urldecode | xargs mpc &&
+				urldecode | xargs mpc &
 
-				# 次の曲を再生
-				mpc next
+				# "next"を出力
+				echo "next"
 
 			else
 
-				# 偽の場合はステータスを表示
-				mpc status
+				# 偽の場合は"status"を出力
+				echo "status"
 			
-			# エラー出力ごと渡す
-			fi 2>&1 |
+			fi |
+
+			# 出力をmpcに渡す
+			xargs mpc 2>&1 |
 			
 			# 出力を改行
 			sed "s/$/<br>/g"
