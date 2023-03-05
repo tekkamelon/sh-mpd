@@ -43,6 +43,14 @@ MPD UI using shellscript and CGI
 
     <main>
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
+
+		<!-- mpdの統計を表示 -->
+		<details>
+
+			<summary>statistics</summary>
+			<p>$(mpc stats | sed "s/$/<br>/g")</p>
+
+		</details>
 		
 		<!-- 入力フォーム -->
 		<form name="FORM" method="GET" >
