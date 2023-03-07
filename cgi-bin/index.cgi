@@ -208,16 +208,11 @@ MPD UI using shellscript and CGI
 
 		<!-- mpdの統計を表示 -->
 		<h3>MPD statistics</h3>
-		<details>
-
-			<summary>details</summary>
 			<p>$(mpc stats | sed "s/$/<br>/g")</p>
 
-		</details>
-		
 		<!-- ソースコード -->
 		<footer>
-			<h4>source code</h4>
+			<h3>source code</h3>
 			<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
 			<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urldecode" reference source</a></p>
 		</footer>
