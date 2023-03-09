@@ -66,6 +66,13 @@ cat << EOS
 
 			)
 
+			<p>$(# ステータスを表示
+			
+			# mpcのエラー出力ごとsedに渡す
+			mpc status 2>&1 | sed "s/$/<br>/g"
+
+			)</p>
+
 		</form>
     </body>
 
