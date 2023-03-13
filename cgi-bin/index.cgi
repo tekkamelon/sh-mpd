@@ -189,8 +189,14 @@ MPD UI using shellscript and CGI
 			<h3>next song</h3>
 			<p><button name=button value=next>$(
 
-			# "mpc queued"の実行結果があればそれを出力,無ければメッセージを出力
-			test -n "$(mpc queued)" && mpc queued || echo "next song not found"
+			# "message"に実行結果がない場合のメッセージを代入
+			message="next song not found"
+
+			# "mpc queued"の実行結果があれば"message"に"mpc queued"の実行結果を代入
+			test -n "$(mpc queued)" && message=$(mpc queued)
+
+			# メッセージを出力
+			echo "${message}"
 
 			)</button></p>
 	
