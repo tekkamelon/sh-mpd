@@ -54,6 +54,9 @@ cat << EOS
 			<p>$(# POSTの"="をスペースに置換,デコードしmpcに渡しエラー出力ごと改行
 
 			cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
+
+			# 全ての曲を追加する
+			echo "<p><button name=add value=/>add all songs</button></p>"
 			
 			)</p>
 
@@ -81,14 +84,7 @@ cat << EOS
 			cat fifo_lsplaylist fifo_listall | grep -F -i "${search_str}" |
 
 			# 区切り文字を"/"に指定
-			awk -F"/" 'BEGIN{
-
-				# 全ての曲を追加
-				print "<p><button name=add value=/>add all songs</button></p>"
-
-			}
-
-			{
+			awk -F"/" '{
 				
 				# 行末に"/"がある場合は真,なければ偽
 				if(/.\/$/){

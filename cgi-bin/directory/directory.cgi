@@ -79,6 +79,9 @@ cat << EOS
 			# 出力を改行
 			sed "s/$/<br>/g"
 
+			# 全ての曲を追加する
+			echo "<p><button name=add value=/>add all songs</button></p>"
+
 			)</p>
 
 			<!-- リンク -->
@@ -91,14 +94,7 @@ cat << EOS
 
 			mpc listall | grep -F -i "$(echo "${QUERY_STRING#*\=}" | urldecode)" |
 
-			awk 'BEGIN{
-
-				# 全ての曲を追加
-				print "<p><button name=add value=/>add all songs</button></p>"
-
-			}
-
-			{
+			awk '{
 
 				# 出力をボタン化
 				print "<p><button name=insert value="$0">"$0"</button></p>"
