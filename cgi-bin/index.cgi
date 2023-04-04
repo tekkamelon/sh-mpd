@@ -180,8 +180,35 @@ MPD UI using shellscript and CGI
 			
 			fi |
 
-			# mpcのエラー出力ごとsedに渡す
-			xargs mpc 2>&1 | sed "s/$/<br>/g"
+			# mpcのエラー出力ごと渡す
+			xargs mpc 2>&1 | 
+
+			# "off","on"をそれぞれ"<b>"タグで囲む
+			awk '{
+
+				# 3行目であれば真,それ以外で偽
+				if(NR == 3){
+
+					# 真の場合は": off",": on"をタグで囲み出力
+					gsub(": off" , ":<b> off</b>")
+
+					gsub(": on" , ":<b> on</b>")
+
+					print $0
+
+				}
+
+				else{
+
+					# 偽の場合はそのまま出力
+					print $0
+
+				}
+			
+			}' |
+
+			# 改行のタグを付与
+			sed "s/$/<br>/g"
 
 			)</p>
 
