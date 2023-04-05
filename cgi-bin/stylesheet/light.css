@@ -71,6 +71,14 @@ l2{
     text-align: left;
 }
 
+strong{
+	color:pink;
+}
+
+b{
+	color:lightblue;
+}
+
 /* 本文 */
 p{
     color: black;

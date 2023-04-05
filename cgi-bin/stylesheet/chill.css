@@ -70,6 +70,14 @@ l2{
     text-align: left;
 }
 
+strong{
+	color:red;
+}
+
+b{
+	color:teal;
+}
+
 /* 本文 */
 p{
     color: rgb(220, 170, 80);

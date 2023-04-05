@@ -69,6 +69,14 @@ l2{
     text-align: left;
 }
 
+strong{
+	color:red;
+}
+
+b{
+	color:blue;
+}
+
 /* 本文 */
 p{
     color: white;
