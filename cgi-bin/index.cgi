@@ -183,32 +183,8 @@ MPD UI using shellscript and CGI
 			# mpcのエラー出力ごと渡す
 			xargs mpc 2>&1 | 
 
-			# "off","on"をそれぞれ"<b>"タグで囲む
-			awk '{
-
-				# 3行目であれば真,それ以外で偽
-				if(NR == 3){
-
-					# 真の場合は": off",": on"をタグで囲み出力
-					gsub(": off" , ":<b> off</b>")
-
-					gsub(": on" , ":<b> on</b>")
-
-					print $0
-
-				}
-
-				else{
-
-					# 偽の場合はそのまま出力
-					print $0
-
-				}
-			
-			}' |
-
-			# 改行のタグを付与
-			sed "s/$/<br>/g"
+			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
 
 			)</p>
 
