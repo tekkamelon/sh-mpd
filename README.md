@@ -18,24 +18,26 @@ $ sudo pacman -S mpc mpd
 # githubよりclone
 $ git clone https://github.com/tekkamelon/sh-mpd
 
-# スクリプトのあるディレクトリへ移動
-$ cd sh-mpd
-
 # "urldecode"コマンドに実行権限を付与
-$ chmod 755 urldecode
-
-# 名前付きパイプを作成
-$ mkfifo fifo_listall && mkfifo fifo_lsplaylist
-
-# 読み書きの権限を付与
-$ sudo chmod a+w fifo_listall && sudo chmod a+w fifo_lsplaylist
+$ chmod 755 sh-mpd/urldecode
 
 # "urldecode"をパスの通ったディレクトリに配置 
-$ sudo cp /usr/local/bin # ※一例
+$ sudo cp sh-mpd/urldecode /usr/local/bin # ※一例
+
+# cgi-bin/をwebサーバーで設定されたディレクトリにコピー
+$ sudo cp -r sh-mpd/cgi-bin /usr/lib/ # ※一例
+
+# 上記でコピーしたディレクトリに移動
+$ cd /usr/lib/cgi-bin
+
+# 名前付きパイプを作成
+$ mkfifo playlist/fifo_listall & mkfifo fifo_playlist/lsplaylist
+
+# 読み書きの権限を付与
+$ sudo chmod a+w playlist/fifo_listall & sudo chmod a+w playlist/fifo_lsplaylist
 
 #  各cgiファイルに実行権限を付与
 $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
-
 ```
 
 ### css,ホスト名の変更が出来ない場合(apache2)
@@ -53,8 +55,6 @@ $ sudo chwon www-data settings/
 - シェル固有の拡張機能の使用を廃し,様々なPOSIX準拠環境での動作を可能にする
 
 - 可能な限りPOSIX準拠のコマンドを使用
-
-- web uiをテキストブラウザを含むあらゆるブラウザでの動作できるようにする
 
 ### 低リソース
 
