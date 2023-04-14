@@ -80,8 +80,11 @@ cat << EOS
 			# POSTを変数展開で加工,"save_playlist"を出力
 			echo "${cat_post%%\=*}" "${cat_post#*\=}""${save_playlist}" |
 
-			# mpcに渡し出力を改行
-			xargs mpc 2>&1 | sed "s/$/<br>/g"
+			# mpcに渡す
+			xargs mpc 2>&1 |
+
+			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
 
 			# プレイリストのセーブ時のステータスの表示,"save_playlist"が空ではない場合に真
 			test -n "${save_playlist}" &&

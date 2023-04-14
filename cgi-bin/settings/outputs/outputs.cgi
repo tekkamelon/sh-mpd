@@ -69,7 +69,10 @@ cat << EOS
 			<p>$(# ステータスを表示
 			
 			# mpcのエラー出力ごとsedに渡す
-			mpc status 2>&1 | sed "s/$/<br>/g"
+			mpc status 2>&1 |
+
+			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
 
 			)</p>
 

@@ -51,9 +51,12 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- ステータスを表示 -->
-			<p>$(# POSTの"="をスペースに置換,デコードしmpcに渡しエラー出力ごと改行
+			<p>$(# POSTの"="をスペースに置換,デコードしmpcに渡す
 
-			cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | sed "s/$/<br>/g"
+			cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
+
+			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
 
 			# 全ての曲を追加する
 			echo "<p><button name=add value=/>add all songs</button></p>"

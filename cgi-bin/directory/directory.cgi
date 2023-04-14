@@ -76,8 +76,8 @@ cat << EOS
 			# 出力をmpcに渡す
 			xargs mpc 2>&1 |
 			
-			# 出力を改行
-			sed "s/$/<br>/g"
+			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
 
 			# 全ての曲を追加する
 			echo "<p><button name=add value=/>add all songs</button></p>"
