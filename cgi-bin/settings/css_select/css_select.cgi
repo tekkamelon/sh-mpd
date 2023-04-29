@@ -15,12 +15,14 @@ if [ -n "${QUERY_STRING#*\=}" ] ; then
 	echo "${QUERY_STRING#*\=}" >| ../css_conf &
 
 	# メッセージを代入
-	export ECHO_MESSAGE="<p>changed css:"${QUERY_STRING#*\=}"</p>"
+	export ECHO_MESSAGE="<p>changed css:${QUERY_STRING#*\=}</p>"
 
 else
 
 	# 設定ファイル内のcssを代入
-	export QUERY_STRING=$(cat ../css_conf)
+	css_config="$(cat ../css_conf)"
+
+	export QUERY_STRING="${css_config}"
 
 	# 空文字を代入
 	export ECHO_MESSAGE=""
