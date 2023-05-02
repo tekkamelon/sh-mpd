@@ -79,7 +79,9 @@ cat << EOS
 			search_str=""
 
 			# クエリがある場合はデコード,変数に代入
-			test -n "${QUERY_STRING#*\=}" && search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
+			test -n "${QUERY_STRING#*\=}" && 
+
+			search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
 			
 			# プレイリスト一覧を出力,名前付きパイプにリダイレクト
 			mpc lsplaylist >| fifo_lsplaylist &

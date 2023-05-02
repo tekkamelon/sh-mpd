@@ -96,11 +96,15 @@ cat << EOS
 			<!-- mpc管理下のディレクトリを再帰的に表示 -->
 			$(# 曲の一覧をgrepで検索
 
-			mpc listall | grep -F -i "$(echo "${QUERY_STRING#*\=}" | urldecode)" |
+			# クエリをデコードし"search_str"に代入
+			search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
+			# 曲の一覧から"search_str"で検索
+			mpc listall | grep -F -i "${search_str}" |
+
+			# 出力をボタン化
 			awk '{
 
-				# 出力をボタン化
 				print "<p><button name=insert value="$0">"$0"</button></p>"
 
 			}'

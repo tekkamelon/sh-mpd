@@ -106,7 +106,7 @@ cat << EOS
 			<!-- キュー内の曲を表示 -->
 			$(# クエリを変数展開で加工,デコード,変数に代入
 			
-			search_str=$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)
+			search_str="$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)"
 			
 			# キューされた曲をgrepで検索,idと区切り文字":"を付与
 			mpc playlist | grep -F -i -n "${search_str}" |
