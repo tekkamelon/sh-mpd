@@ -40,14 +40,6 @@ $ sudo chmod a+w playlist/fifo_listall & sudo chmod a+w playlist/fifo_lsplaylist
 $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
 ```
 
-### css,ホスト名の変更が出来ない場合(apache2)
-
-```sh
-$ cd sh-mpd/cgi-bin/
-
-$ sudo chwon www-data settings/
-```
-
 ## 開発の目標
 
 ### 高い移植性
@@ -78,6 +70,39 @@ $ sudo chwon www-data settings/
 
 - busybox ash ver. 1.30.1 (シバンのオプションを指定しない場合のみ動作)
 
+## トラブルシューティング
+
+### css,ホスト名の変更が出来ない場合(apache2)
+
+```sh
+# apache2の実行ユーザーを確認
+$ cat /etc/apache2/envvars | grep -e "^export APACHE_RUN_USER" -e "^export APACHE_RUN_GROUP"
+
+export APACHE_RUN_USER=www-data
+export APACHE_RUN_GROUP=www-data
+
+# ホスティングしているディレクトリに移動
+$ cd /"YOUR_DIRECTORY"/sh-mpd/cgi-bin/
+
+# "APACHE_RUN_USER","APACHE_RUN_GROUP"に合わせてディレクトリの所有ユーザー,グループを変更
+$ sudo chwon www-data:www-data settings/
+```
+
+### "Playlist"ページが開けない場合(apache2)
+
+```sh
+# apache2の実行ユーザーを確認
+$ cat /etc/apache2/envvars | grep -e "^export APACHE_RUN_USER" -e "^export APACHE_RUN_GROUP"
+
+export APACHE_RUN_USER=www-data
+export APACHE_RUN_GROUP=www-data
+
+# ホスティングしているディレクトリに移動
+$ cd /"YOUR_DIRECTORY"/sh-mpd/cgi-bin/playlist/
+
+# "APACHE_RUN_USER","APACHE_RUN_GROUP"に合わせて名前付きパイプの所有ユーザー,グループを変更
+$ sudo chwon www-data:www-data fifo_l*
+```
 ## "urldecode"コマンド引用元
 
 - urldecode:https://github.com/ShellShoccar-jpn/misc-tools
