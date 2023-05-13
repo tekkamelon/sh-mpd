@@ -36,11 +36,11 @@ cat << EOS
 
     <body>
 		<!-- ホスト名の表示 -->
-		<h3>hostname:$MPD_HOST</h3>
+		<h3>hostname:${MPD_HOST}</h3>
 		<button><a href="/cgi-bin/settings/host/host.cgi">change_host</a></button>
 			
 		<!-- ポート番号の設定 -->
-		<h3>port: $MPD_PORT</h3>
+		<h3>port: ${MPD_PORT}</h3>
 		<button><a href="/cgi-bin/settings/port/port.cgi">change_port</a></button>
 
 		<!-- 出力先デバイスの設定 -->

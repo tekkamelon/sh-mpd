@@ -55,7 +55,7 @@ cat << EOS
 				echo "${cat_post#*\=}" >| ../hostname &
 
 				# メッセージの出力
-				echo "<p>changed host:${cat_post#*\=}</p>"
+				echo "<p>changed host:${cat_post#*\=}</p>" &
 
 				# POSTを環境変数に代入
 				export MPD_HOST="${cat_post#*\=}"
@@ -77,7 +77,8 @@ cat << EOS
 			mpc status 2>&1 |
 			
 			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+			sed -e "3 s/: off/:<b> off<\/b>/g" -e "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+
 			)</p>
 			
 		</form>
