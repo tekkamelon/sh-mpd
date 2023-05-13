@@ -56,7 +56,7 @@ cat << EOS
 				echo "${cat_post#*\=}" >| ../port_conf &
 
 				# メッセージの出力
-				echo "<p>changed port number:${cat_post#*\=}</p>" &
+				echo "changed port number:${cat_post#*\=}<br>" &
 				
 				# POSTを環境変数に代入
 				export MPD_PORT="${cat_post#*\=}"
@@ -65,7 +65,7 @@ cat << EOS
 			elif [ -n "${cat_post}" ] ; then
 				
 				# 偽であればメッセージを表示
-				echo "<p>not a valid port number!</p>"
+				echo "not a valid port number!<br>"
 
 			else
 

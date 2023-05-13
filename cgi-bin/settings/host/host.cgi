@@ -55,7 +55,7 @@ cat << EOS
 				echo "${cat_post#*\=}" >| ../hostname &
 
 				# メッセージの出力
-				echo "<p>changed host:${cat_post#*\=}</p>" &
+				echo "changed host:${cat_post#*\=}<br>" &
 
 				# POSTを環境変数に代入
 				export MPD_HOST="${cat_post#*\=}"
@@ -64,7 +64,7 @@ cat << EOS
 			elif [ -n "${cat_post}" ] ; then
 
 				# 真の場合はメッセージを表示
-				echo "<p>failed to resolve hostname!</p>"
+				echo "failed to resolve hostname!<br>"
 
 			else
 
