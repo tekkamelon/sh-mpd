@@ -78,14 +78,15 @@ $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
 # apache2の実行ユーザーを確認
 $ cat /etc/apache2/envvars | grep -e "^export APACHE_RUN_USER" -e "^export APACHE_RUN_GROUP"
 
+# 実行結果(例)
 export APACHE_RUN_USER=www-data
 export APACHE_RUN_GROUP=www-data
 
 # ホスティングしているディレクトリに移動
-$ cd /"YOUR_DIRECTORY"/sh-mpd/cgi-bin/
+$ cd /"YOUR_DIRECTORY"/cgi-bin/
 
 # "APACHE_RUN_USER","APACHE_RUN_GROUP"に合わせてディレクトリの所有ユーザー,グループを変更
-$ sudo chwon www-data:www-data settings/
+$ sudo chown www-data:www-data settings/
 ```
 
 ### "Playlist"ページが開けない場合(apache2)
@@ -94,15 +95,17 @@ $ sudo chwon www-data:www-data settings/
 # apache2の実行ユーザーを確認
 $ cat /etc/apache2/envvars | grep -e "^export APACHE_RUN_USER" -e "^export APACHE_RUN_GROUP"
 
+# 実行結果(例)
 export APACHE_RUN_USER=www-data
 export APACHE_RUN_GROUP=www-data
 
 # ホスティングしているディレクトリに移動
-$ cd /"YOUR_DIRECTORY"/sh-mpd/cgi-bin/playlist/
+$ cd /"YOUR_DIRECTORY"/cgi-bin/playlist/
 
 # "APACHE_RUN_USER","APACHE_RUN_GROUP"に合わせて名前付きパイプの所有ユーザー,グループを変更
-$ sudo chwon www-data:www-data fifo_l*
+$ sudo chown www-data:www-data fifo_l*
 ```
+
 ## "urldecode"コマンド引用元
 
 - urldecode:https://github.com/ShellShoccar-jpn/misc-tools
