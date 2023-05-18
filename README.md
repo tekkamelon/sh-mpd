@@ -31,10 +31,10 @@ $ sudo cp -r sh-mpd/cgi-bin /usr/lib/ # ※一例
 $ cd /usr/lib/cgi-bin
 
 # 名前付きパイプを作成
-$ mkfifo playlist/fifo_listall & mkfifo fifo_playlist/lsplaylist
+$ mkfifo playlist/fifo_listall playlist/fifo_lsplaylist
 
 # 読み書きの権限を付与
-$ sudo chmod a+w playlist/fifo_listall & sudo chmod a+w playlist/fifo_lsplaylist
+$ sudo chmod a+w playlist/fifo_listall playlist/fifo_lsplaylist
 
 #  各cgiファイルに実行権限を付与
 $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
