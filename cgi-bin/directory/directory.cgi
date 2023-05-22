@@ -56,6 +56,19 @@ cat << EOS
 
 			<p>$(# POSTで受け取った文字列を変数に代入
 
+			# urldecodeにPATHが通っていれば真,なければ偽
+			if type urldecode > /dev/null 2>&1 ; then
+				
+				# 真の場合は何もしない
+				:
+
+			else
+
+				# 偽の場合はリンクを表示
+				echo "<h2><a href=\"https://github.com/ShellShoccar-jpn/misc-tools\">please install \"urldecode\"</a></h2>"
+				
+			fi
+
 			cat_post=$(cat)
 
 			# POSTを変数展開で加工,文字列があれば真,無ければ偽

@@ -68,6 +68,19 @@ cat << EOS
 			<!-- ステータスの表示 -->
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 			
+			# urldecodeにPATHが通っていれば真,なければ偽
+			if type urldecode > /dev/null 2>&1 ; then
+				
+				# 真の場合は何もしない
+				:
+
+			else
+
+				# 偽の場合はリンクを表示
+				echo "<h2><a href=\"https://github.com/ShellShoccar-jpn/misc-tools\">please install \"urldecode\"</a></h2>"
+				
+			fi
+				
 			# POSTを変数に代入
 			cat_post=$(cat)
 
