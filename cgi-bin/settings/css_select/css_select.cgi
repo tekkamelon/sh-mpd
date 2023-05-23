@@ -56,7 +56,10 @@ cat << EOS
 
 			$(# css一覧を表示
 
-			ls ../../stylesheet |
+			# cssの一覧を変数として宣言
+			css_list=$(ls ../../stylesheet)
+
+			echo "${css_list}" |
 			
 			awk '{
 
