@@ -48,27 +48,21 @@ cat << EOS
 				
 		</form>
 	
-		<!-- ステータスを表示 --> 
 		<form name="music" method="POST" >
 
 		<!-- 最下部へのジャンプ -->
 		<p><a href="#bottom">jump to bottom</a></p>
 
-			<p>$(# POSTで受け取った文字列を変数に代入
+			<!-- ステータスを表示 --> 
+			<p>$(# POSTの有無に応じてmpcでの処理を分岐
 
-			# urldecodeにPATHが通っていれば真,なければ偽
-			if type urldecode > /dev/null 2>&1 ; then
-				
-				# 真の場合は何もしない
-				:
+			# urldecodeにPATHが通っていなければ偽
+			type urldecode > /dev/null 2>&1 ||
 
-			else
+			# 偽の場合はリンクを表示
+			echo '<h2><a href="https://github.com/ShellShoccar-jpn/misc-tools">please install "urldecode"</a></h2>'
 
-				# 偽の場合はリンクを表示
-				echo "<h2><a href=\"https://github.com/ShellShoccar-jpn/misc-tools\">please install \"urldecode\"</a></h2>"
-				
-			fi
-
+			# POSTで受け取った文字列を変数として宣言
 			cat_post=$(cat)
 
 			# POSTを変数展開で加工,文字列があれば真,無ければ偽

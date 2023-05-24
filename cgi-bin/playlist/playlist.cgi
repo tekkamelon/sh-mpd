@@ -55,21 +55,15 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- ステータスを表示 -->
-			<p>$(# POSTの"="をスペースに置換,デコードしmpcに渡す
+			<p>$(# POSTの処理,POSTが無い場合はステータスの表示
 
-			# urldecodeにPATHが通っていれば真,なければ偽
-			if type urldecode > /dev/null 2>&1 ; then
-				
-				# 真の場合は何もしない
-				:
+			# urldecodeにPATHが通っていなければ偽
+			type urldecode > /dev/null 2>&1 ||
 
-			else
-
-				# 偽の場合はリンクを表示
-				echo "<h2><a href=\"https://github.com/ShellShoccar-jpn/misc-tools\">please install \"urldecode\"</a></h2>"
-				
-			fi
-
+			# 偽の場合はリンクを表示
+			echo '<h2><a href="https://github.com/ShellShoccar-jpn/misc-tools">please install "urldecode"</a></h2>'
+			
+			# POSTの"="をスペースに置換,デコードしmpcに渡す
 			cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
 
 			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
