@@ -31,36 +31,43 @@ cat << EOS
     </head>
 
 	<header>
+
 		<h1>settings</h1>
+
 	</header>
 
     <body>
+	 
 		<!-- ホスト名の表示 -->
 		<h3>hostname:${MPD_HOST}</h3>
-		<button><a href="/cgi-bin/settings/host/host.cgi">change_host</a></button>
+		<button onclick="location.href='/cgi-bin/settings/host/host.cgi'">change_host</button>
 			
 		<!-- ポート番号の設定 -->
 		<h3>port: ${MPD_PORT}</h3>
-		<button><a href="/cgi-bin/settings/port/port.cgi">change_port</a></button>
+		<button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change_port</button>
 
 		<!-- 出力先デバイスの設定 -->
 		<h3>ountput devices list</h3>
-		<button><a href="/cgi-bin/settings/outputs/outputs.cgi">select_output_device</a></button>
+		<button onclick="location.href='/cgi-bin/settings/outputs/outputs.cgi'">select_output_device</button>
 		
 		<!-- CSSの設定 -->
 		<h3>CSS setting</h3>
-		<button><a href="/cgi-bin/settings/css_select/css_select.cgi">select_css</a></button>
+		<button onclick="location.href='/cgi-bin/settings/css_select/css_select.cgi'">select_css</button>
 			
     </body>
 
 	<div class="link">
+
 		<footer>	
+
 			<!-- リンク -->
-			<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
-			<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
-			<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
+			<button onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
+			<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directoty</button>
+			<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
+			<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+
 		</footer>	
+
 	</dev>
 
 </html>

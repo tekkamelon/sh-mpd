@@ -104,10 +104,14 @@ cat << EOS
 
 			)</p>
 
-			<!-- リンク -->
-			<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
-			<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
+		</form>
+
+		<!-- リンク -->
+		<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
+		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
+		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+
+		<form name="music" method="POST" >
 
 			<!-- キュー内の曲を表示 -->
 			$(
@@ -130,16 +134,19 @@ cat << EOS
 			)
 
 		</form>
+
 	</body>
 
 	<!-- "jump to bottom"のジャンプ先 -->
 	<div id="bottom"></div>
 
 	<footer>
+
 		<!-- リンク -->
-		<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
-		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
+		<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
+		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
+		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+
 	</footer>
 
 	<!-- 最上部へのジャンプ -->

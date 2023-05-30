@@ -95,10 +95,14 @@ cat << EOS
 
 			)</p>
 
-			<!-- リンク -->
-			<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
-			<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-			<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
+		</form>
+
+		<!-- リンク -->
+		<button onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
+		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
+		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+
+		<form name="music" method="POST" >
 
 			<!-- mpc管理下のディレクトリを再帰的に表示 -->
 			$(# 曲の一覧をgrepで検索
@@ -119,16 +123,19 @@ cat << EOS
 			)
 
 		</form>
+		
 	</body>
 
 	<!-- "jump to bottom"のジャンプ先 -->
 	<div id="bottom"></div>
 
 	<footer>
+
 		<!-- リンク -->
-		<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
-		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
+		<button onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
+		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
+		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+
 	</footer>
 
 	<!-- 最上部へのジャンプ -->

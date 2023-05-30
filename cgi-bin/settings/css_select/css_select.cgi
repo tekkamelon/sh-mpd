@@ -42,9 +42,16 @@ cat << EOS
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
-    </head> <header> <h1>settings</h1> </header>
+    </head> 
+
+	<header>
+
+		<h1>settings</h1>
+	
+	</header>
 
     <body>
+
 		<!-- ホスト名の設定 -->
 		<form name="setting" method="GET" >
 
@@ -74,12 +81,14 @@ cat << EOS
     </body>
 
 	<footer>	
+
 		<!-- リンク -->
-		<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
-		<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
-		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
-		<button><a href="/cgi-bin/settings/settings.cgi">Settings</a></button>
+		<button onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
+		<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directoty</button>
+		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
+		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+		<button onclick="location.href='/cgi-bin/settings/settings.cgi'">Settings</button>
+
 	</footer>	
 
 </html>

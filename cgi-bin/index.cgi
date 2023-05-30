@@ -214,10 +214,10 @@ MPD UI using shellscript and CGI
 	<aside>
 		<!-- リンク -->
 		<h3>MENU</h3>
-		<button><a href="queued/queued.cgi">Queued</a></button>
-		<button><a href="directory/directory.cgi">Directoty</a></button>
-		<button><a href="playlist/playlist.cgi">Playlist</a></button>
-		<button><a href="settings/settings.cgi">Settings</a></button>
+		<button onclick="location.href='queued/queued.cgi'">Queued</button>
+		<button onclick="location.href='directory/directory.cgi'">Directoty</button>
+		<button onclick="location.href='playlist/playlist.cgi'">Playlist</button>
+		<button onclick="location.href='settings/settings.cgi'">Settings</button>
 
 		<!-- mpdの統計を表示 -->
 		<h3>MPD statistics</h3>

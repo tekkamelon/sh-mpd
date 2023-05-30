@@ -86,12 +86,14 @@ cat << EOS
     </body>
 
 	<footer>	
+
 		<!-- リンク -->
-		<button><a href="/cgi-bin/queued/queued.cgi">Queued</a></button>
-		<button><a href="/cgi-bin/directory/directory.cgi">Directory</a></button>
-		<button><a href="/cgi-bin/index.cgi">HOME</a></button>
-		<button><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></button>
-		<button><a href="/cgi-bin/settings/settings.cgi">Settings</a></button>
+		<button onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
+		<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directoty</button>
+		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
+		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+		<button onclick="location.href='/cgi-bin/settings/settings.cgi'">Settings</button>
+
 	</footer>	
 
 </html>
