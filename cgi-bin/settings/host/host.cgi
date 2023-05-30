@@ -21,67 +21,78 @@ echo ""
 cat << EOS
 <!DOCTYPE html>
 <html>
+
     <head>
+
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf)">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
+
     </head>
 
 	<header>
+
 		<h1>settings</h1>
+
 	</header>
 
     <body>
+
 		<!-- ホスト名,ポート番号の表示-->
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
+
 		<form name="setting" method="POST" >
 
-				<span>
-					<p>enter hostname or local IP: <input type="text" placeholder="example: foobar.local" name="MPD_HOST"></p>
-				</span>
-			
-			<!-- 実行結果を表示 -->
-			<p>$(# POSTを変数に代入
+			<span>
 
-			cat_post=$(cat)
+				<!-- ホスト名又はIPアドレスの入力欄 -->
+				<p>enter hostname or local IP: <input type="text" placeholder="example: foobar.local" name="MPD_HOST"></p>
 
-			# POSTを変数展開で加工,ホスト名が有効であれば真,無効であれば偽
-			if mpc -q --host="${cat_post#*\=}" ; then
-
-				# 真の場合はPOSTを変数展開で加工,設定ファイルへのリダイレクト
-				echo "${cat_post#*\=}" >| ../hostname &
-
-				# メッセージの出力
-				echo "changed host:${cat_post#*\=}<br>" &
-
-				# POSTを環境変数に代入
-				export MPD_HOST="${cat_post#*\=}"
-				
-			# 偽の場合はPOSTがあれば真,無ければ偽
-			elif [ -n "${cat_post}" ] ; then
-
-				# 真の場合はメッセージを表示
-				echo "failed to resolve hostname!<br>"
-
-			else
-
-				# 偽の場合は何もしない
-				:
-				
-			fi
-
-			# ステータスを表示
-			mpc status 2>&1 |
-			
-			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
-
-			)</p>
+			</span>
 			
 		</form>
+
+		<!-- 実行結果を表示 -->
+		<p>$(# POSTを変数に代入
+
+		cat_post=$(cat)
+
+		# POSTを変数展開で加工,ホスト名が有効であれば真,無効であれば偽
+		if mpc -q --host="${cat_post#*\=}" ; then
+
+			# 真の場合はPOSTを変数展開で加工,設定ファイルへのリダイレクト
+			echo "${cat_post#*\=}" >| ../hostname &
+
+			# メッセージの出力
+			echo "changed host:${cat_post#*\=}<br>" &
+
+			# POSTを環境変数に代入
+			export MPD_HOST="${cat_post#*\=}"
+			
+		# 偽の場合はPOSTがあれば真,無ければ偽
+		elif [ -n "${cat_post}" ] ; then
+
+			# 真の場合はメッセージを表示
+			echo "failed to resolve hostname!<br>"
+
+		else
+
+			# 偽の場合は何もしない
+			:
+			
+		fi
+
+		# ステータスを表示
+		mpc status 2>&1 |
+		
+		# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+		sed -e "3 s/: off/:<b> off<\/b>/g" -e "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+
+		)</p>
+			
 
     </body>
 
