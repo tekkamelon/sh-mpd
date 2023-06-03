@@ -212,6 +212,7 @@ MPD UI using shellscript and CGI
 	</main>
 
 	<aside>
+
 		<!-- リンク -->
 		<h3>MENU</h3>
 		<button onclick="location.href='queued/queued.cgi'">Queued</button>
@@ -224,16 +225,19 @@ MPD UI using shellscript and CGI
 
 			<p>$(mpc stats | sed "s/$/<br>/g")</p>
 
-		<!-- ソースコード -->
+		<!-- ソースコードのリンク -->
 		<footer>
 
 			<h3>source code</h3>
 			<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
-			<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urldecode" reference source</a></p>
-			<p><a href="https://github.com/andybrewer/mvp/">"mvp.css" reference source</a></p>
-			<p><a href="https://github.com/xz/new.css">"new.css" reference source</a></p>
+
+			<h3>reference source code</h3>
+			<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urldecode"</a></p>
+			<p><a href="https://github.com/andybrewer/mvp/">"mvp.css"</a></p>
+			<p><a href="https://github.com/xz/new.css">"new.css"</a></p>
 
 		</footer>
+
 	</aside>
 
 </div>
