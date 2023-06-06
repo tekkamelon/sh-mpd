@@ -106,6 +106,16 @@ $ cd /"YOUR_DIRECTORY"/cgi-bin/playlist/
 $ sudo chown www-data:www-data fifo_l*
 ```
 
-## "urldecode"コマンド引用元
+## 各種引用先
 
-- urldecode:https://github.com/ShellShoccar-jpn/misc-tools
+- urldecode
+
+	- https://github.com/ShellShoccar-jpn/misc-tools
+
+- mvp.css
+
+	- https://github.com/andybrewer/mvp/mvp.css
+
+- new.css
+
+	- https://github.com/xz/new.css
