@@ -77,6 +77,18 @@ cat << EOS
 				# "next"を出力
 				echo "next"
 
+			# 偽の場合はPOSTを変数展開,"insertresult="であれば真,それ以外で偽
+			elif [ "${cat_post#\=*}" = "insertresult=" ] ; then
+
+				# 真の場合はクエリをデコードし"search_str"に代入
+				search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
+
+				# 曲の一覧から"search_str"で検索,結果を挿入
+				mpc listall | grep -F -i "${search_str}" | mpc insert &
+
+				# "next"を出力
+				echo "next"
+
 			else
 
 				# 偽の場合は"status"を出力
@@ -113,10 +125,17 @@ cat << EOS
 			# 曲の一覧から"search_str"で検索
 			mpc listall | grep -F -i "${search_str}" |
 
-			# 出力をボタン化
 			awk '{
 
+				# 出力をボタン化
 				print "<p><button name=insert value="$0">"$0"</button></p>"
+
+			}
+
+			END{
+
+				# 検索結果を挿入するボタン
+				print "<p><button name=insertresult value=>insert search result</button></p>"
 
 			}'
 
