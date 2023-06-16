@@ -21,18 +21,21 @@ echo ""
 cat << EOS
 <!DOCTYPE html>
 <html>
+
     <head>
+
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat css_conf)">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
+
     </head>
 
 	<header>
 
-		<h1>settings</h1>
+		<h1>Settings</h1>
 
 	</header>
 
@@ -43,7 +46,7 @@ cat << EOS
 		<button onclick="location.href='/cgi-bin/settings/host/host.cgi'">change_host</button>
 			
 		<!-- ポート番号の設定 -->
-		<h3>port: ${MPD_PORT}</h3>
+		<h3>port:${MPD_PORT}</h3>
 		<button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change_port</button>
 
 		<!-- 出力先デバイスの設定 -->
