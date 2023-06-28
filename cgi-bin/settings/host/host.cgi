@@ -49,7 +49,7 @@ cat << EOS
 			<span>
 
 				<!-- ホスト名又はIPアドレスの入力欄 -->
-				<p>enter hostname or local IP: <input type="text" placeholder="example: foobar.local" name="MPD_HOST"></p>
+				<p><input type="text" placeholder="enter hostname or local IP default:localhost" name="MPD_HOST"></p>
 
 			</span>
 			

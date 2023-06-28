@@ -49,7 +49,7 @@ cat << EOS
 			<span>
 
 				<!-- ポート番号の入力欄 -->
-				<p>enter or port number: <input type="text" placeholder="default: 6600" name="MPD_HOST"></p>
+				<p><input type="text" placeholder="enter or port number default:6600" name="MPD_HOST"></p>
 					
 			</span>
 
