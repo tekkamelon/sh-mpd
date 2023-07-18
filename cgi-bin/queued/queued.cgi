@@ -21,23 +21,29 @@ echo ""
 cat << EOS
 <!DOCTYPE html>
 <html>
+
     <head>
+
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf)">
 		<link rel="icon" ref="image/favicon_ios.ico">
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
 		<title>sh-MPD</title>
+
     </head>
 
 	<!-- "jump to top"のジャンプ先 -->
 	<div id="top"></div>
 
 	<header>
+
 		<h1>Queued</h1>
+
 	</header>
 
     <body>
+
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
 		<!-- playlistの処理 -->
 		<form name="FORM" method="GET" >
@@ -51,14 +57,21 @@ cat << EOS
 
 						<!-- 保存 -->
 						<option value="save">save playlist</option>
+
 		            </select>
 
 					<!-- playlistの名前,検索ワードの入力欄 -->
 					<span>
+
 						<input type="text" name="input_string">
+
 					</span>
+
 				</p>
 		</form>
+
+		<!-- キュー内の曲の削除 -->
+		<button onclick="location.href='/cgi-bin/queued/remove.cgi'">Remove queued song</button>
 
 		<!-- 最下部へのジャンプ -->
 		<p><a href="#bottom">jump to bottom</a></p>
@@ -143,6 +156,7 @@ cat << EOS
 	<footer>
 
 		<!-- リンク -->
+		<button onclick="location.href='/cgi-bin/queued/remove.cgi'">Remove queued song</button>
 		<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
 		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
 		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
