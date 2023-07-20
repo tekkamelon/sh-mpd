@@ -85,18 +85,8 @@ cat << EOS
 			# POSTを変数に代入
 			cat_post=$(cat)
 
-			# クエリを変数展開で加工,sedでの処理結果を変数に代入
-			save_playlist=$(
-
-				echo "${QUERY_STRING#*\=}" |
-	
-				# "&input_string"をスペースに,"search[任意の１文字以上]"を置換しデコード
-				sed -e "s/&input_string=/ /" -e "s/search.*//g" | urldecode
-
-			)
-
-			# POSTを変数展開で加工,"save_playlist"を出力
-			echo "${cat_post%%\=*}" "${cat_post#*\=}""${save_playlist}" |
+			# POSTの"="を" "に置換,"&del"を削除
+			echo "${cat_post}" | sed -e "s/=/ /g" -e "s/\&del//g" |
 
 			# mpcに渡す
 			xargs mpc 2>&1 |
@@ -105,10 +95,10 @@ cat << EOS
 			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
 
 			# プレイリストのセーブ時のステータスの表示,"save_playlist"が空ではない場合に真
-			test -n "${save_playlist}" &&
+			# test -n "${save_playlist}" &&
 
-			# 真の場合,ステータスとメッセージを表示
-			mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:${save_playlist#* }</p>"
+			# # 真の場合,ステータスとメッセージを表示
+			# mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:${save_playlist#* }</p>"
 
 			)</p>
 
@@ -121,6 +111,9 @@ cat << EOS
 		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
 
 		<form name="music" method="POST" >
+
+			<!-- 削除ボタン -->
+			<p><input type="submit" value="Remove select song"></p>
 
 			<!-- キュー内の曲を表示 -->
 			$(
@@ -136,11 +129,15 @@ cat << EOS
 
 				sub(":" , ">")
 
-				print "<p><button name=del value="$0"</button></p>"
+				# print "<p><button name=del value="$0"</button></p>"
+				print "<p><input type=checkbox name=del value="$0"</p>"
 
 			}'
-
+			
 			)
+
+			<!-- 削除ボタン -->
+			<p><input type="submit" value="Remove select song"></p>
 
 		</form>
 
