@@ -43,11 +43,14 @@ cat << EOS
 	</header>
 
     <body>
+
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
+
 		<!-- playlistの処理 -->
 		<form name="FORM" method="GET" >
 
 				<p>
+
 					<!-- ドロップダウンリスト -->
 	             	<select name="button">
 						
@@ -63,6 +66,7 @@ cat << EOS
 
 					</span>
 				</p>
+
 		</form>
 
 		<!-- キュー -->
@@ -94,11 +98,11 @@ cat << EOS
 			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
 
-			# プレイリストのセーブ時のステータスの表示,"save_playlist"が空ではない場合に真
-			# test -n "${save_playlist}" &&
+			# 曲の削除の結果の表示,"cat_post"が空ではない場合に真
+			test -n "${cat_post}" &&
 
-			# # 真の場合,ステータスとメッセージを表示
-			# mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:${save_playlist#* }</p>"
+			# 真の場合,ステータスとメッセージを表示
+			mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>Remove selected song!</p>"
 
 			)</p>
 
@@ -124,12 +128,11 @@ cat << EOS
 			# キューされた曲をgrepで検索,idと区切り文字":"を付与
 			mpc playlist | grep -F -i -n "${search_str}" |
 
-			# ":"を">"に置換,標準入力をタグ付きで出力
+			# 区切り文字":"を">"に置換,標準入力をタグ付きで出力
 			awk '{
 
 				sub(":" , ">")
 
-				# print "<p><button name=del value="$0"</button></p>"
 				print "<p><input type=checkbox name=del value="$0"</p>"
 
 			}'
