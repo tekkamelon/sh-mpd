@@ -43,19 +43,19 @@ cat << EOS
 	 
 		<!-- ホスト名の表示 -->
 		<h3>hostname:${MPD_HOST}</h3>
-		<button onclick="location.href='/cgi-bin/settings/host/host.cgi'">change_host</button>
+		<p><button onclick="location.href='/cgi-bin/settings/host/host.cgi'">change_host</button></p>
 			
 		<!-- ポート番号の設定 -->
 		<h3>port:${MPD_PORT}</h3>
-		<button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change_port</button>
+		<p><button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change_port</button></p>
 
 		<!-- 出力先デバイスの設定 -->
 		<h3>ountput devices list</h3>
-		<button onclick="location.href='/cgi-bin/settings/outputs/outputs.cgi'">select_output_device</button>
+		<p><button onclick="location.href='/cgi-bin/settings/outputs/outputs.cgi'">select_output_device</button></p>
 		
 		<!-- CSSの設定 -->
 		<h3>CSS setting</h3>
-		<button onclick="location.href='/cgi-bin/settings/css_select/css_select.cgi'">select_css</button>
+		<p><button onclick="location.href='/cgi-bin/settings/css_select/css_select.cgi'">select_css</button></p>
 			
     </body>
 
