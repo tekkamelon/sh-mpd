@@ -60,7 +60,7 @@ cat << EOS
 
 		            </select>
 
-					<!-- playlistの名前,検索ワードの入力欄 -->
+					<!-- 検索ワードの入力欄 -->
 					<span>
 
 						<input type="text" name="input_string">
@@ -69,9 +69,6 @@ cat << EOS
 
 				</p>
 		</form>
-
-		<!-- キュー内の曲の削除 -->
-		<button onclick="location.href='/cgi-bin/queued/remove.cgi'">Remove queued song</button>
 
 		<!-- 最下部へのジャンプ -->
 		<p><a href="#bottom">jump to bottom</a></p>

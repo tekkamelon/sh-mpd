@@ -51,26 +51,18 @@ cat << EOS
 
 				<p>
 
-					<!-- ドロップダウンリスト -->
-	             	<select name="button">
-						
-						<!-- 検索 -->
-						<option value="search">search</option>
-
 		            </select>
 
-					<!-- playlistの名前,検索ワードの入力欄 -->
+					<!-- 検索ワードの入力欄 -->
 					<span>
 
-						<input type="text" name="input_string">
+						<p><input type="text" placeholder="search_word" name="input_string"></p>
 
 					</span>
+
 				</p>
 
 		</form>
-
-		<!-- キュー -->
-		<button onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
 
 		<!-- 最下部へのジャンプ -->
 		<p><a href="#bottom">jump to bottom</a></p>
@@ -123,8 +115,8 @@ cat << EOS
 			$(
 
 			# クエリを変数展開で加工,デコード,変数に代入
-			search_str="$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)"
-			
+			search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
+
 			# キューされた曲をgrepで検索,idと区切り文字":"を付与
 			mpc playlist | grep -F -i -n "${search_str}" |
 
