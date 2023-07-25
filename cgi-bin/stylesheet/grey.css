@@ -1,4 +1,4 @@
-@cha52rset "UTF-8";
+@charset "UTF-8";
 /* grey.css: グレイテーマのcss */
 
 /* 見出しの色 */
@@ -34,7 +34,7 @@ header{
 body{
     background-color: rgb(47, 50, 52);
 	color: rgb(0, 0, 0);
-    text-align: left52;
+    text-align: left;
 }
 
 /* 大見出し */
@@ -132,7 +132,7 @@ button{
 	color: rgb(130, 135, 135);
 	background-color: rgb(60, 65, 65);
 	border: 1px solid rgb(60, 65, 65);
-	border-radius: 5px;
+	border-radius: 6px;
 	text-align: center;
 }
 
@@ -142,7 +142,7 @@ button:hover{
 	color: rgb(60, 65, 65);
 	background-color: rgb(110, 115, 115);
 	border: 1px solid rgb(110, 115, 115);
-	border-radius: 5px;
+	border-radius: 6px;
 	text-align: center;
 }
 
