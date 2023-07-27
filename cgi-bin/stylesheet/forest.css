@@ -89,7 +89,7 @@ p{
 select{
 	color: var(--main-bg-color);
 	background-color: rgb(35, 50, 30);
-	border: 1px solid teal;
+	border: 1px solid rgb(35, 50, 30);
 	border-radius: 6px;
     text-align:center
 }
@@ -107,30 +107,34 @@ input{
 	margin-top: 20px;
 	color: grey;
 	background-color: rgb(35, 50, 30);
-	border: 1px solid teal;
-	border-radius: 6px;
+	border: 1px solid rgb(35, 50, 30);
+	border-radius: 5px;
 }
 
 table {
-	border-collapse:collapse;
-	border-color: rgb(130, 140, 60);
+	border: none;
+	/* border-collapse:collapse; */
+	/* border-color: rgb(130, 140, 60); */
 }
 
 /* table */
 table th{
-	border-color: rgb(130, 140, 60);
+	border: none;
+	/* border-color: rgb(130, 140, 60); */
 	color: grey;
 	text-align: center
 }
 
 tr {
-	border-color: rgb(130, 140, 60);
+	border: none;
+	/* border-color: rgb(130, 140, 60); */
 }
 	 
 table td{
-	border-color: rgb(130, 140, 60);
-	color: grey;
-	text-align: center
+	border: none;
+	/* border-color: rgb(130, 140, 60); */
+	/* color: grey; */
+	/* text-align: center */
 }
 
 /* button */
@@ -138,19 +142,19 @@ button{
 	margin: 3px;
 	padding: 7px 14px;
 	color: grey;
-    background-color: var(--letter-color);
-	border: 1px solid rgb(130, 150, 60);
-	border-radius: 12px;
+    background-color: rgb(60, 90, 20);
+	border: 1px solid rgb(60, 90, 20);
+	border-radius: 6px;
 	text-align: center;
 }
 
 button:hover{
 	margin: 3px;
 	padding: 7px 14px;
-	color: var(--main-bg-color);
-	background-color: rgb(75, 105, 65);
+	color: rgb(200, 200, 200);
+    background-color: rgb(60, 90, 20);
 	border: 1px solid orange;
-	border-radius: 12px;
+	border-radius: 6px;
 	text-align: center;
 }
 
