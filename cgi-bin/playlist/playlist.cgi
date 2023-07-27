@@ -44,7 +44,7 @@ cat << EOS
 		<form name="FORM" method="GET" >
 
 			<!-- 検索ワードの入力欄 -->
-			<p><input type="text" placeholder="search_word" name="search_word"></p>
+			<p><input type="text" placeholder="search word" name="search_word"></p>
 
 		</form>
 	

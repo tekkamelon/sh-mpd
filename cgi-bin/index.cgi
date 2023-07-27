@@ -146,13 +146,21 @@ MPD UI using shellscript and CGI
 	                <option value="searchplay filename">filename</option>
 
 					</form>
+
 					<form method="POST">
+
 						<p>
+
 							<span>
-								<input type="text" name="search">
+
+								<input type="text" placeholder="search word" name="search">
+
 							</span>
+
 						</p>
+
 				    </form>
+
 	            </select>
 
 		<form name="FORM" method="GET" >

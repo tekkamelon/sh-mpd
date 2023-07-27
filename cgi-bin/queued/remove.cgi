@@ -56,7 +56,7 @@ cat << EOS
 					<!-- 検索ワードの入力欄 -->
 					<span>
 
-						<p><input type="text" placeholder="search_word" name="input_string"></p>
+						<p><input type="text" placeholder="search word" name="input_string"></p>
 
 					</span>
 

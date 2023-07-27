@@ -63,7 +63,7 @@ cat << EOS
 					<!-- 検索ワードの入力欄 -->
 					<span>
 
-						<input type="text" name="input_string">
+						<p><input type="text" placeholder="search word or playlist name" name="input_string"></p>
 
 					</span>
 
