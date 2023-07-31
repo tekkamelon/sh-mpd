@@ -21,20 +21,25 @@ echo ""
 cat << EOS
 <!DOCTYPE html>
 <html>
+
     <head>
+	
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf)">
 		<link rel="icon" ref="image/favicon_ios.ico">
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
         <title>sh-MPD</title>
+		
     </head>
 	
 	<!-- "jump to top"のジャンプ先 -->
 	<div id="top"></div>
 
 	<header>
-		<h1>Remove queued playlist</h1>
+	
+		<h1>Remove playlist</h1>
+		
 	</header>
 
     <body>
@@ -74,6 +79,7 @@ cat << EOS
 		</form>
 
 		<!-- リンク -->
+		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
 		<button onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
 		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
 		<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
@@ -117,6 +123,7 @@ cat << EOS
 	<footer>
 	
 		<!-- リンク -->
+		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
 		<button onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
 		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
 		<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
