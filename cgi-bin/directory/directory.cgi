@@ -60,7 +60,7 @@ cat << EOS
 			type urldecode > /dev/null 2>&1 ||
 
 			# 偽の場合はリンクを表示
-			echo '<h2><a href="https://github.com/ShellShoccar-jpn/misc-tools">please install "urldecode"</a></h2>'
+			echo '<h2><a href="https://github.com/ShellShoccar-jpn/misc-tools">please install "urldecode"</a></h2>' &
 
 			# POSTで受け取った文字列を変数として宣言
 			cat_post=$(cat)
