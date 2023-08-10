@@ -127,9 +127,24 @@ cat << EOS
 			<!-- キュー内の曲を表示 -->
 			$(
 
-			# クエリを変数展開で加工,デコード,変数に代入
-			search_str="$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)"
+			# クエリを変数展開で加工
+			saved_tmp="${QUERY_STRING#*\=}"
+
+			saved="${saved_tmp%%\&*}"
+
+			# "saved"が"save"で真,それ以外で偽
+			if [ "${saved}" = "save" ] ; then
+
+				# 真の場合は"search_str"に空文字を代入
+				search_str=""
+
+			else
+
+				# 偽の場合はクエリを変数展開で加工,デコード,変数に代入
+				search_str="$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)"
 			
+			fi
+
 			# キューされた曲をgrepで検索,idと区切り文字":"を付与
 			mpc playlist | grep -F -i -n "${search_str}" |
 
