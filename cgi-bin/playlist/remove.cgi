@@ -68,8 +68,8 @@ cat << EOS
 			# 偽の場合はリンクを表示
 			echo '<h2><a href="https://github.com/ShellShoccar-jpn/misc-tools">please install "urldecode"</a></h2>' &
 			
-			# POSTの"="をスペースに置換,デコードしmpcに渡す
-			cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
+			# POSTの"="をスペースに,"%rm"を"\nrm"に置換,デコードしmpcに渡す
+			cat | sed -e "s/=/ /g" -e "s/\&rm/\nrm/g"| urldecode | xargs -n2 mpc 2>&1 | 
 
 			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
