@@ -97,6 +97,13 @@ cat << EOS
 
 			)
 
+			# プレイリスト作成後にキュー内の曲を再生するための処理
+			# "cat_post"と"save_playlist"の両方があれば真
+			test -n "${cat_post}" && test -n "${save_playlist}" &&
+
+			# 真の場合は"save_playlist"に空文字を代入
+			save_playlist=""
+
 			# POSTを変数展開で加工,"save_playlist"を出力
 			echo "${cat_post%%\=*}" "${cat_post#*\=}""${save_playlist}" |
 
@@ -131,6 +138,7 @@ cat << EOS
 			saved_tmp="${QUERY_STRING#*\=}"
 
 			saved="${saved_tmp%%\&*}"
+
 
 			# "saved"が"save"で真,それ以外で偽
 			if [ "${saved}" = "save" ] ; then
