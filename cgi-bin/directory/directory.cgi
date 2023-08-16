@@ -124,16 +124,12 @@ cat << EOS
 				# 出力をボタン化
 				print "<p><button name=insert value="$0">"$0"</button></p>"
 
-			}
-
-			END{
-
-				# 検索結果を挿入するボタン
-				print "<p><button name=insertresult value=>insert search result</button></p>"
-
 			}'
 
 			)
+			
+			<!-- 検索結果を挿入するボタン -->
+			<p><button name=insertresult value=>insert search result</button></p>
 
 		</form>
 		
