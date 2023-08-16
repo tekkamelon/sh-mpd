@@ -14,7 +14,9 @@ port="$(cat settings/port_conf)"
 
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
-export PATH="$PATH:../"
+
+# "urldecode"にパスを通す
+export PATH="$PATH:../bin"
 
 echo "Content-type: text/html"
 echo ""
