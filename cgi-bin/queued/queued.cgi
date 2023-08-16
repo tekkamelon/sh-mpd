@@ -14,6 +14,7 @@ port="$(cat ../settings/port_conf)"
 
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
+export PATH="$PATH:../../"
 
 echo "Content-type: text/html"
 echo ""
