@@ -11,7 +11,6 @@ export LANG=C
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
-
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
 
@@ -66,12 +65,6 @@ cat << EOS
 			<!-- ステータスを表示 -->
 			<p>$(# POSTの処理,POSTが無い場合はステータスの表示
 
-			# urldecodeにPATHが通っていなければ偽
-			type urldecode > /dev/null 2>&1 ||
-
-			# 偽の場合はリンクを表示
-			echo '<h2><a href="https://github.com/ShellShoccar-jpn/misc-tools">please install "urldecode"</a></h2>' &
-			
 			# POSTの"="をスペースに置換,デコードしmpcに渡す
 			cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
 

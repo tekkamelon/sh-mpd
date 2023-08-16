@@ -11,7 +11,6 @@ export LANG=C
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
-
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
 
@@ -59,12 +58,6 @@ cat << EOS
 			<!-- ステータスを表示 --> 
 			<p>$(# POSTの有無に応じてmpcでの処理を分岐
 
-			# urldecodeにPATHが通っていなければ偽
-			type urldecode > /dev/null 2>&1 ||
-
-			# 偽の場合はリンクを表示
-			echo '<h2><a href="https://github.com/ShellShoccar-jpn/misc-tools">please install "urldecode"</a></h2>' &
-
 			# POSTで受け取った文字列を変数として宣言
 			cat_post=$(cat)
 
@@ -77,7 +70,6 @@ cat << EOS
 				# デコード,mpcに渡す
 				urldecode | xargs mpc &
 
-				# "next"を出力
 				echo "next"
 
 			# 偽の場合はPOSTを変数展開,"insertresult="であれば真,それ以外で偽
@@ -89,7 +81,6 @@ cat << EOS
 				# 曲の一覧から"search_str"で検索,結果を挿入
 				mpc listall | grep -F -i "${search_str}" | mpc insert &
 
-				# "next"を出力
 				echo "next"
 
 			else

@@ -11,7 +11,6 @@ export LANG=C
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
-
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
 
@@ -80,12 +79,6 @@ cat << EOS
 			
 			<!-- ステータスの表示 -->
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
-			
-			# urldecodeにPATHが通っていなければ偽
-			type urldecode > /dev/null 2>&1 ||
-
-			# 偽の場合はリンクを表示
-			echo '<h2><a href="https://github.com/ShellShoccar-jpn/misc-tools">please install "urldecode"</a></h2>' &
 				
 			# POSTを変数に代入
 			cat_post=$(cat)
@@ -110,7 +103,6 @@ cat << EOS
 			# POSTを変数展開で加工,"save_playlist"を出力
 			echo "${cat_post%%\=*}" "${cat_post#*\=}""${save_playlist}" |
 
-			# mpcに渡す
 			xargs mpc 2>&1 |
 
 			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
@@ -139,9 +131,7 @@ cat << EOS
 
 			# クエリを変数展開で加工
 			saved_tmp="${QUERY_STRING#*\=}"
-
 			saved="${saved_tmp%%\&*}"
-
 
 			# "saved"が"save"で真,それ以外で偽
 			if [ "${saved}" = "save" ] ; then

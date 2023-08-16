@@ -11,7 +11,6 @@ export LANG=C
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
-
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
 
@@ -75,19 +74,12 @@ cat << EOS
 			<!-- ステータスの表示 -->
 			<p>$(# 選択された曲の再生,プレイリストの保存の処理
 			
-			# urldecodeにPATHが通っていなければ偽
-			type urldecode > /dev/null 2>&1 ||
-
-			# 偽の場合はリンクを表示
-			echo '<h2><a href="https://github.com/ShellShoccar-jpn/misc-tools">please install "urldecode"</a></h2>' &
-				
 			# POSTを変数に代入
 			cat_post=$(cat)
 
 			# POSTの"="を" "に置換,"&del"を削除
 			echo "${cat_post}" | sed -e "s/=/ /g" -e "s/\&del//g" |
 
-			# mpcに渡す
 			xargs mpc 2>&1 |
 
 			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
