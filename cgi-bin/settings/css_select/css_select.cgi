@@ -5,7 +5,7 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# 環境変数の設定
+# ====== 環境変数の設定 ======
 export LANG=C
 
 # クエリを変数展開で加工,文字列があれば真,なければ偽
@@ -28,7 +28,29 @@ else
 	export ECHO_MESSAGE=""
 
 fi
+# ====== 環境変数の設定ここまで ======
 
+
+# ===== スクリプトによる処理 ======
+css_list=$(# css一覧を表示
+
+	# cssの一覧を変数として宣言
+	css_list=$(ls ../../stylesheet)
+
+	echo "${css_list}" |
+
+	awk '{
+
+		# 出力をボタン化
+		print "<p><button name=css value="$0">"$0"</button></p>"
+
+	}'
+
+)
+# ===== スクリプトによる処理ここまで ======
+
+
+# ====== HTML ======
 echo "Content-type: text/html"
 echo ""
 
@@ -61,21 +83,7 @@ cat << EOS
 			<!-- css変更時のメッセージを表示 -->
 			${ECHO_MESSAGE}
 
-			$(# css一覧を表示
-
-			# cssの一覧を変数として宣言
-			css_list=$(ls ../../stylesheet)
-
-			echo "${css_list}" |
-			
-			awk '{
-
-				# 出力をボタン化
-				print "<p><button name=css value="$0">"$0"</button></p>"
-
-			}'
-			
-			)
+			${css_list}
  
 		</form>
     </body>
@@ -93,4 +101,5 @@ cat << EOS
 
 </html>
 EOS
+# ====== HTMLここまで ======
 

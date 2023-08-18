@@ -20,6 +20,56 @@ export PATH="$PATH:../../bin"
 # ====== 環境変数の設定ここまで ======
 
 
+# ===== スクリプトによる処理 ======
+mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
+			
+	# POSTを変数に代入
+	cat_post=$(cat)
+
+	# POSTの"="を" "に置換,"&del"を削除
+	echo "${cat_post}" | sed -e "s/=/ /g" -e "s/\&del//g" |
+
+	xargs mpc 2>&1 |
+
+	# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+
+	# 曲の削除の結果の表示,"cat_post"が空ではない場合に真
+	if [ -n "${cat_post}" ] ; then
+
+		# 真の場合,ステータスとメッセージを表示
+		mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>Remove selected song!</p>"
+
+	else
+
+		:
+
+	fi
+
+)
+
+# キュー内の曲の検索
+queued_song=$(
+
+	# クエリを変数展開で加工,デコード,変数に代入
+	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
+
+	# キューされた曲をgrepで検索,idと区切り文字":"を付与
+	mpc playlist | grep -F -i -n "${search_str}" |
+
+	# 区切り文字":"を">"に置換,標準入力をタグ付きで出力
+	awk '{
+
+		sub(":" , ">")
+
+		print "<p><input type=checkbox name=del value="$0"</p>"
+
+	}'
+
+)
+# ===== スクリプトによる処理ここまで ======
+
+
 # ====== HTML ======
 echo "Content-type: text/html"
 echo ""
@@ -76,26 +126,7 @@ cat << EOS
 		<form name="music" method="POST" >
 			
 			<!-- ステータスの表示 -->
-			<p>$(# 選択された曲の再生,プレイリストの保存の処理
-			
-			# POSTを変数に代入
-			cat_post=$(cat)
-
-			# POSTの"="を" "に置換,"&del"を削除
-			echo "${cat_post}" | sed -e "s/=/ /g" -e "s/\&del//g" |
-
-			xargs mpc 2>&1 |
-
-			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
-
-			# 曲の削除の結果の表示,"cat_post"が空ではない場合に真
-			test -n "${cat_post}" &&
-
-			# 真の場合,ステータスとメッセージを表示
-			mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>Remove selected song!</p>"
-
-			)</p>
+			<p>${mpc_post}</p>
 
 		</form>
 
@@ -111,24 +142,7 @@ cat << EOS
 			<p><input type="submit" value="Remove select song"></p>
 
 			<!-- キュー内の曲を表示 -->
-			$(
-
-			# クエリを変数展開で加工,デコード,変数に代入
-			search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
-
-			# キューされた曲をgrepで検索,idと区切り文字":"を付与
-			mpc playlist | grep -F -i -n "${search_str}" |
-
-			# 区切り文字":"を">"に置換,標準入力をタグ付きで出力
-			awk '{
-
-				sub(":" , ">")
-
-				print "<p><input type=checkbox name=del value="$0"</p>"
-
-			}'
-			
-			)
+			${queued_song}
 
 			<!-- 削除ボタン -->
 			<p><input type="submit" value="Remove select song"></p>
@@ -156,3 +170,4 @@ cat << EOS
 </html>
 EOS
 # ====== HTMLここまで ======
+

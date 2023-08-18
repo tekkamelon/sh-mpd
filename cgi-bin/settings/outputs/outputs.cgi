@@ -5,7 +5,7 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# 環境変数の設定
+# ====== 環境変数の設定 ======
 export LANG=C
 
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
@@ -14,7 +14,54 @@ port="$(cat ../port_conf)"
 
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
+# ====== 環境変数の設定ここまで ======
 
+
+# ===== スクリプトによる処理 ======
+# POSTを加工しmpcに渡す
+mpc_post=$(# POSTを変数に代入
+
+	cat_post=$(cat)
+
+	# POSTの有無を確認,あれば真,無ければ偽
+	if [ -n "${cat_post}" ] ; then
+
+		# 真の場合はPOSTを変数展開で"="をスペースに置換
+		echo "${cat_post%%\=*}" "${cat_post#*\=}" 
+		
+	else
+
+		# 偽の場合は"outputs"を出力
+		echo "outputs"
+
+	fi | 
+
+	# 出力をmpcに渡す
+	xargs mpc |
+
+	# スペースを区切り文字に設定,1フィールド目が"Output"の行をボタン化
+	awk -F" " '$1 == "Output"{
+
+		print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
+
+	}'
+
+)
+
+# ステータスを表示
+mpc_status=$(
+			
+	# mpcのエラー出力ごとsedに渡す
+	mpc status 2>&1 |
+
+	# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+
+)
+# ===== スクリプトによる処理 ======
+
+
+# ====== HTML ======
 echo "Content-type: text/html"
 echo ""
 
@@ -41,44 +88,10 @@ cat << EOS
 
 			<!-- 出力先デバイスの設定 -->
 			<h3>ountput devices list</h3>
-			$(# POSTを変数に代入
+			${mpc_post}
 
-			cat_post=$(cat)
-
-			# POSTの有無を確認,あれば真,無ければ偽
-			if [ -n "${cat_post}" ] ; then
-			
-				# 真の場合はPOSTを変数展開で"="をスペースに置換
-				echo "${cat_post%%\=*}" "${cat_post#*\=}" 
-				
-			else
-
-				# 偽の場合は"outputs"を出力
-				echo "outputs"
-
-			fi | 
-
-			# 出力をmpcに渡す
-			xargs mpc |
-
-			# スペースを区切り文字に設定,1フィールド目が"Output"の行をボタン化
-			awk -F" " '$1 == "Output"{
-
-				print "<p><button name=toggleoutput value="$2">"$0"</button></p>"
-
- 			}'
-
-			)
-
-			<p>$(# ステータスを表示
-			
-			# mpcのエラー出力ごとsedに渡す
-			mpc status 2>&1 |
-
-			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
-
-			)</p>
+			<!-- ステータスの表示 -->
+			<p>${mpc_status}</p>
 
 		</form>
     </body>
@@ -96,4 +109,5 @@ cat << EOS
 
 </html>
 EOS
+# ====== HTML ======
 

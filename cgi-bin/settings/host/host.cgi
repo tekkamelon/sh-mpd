@@ -5,7 +5,7 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# 環境変数の設定
+# ====== 環境変数の設定 ======
 export LANG=C
 
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
@@ -14,7 +14,10 @@ port="$(cat ../port_conf)"
 
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
+# ====== 環境変数の設定ここまで ======
 
+
+# ====== HTML ======
 echo "Content-type: text/html"
 echo ""
 
@@ -110,4 +113,5 @@ cat << EOS
 
 </html>
 EOS
+# ====== HTMLここまで ======
 

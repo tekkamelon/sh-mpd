@@ -19,6 +19,95 @@ export PATH="$PATH:../../bin"
 # ====== 環境変数の設定ここまで ======
 
 
+# ===== スクリプトによる処理 ======
+# POSTを加工しmpcに渡す
+mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
+				
+	# POSTを変数に代入
+	cat_post=$(cat)
+
+ 	# クエリを変数展開で加工,sedでの処理結果を変数に代入
+	save_playlist=$(
+
+		echo "${QUERY_STRING#*\=}" |
+	
+ 		# "&input_string"をスペースに,"search[任意の１文字以上]"を置換しデコード
+		sed -e "s/&input_string=/ /" -e "s/search.*//g" | urldecode
+
+	)
+
+	# プレイリスト作成後にキュー内の曲を再生するための処理
+	# "cat_post"と"save_playlist"の両方があれば真
+	if [ -n "${cat_post}" ] && [ -n "${save_playlist}" ] ; then
+
+
+		# 真の場合は"save_playlist"に空文字を代入
+		save_playlist=""
+
+	else
+
+		:
+
+	fi
+
+	# POSTを変数展開で加工,"save_playlist"を出力
+	echo "${cat_post%%\=*}" "${cat_post#*\=}""${save_playlist}" |
+
+	xargs mpc 2>&1 |
+
+	# # 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+
+	# # プレイリストのセーブ時のステータスの表示,"save_playlist"が空ではない場合に真
+	if [ -n "${save_playlist}" ] ; then
+
+		# 真の場合,ステータスとメッセージを表示
+		mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:${save_playlist#* }</p>"
+
+	else
+
+		:
+
+	fi
+
+)
+
+# キュー内の曲の検索
+queued_song=$(
+
+	# クエリを変数展開で加工
+	saved_tmp="${QUERY_STRING#*\=}"
+	saved="${saved_tmp%%\&*}"
+
+	# "saved"が"save"で真,それ以外で偽
+	if [ "${saved}" = "save" ] ; then
+
+		# 真の場合は"search_str"に空文字を代入
+		search_str=""
+
+	else
+
+		# 偽の場合はクエリを変数展開で加工,デコード,変数に代入
+		search_str="$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)"
+
+	fi
+
+	# キューされた曲をgrepで検索,idと区切り文字":"を付与
+	mpc playlist | grep -F -i -n "${search_str}" |
+
+	# ":"を">"に置換,標準入力をタグ付きで出力
+	awk '{
+
+		sub(":" , ">")
+
+		print "<p><button name=play value="$0"</button></p>"
+
+	}'
+
+)
+# ===== スクリプトによる処理 ======
+
+
 # ====== HTML ======
 echo "Content-type: text/html"
 echo ""
@@ -81,43 +170,7 @@ cat << EOS
 		<form name="music" method="POST" >
 			
 			<!-- ステータスの表示 -->
-			<p>$(# 選択された曲の再生,プレイリストの保存の処理
-				
-			# POSTを変数に代入
-			cat_post=$(cat)
-
-			# クエリを変数展開で加工,sedでの処理結果を変数に代入
-			save_playlist=$(
-
-				echo "${QUERY_STRING#*\=}" |
-	
-				# "&input_string"をスペースに,"search[任意の１文字以上]"を置換しデコード
-				sed -e "s/&input_string=/ /" -e "s/search.*//g" | urldecode
-
-			)
-
-			# プレイリスト作成後にキュー内の曲を再生するための処理
-			# "cat_post"と"save_playlist"の両方があれば真
-			test -n "${cat_post}" && test -n "${save_playlist}" &&
-
-			# 真の場合は"save_playlist"に空文字を代入
-			save_playlist=""
-
-			# POSTを変数展開で加工,"save_playlist"を出力
-			echo "${cat_post%%\=*}" "${cat_post#*\=}""${save_playlist}" |
-
-			xargs mpc 2>&1 |
-
-			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
-
-			# プレイリストのセーブ時のステータスの表示,"save_playlist"が空ではない場合に真
-			test -n "${save_playlist}" &&
-
-			# 真の場合,ステータスとメッセージを表示
-			mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:${save_playlist#* }</p>"
-
-			)</p>
+			<p>${mpc_post}</p>
 
 		</form>
 
@@ -130,38 +183,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- キュー内の曲を表示 -->
-			$(
-
-			# クエリを変数展開で加工
-			saved_tmp="${QUERY_STRING#*\=}"
-			saved="${saved_tmp%%\&*}"
-
-			# "saved"が"save"で真,それ以外で偽
-			if [ "${saved}" = "save" ] ; then
-
-				# 真の場合は"search_str"に空文字を代入
-				search_str=""
-
-			else
-
-				# 偽の場合はクエリを変数展開で加工,デコード,変数に代入
-				search_str="$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)"
-			
-			fi
-
-			# キューされた曲をgrepで検索,idと区切り文字":"を付与
-			mpc playlist | grep -F -i -n "${search_str}" |
-
-			# ":"を">"に置換,標準入力をタグ付きで出力
-			awk '{
-
-				sub(":" , ">")
-
-				print "<p><button name=play value="$0"</button></p>"
-
-			}'
-
-			)
+			${queued_song}
 
 		</form>
 
@@ -186,3 +208,4 @@ cat << EOS
 </html>
 EOS
 # ====== HTMLここまで ======
+
