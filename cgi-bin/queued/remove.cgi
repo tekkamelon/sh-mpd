@@ -6,7 +6,7 @@
 # v 変数の表示
 
 # ====== 環境変数の設定 ======
-# 環境変数の設定
+export LC_ALL=C
 export LANG=C
 
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
@@ -39,10 +39,6 @@ mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
 
 		# 真の場合,ステータスとメッセージを表示
 		mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>Remove selected song!</p>"
-
-	else
-
-		:
 
 	fi
 

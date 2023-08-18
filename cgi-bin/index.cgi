@@ -6,6 +6,7 @@
 # v 変数の表示
 
 # ====== 環境変数の設定 ======
+export LC_ALL=C
 export LANG=C
 
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"

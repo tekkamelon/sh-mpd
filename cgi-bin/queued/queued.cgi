@@ -6,6 +6,7 @@
 # v 変数の表示
 
 # ====== 環境変数の設定 ======
+export LC_ALL=C
 export LANG=C
 
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
@@ -40,13 +41,8 @@ mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
 	# "cat_post"と"save_playlist"の両方があれば真
 	if [ -n "${cat_post}" ] && [ -n "${save_playlist}" ] ; then
 
-
 		# 真の場合は"save_playlist"に空文字を代入
 		save_playlist=""
-
-	else
-
-		:
 
 	fi
 
@@ -63,10 +59,6 @@ mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
 
 		# 真の場合,ステータスとメッセージを表示
 		mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:${save_playlist#* }</p>"
-
-	else
-
-		:
 
 	fi
 
@@ -105,7 +97,7 @@ queued_song=$(
 	}'
 
 )
-# ===== スクリプトによる処理 ======
+# ===== スクリプトによる処理ここまで ======
 
 
 # ====== HTML ======
