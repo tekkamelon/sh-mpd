@@ -20,6 +20,56 @@ export PATH="$PATH:../bin"
 # ====== 環境変数の設定ここまで ======
 
 
+# ===== スクリプトによる処理 ======
+# "control button",入力欄から受け取ったPOSTやクエリの処理
+control_button=$(# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
+
+	# POSTを変数に代入
+	cat_post=$(cat) 
+	
+	# POSTの有無を確認,あれば真,なければ偽
+	if [ -n "${cat_post#*\&*\=}" ] ; then
+	
+		# 真の場合はPOSTを変数展開で加工,再度代入
+		cat_post="${cat_post#*\=}"
+
+		# POSTを変数展開で加工,最後の引数をシングルクォート付きで出力,デコード
+		echo "${cat_post%%\&*}" "'${cat_post#*\&*\=}'" | urldecode
+
+	else
+
+		# 偽の場合はクエリを変数展開で加工
+		echo "${QUERY_STRING#*\=}" |
+
+		# "volume","seek","mute"時の文字列をデコード
+		sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"
+	
+	fi |
+
+	# mpcのエラー出力ごと渡す
+	xargs mpc 2>&1 | 
+
+	# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+
+)
+
+# 次の曲の処理
+next_song=$(
+
+	# "message"に実行結果がない場合のメッセージを代入
+	message="next song not found"
+
+	# "mpc queued"の実行結果があれば"message"に"mpc queued"の実行結果を代入
+	test -n "$(mpc queued)" && message=$(mpc queued)
+
+	# メッセージを出力
+	echo "${message}"
+
+)
+# ===== スクリプトによる処理ここまで ======
+
+
 # ====== HTML ======
 echo "Content-type: text/html"
 echo ""
@@ -174,52 +224,11 @@ MPD UI using shellscript and CGI
 			<!-- 現在のステータス -->
 			<h3>current song</h3>
 	
-			<p>$(# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
-
-			# POSTを変数に代入
-			cat_post=$(cat) 
-			
-			# POSTの有無を確認,あれば真,なければ偽
-			if [ -n "${cat_post#*\&*\=}" ] ; then
-			
-				# 真の場合はPOSTを変数展開で加工,再度代入
-				cat_post="${cat_post#*\=}"
-
-				# POSTを変数展開で加工,最後の引数をシングルクォート付きで出力,デコード
-				echo "${cat_post%%\&*}" "'${cat_post#*\&*\=}'" | urldecode
-
-			else
-
-				# 偽の場合はクエリを変数展開で加工
-				echo "${QUERY_STRING#*\=}" |
-	
-				# "volume","seek","mute"時の文字列をデコード
-				sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"
-			
-			fi |
-
-			# mpcのエラー出力ごと渡す
-			xargs mpc 2>&1 | 
-
-			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
-
-			)</p>
+			<p>${control_button}</p>
 
 			<!-- 次の曲 -->
 			<h3>next song</h3>
-			<p><button name=button value=next>$(
-
-			# "message"に実行結果がない場合のメッセージを代入
-			message="next song not found"
-
-			# "mpc queued"の実行結果があれば"message"に"mpc queued"の実行結果を代入
-			test -n "$(mpc queued)" && message=$(mpc queued)
-
-			# メッセージを出力
-			echo "${message}"
-
-			)</button></p>
+			<p><button name=button value=next>${next_song}</button></p>
 	
 		</form>
 

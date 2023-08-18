@@ -19,6 +19,63 @@ export PATH="$PATH:../../bin"
 # ====== 環境変数の設定ここまで ======
 
 
+# ===== スクリプトによる処理 ======
+# POSTを加工しmpcに渡す
+mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
+
+	# POSTの"="をスペースに置換,デコードしmpcに渡す
+	cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
+
+	# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+
+	# 全ての曲を追加する
+	echo "<p><button name=add value=/>add all songs</button></p>"
+			
+)
+
+# プレイリスト及びトップディレクトリの表示
+playlist_and_directory=$(# プレイリスト及びディレクトリの検索などの処理
+
+	# クエリを変数展開で加工,デコード,変数に代入
+	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
+	
+	# プレイリスト一覧を出力,名前付きパイプにリダイレクト
+	mpc lsplaylist >| fifo_lsplaylist &
+	
+	# ディレクトリを再帰的に出力,1フィールド目と"/"を出力,名前付きパイプにリダイレクト
+	mpc listall | awk -F"/" '{print $1"/"}' >| fifo_listall &
+
+	# 名前付きパイプ内のデータを出力,grepで固定文字列を大文字,小文字を区別せずに検索
+	cat fifo_lsplaylist fifo_listall | grep -F -i "${search_str}" |
+
+	# 区切り文字を"/"に指定
+	awk -F"/" '{
+		
+		# 行末に"/"がある場合は真,なければ偽
+		if(/.\/$/){
+
+			# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
+			print "<p><button name=add value="$1">"$1"</button></p>"
+
+		}
+
+		else{
+
+			# 偽の場合はPOSTの1フィールド目に"lsplaylist"を指定しボタン化
+			print "<p><button name=load value="$0">"$0"</button></p>"
+
+		}
+	
+	}' |
+
+	# 重複を削除
+	awk '!a[$0]++{print $0}' &
+
+	)
+# ===== スクリプトによる処理ここまで ======
+
+
 # ====== HTML ======
 echo "Content-type: text/html"
 echo ""
@@ -66,18 +123,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- ステータスを表示 -->
-			<p>$(# POSTの処理,POSTが無い場合はステータスの表示
-
-			# POSTの"="をスペースに置換,デコードしmpcに渡す
-			cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
-
-			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
-
-			# 全ての曲を追加する
-			echo "<p><button name=add value=/>add all songs</button></p>"
-			
-			)</p>
+			<p>${mpc_post}</p>
 
 		</form>
 
@@ -90,44 +136,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
-			$(# プレイリスト及びディレクトリの検索などの処理
-
-			# クエリを変数展開で加工,デコード,変数に代入
-			search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
-			
-			# プレイリスト一覧を出力,名前付きパイプにリダイレクト
-			mpc lsplaylist >| fifo_lsplaylist &
-			
-			# ディレクトリを再帰的に出力,1フィールド目と"/"を出力,名前付きパイプにリダイレクト
-			mpc listall | awk -F"/" '{print $1"/"}' >| fifo_listall &
-
-			# 名前付きパイプ内のデータを出力,grepで固定文字列を大文字,小文字を区別せずに検索
-			cat fifo_lsplaylist fifo_listall | grep -F -i "${search_str}" |
-
-			# 区切り文字を"/"に指定
-			awk -F"/" '{
-				
-				# 行末に"/"がある場合は真,なければ偽
-				if(/.\/$/){
-
-					# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
-					print "<p><button name=add value="$1">"$1"</button></p>"
-
- 				}
-
-				else{
- 
-					# 偽の場合はPOSTの1フィールド目に"lsplaylist"を指定しボタン化
-	 				print "<p><button name=load value="$0">"$0"</button></p>"
-
-				}
-			
-			}' |
-
-			# 重複を削除
-			awk '!a[$0]++{print $0}' &
-
-			)
+			${playlist_and_directory}
 
 		</form>
 

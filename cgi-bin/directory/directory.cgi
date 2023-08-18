@@ -19,6 +19,73 @@ export PATH="$PATH:../../bin"
 # ====== 環境変数の設定ここまで ======
 
 
+# ===== スクリプトによる処理 ======
+# POSTやクエリから受け取ったテキストの処理
+mpc_post=$(# POSTの有無に応じてmpcでの処理を分岐
+
+	# POSTで受け取った文字列を変数として宣言
+	cat_post=$(cat)
+
+	# POSTを変数展開で加工,文字列があれば真,無ければ偽
+	if [ -n "${cat_post#*\=}" ] ; then 
+
+		# 真の場合はPOSTを変数展開で"="をスペースに置換,曲名をダブルクォートで括って出力
+		echo "${cat_post%\=*} ""\"${cat_post#*\=}\"" |
+
+		# デコード,mpcに渡す
+		urldecode | xargs mpc &
+
+		echo "next"
+
+	# 偽の場合はPOSTを変数展開,"insertresult="であれば真,それ以外で偽
+	elif [ "${cat_post#\=*}" = "insertresult=" ] ; then
+
+		# 真の場合はクエリをデコードし"search_str"に代入
+		search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
+
+		# 曲の一覧から"search_str"で検索,結果を挿入
+		mpc listall | grep -F -i "${search_str}" | mpc insert &
+
+		echo "next"
+
+	else
+
+		# 偽の場合は"status"を出力
+		echo "status"
+	
+	fi |
+
+	# 出力をmpcに渡す
+	xargs mpc 2>&1 |
+	
+	# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+
+	# 全ての曲を追加する
+	echo "<p><button name=add value=/>add all songs</button></p>"
+
+)
+
+# mpd管理下の全ての曲を表示
+directory_list=$(# 曲の一覧をgrepで検索
+
+	# クエリをデコードし"search_str"に代入
+	search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
+
+	# 曲の一覧から"search_str"で検索
+	mpc listall | grep -F -i "${search_str}" |
+
+	awk '{
+
+		# 出力をボタン化
+		print "<p><button name=insert value="$0">"$0"</button></p>"
+
+	}'
+
+)
+# ===== スクリプトによる処理ここまで ======
+
+
 # ====== HTML ======
 echo "Content-type: text/html"
 echo ""
@@ -59,50 +126,7 @@ cat << EOS
 		<p><a href="#bottom">jump to bottom</a></p>
 
 			<!-- ステータスを表示 --> 
-			<p>$(# POSTの有無に応じてmpcでの処理を分岐
-
-			# POSTで受け取った文字列を変数として宣言
-			cat_post=$(cat)
-
-			# POSTを変数展開で加工,文字列があれば真,無ければ偽
-			if [ -n "${cat_post#*\=}" ] ; then 
-
-				# 真の場合はPOSTを変数展開で"="をスペースに置換,曲名をダブルクォートで括って出力
-				echo "${cat_post%\=*} ""\"${cat_post#*\=}\"" |
-	
-				# デコード,mpcに渡す
-				urldecode | xargs mpc &
-
-				echo "next"
-
-			# 偽の場合はPOSTを変数展開,"insertresult="であれば真,それ以外で偽
-			elif [ "${cat_post#\=*}" = "insertresult=" ] ; then
-
-				# 真の場合はクエリをデコードし"search_str"に代入
-				search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
-
-				# 曲の一覧から"search_str"で検索,結果を挿入
-				mpc listall | grep -F -i "${search_str}" | mpc insert &
-
-				echo "next"
-
-			else
-
-				# 偽の場合は"status"を出力
-				echo "status"
-			
-			fi |
-
-			# 出力をmpcに渡す
-			xargs mpc 2>&1 |
-			
-			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
-
-			# 全ての曲を追加する
-			echo "<p><button name=add value=/>add all songs</button></p>"
-
-			)</p>
+			<p>${mpc_post}</p>
 
 		</form>
 
@@ -114,22 +138,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- mpc管理下のディレクトリを再帰的に表示 -->
-			$(# 曲の一覧をgrepで検索
-
-			# クエリをデコードし"search_str"に代入
-			search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
-
-			# 曲の一覧から"search_str"で検索
-			mpc listall | grep -F -i "${search_str}" |
-
-			awk '{
-
-				# 出力をボタン化
-				print "<p><button name=insert value="$0">"$0"</button></p>"
-
-			}'
-
-			)
+			${directory_list}
 			
 			<!-- 検索結果を挿入するボタン -->
 			<p><button name=insertresult value=>insert search result</button></p>
