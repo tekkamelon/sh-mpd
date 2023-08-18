@@ -19,6 +19,40 @@ export PATH="$PATH:../../bin"
 # ====== 環境変数の設定ここまで ======
 
 
+# ===== スクリプトによる処理 ======
+# POSTを加工しmpcに渡す
+mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
+
+			# POSTの"="をスペースに,"&rm"を"\nrm"に置換,デコードしmpcに渡す
+			cat | sed -e "s/=/ /g" -e "s/\&rm/\nrm/g"| urldecode | xargs -l mpc 2>&1 | 
+
+			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+			sed -e "3 s/: off/:<b> off<\/b>/g" -e "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+
+)
+
+# プレイリスト一覧をチェックボックス付きで表示
+playlist=$(# プレイリスト及びディレクトリの検索などの処理
+
+	# クエリを変数展開で加工,デコード,変数に代入
+	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
+
+	# プレイリスト一覧を出力
+	mpc lsplaylist |
+
+	# 固定文字列を大文字,小文字を区別せずに検索
+	grep -F -i "${search_str}" |
+
+	# タグを付与し出力,ボタン化
+	awk '{
+
+		print "<p><input type=checkbox name=rm value="$0">"$0"</p>"
+
+	}'
+
+)
+
+
 # ====== HTML ======
 echo "Content-type: text/html"
 echo ""
@@ -65,15 +99,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- ステータスを表示 -->
-			<p>$(# POSTの処理,POSTが無い場合はステータスの表示
-
-			# POSTの"="をスペースに,"&rm"を"\nrm"に置換,デコードしmpcに渡す
-			cat | sed -e "s/=/ /g" -e "s/\&rm/\nrm/g"| urldecode | xargs -l mpc 2>&1 | 
-
-			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
-			
-			)</p>
+			<p>${mpc_post}</p>
 
 		</form>
 
@@ -89,25 +115,7 @@ cat << EOS
 			<p><input type="submit" value="Remove select playlist"></p>
 
 			<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
-			$(# プレイリスト及びディレクトリの検索などの処理
-
-			# クエリを変数展開で加工,デコード,変数に代入
-			search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
-			
-			# プレイリスト一覧を出力
-			mpc lsplaylist |
-
-			# 固定文字列を大文字,小文字を区別せずに検索
-			grep -F -i "${search_str}" |
-
-			# タグを付与し出力,ボタン化
-			awk '{
-
-				print "<p><input type=checkbox name=rm value="$0">"$0"</p>"
-
-			}'
-
-			)
+			${playlist}
 
 			<!-- 削除ボタン -->
 			<p><input type="submit" value="Remove select playlist"></p>
