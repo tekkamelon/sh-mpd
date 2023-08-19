@@ -1,0 +1,22 @@
+#!/bin/sh -eu
+
+cat - |
+
+awk '{
+
+	# オフの場合の処理
+	gsub( "repeat: off" , "repeat:<b> off</b>" )
+	gsub( "random: off" , "random:<b> off</b>" )
+	gsub( "single: off" , "single:<b> off</b>" )
+	gsub( "consume: off" , "consume:<b> off</b>" )
+
+	# オンの場合の処理
+	gsub( "repeat: on" , "repeat:<strong> on</strong>" )
+	gsub( "random: on" , "random:<strong> on</strong>" )
+	gsub( "single: on" , "single:<strong> on</strong>" )
+	gsub( "consume: on" , "consume:<strong> on</strong>" )
+
+	# 置換した結果に改行を付与し出力
+	print $0"<br>"
+
+}'
