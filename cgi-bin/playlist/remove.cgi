@@ -20,6 +20,14 @@ export PATH="$PATH:../../bin"
 
 
 # ===== スクリプトによる処理 ======
+if [ -e "fifo_listall" ] && [ -e "fifo_lsplaylist" ] ; then
+
+	rm fifo_listall fifo_lsplaylist
+
+fi
+
+mkfifo fifo_listall fifo_lsplaylist
+
 # POSTを加工しmpcに渡す
 mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
 
@@ -51,6 +59,9 @@ playlist=$(# プレイリスト及びディレクトリの検索などの処理
 	}'
 
 )
+
+rm fifo_listall fifo_lsplaylist
+# ====== スクリプトによる処理ここまで ======
 
 
 # ====== HTML ======

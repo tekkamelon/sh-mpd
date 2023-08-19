@@ -1,4 +1,7 @@
-# cssのテスト用のhtmlを除外
+# 名前付きパイプを除外
+cgi-bin/playlist/fifo_listall
+cgi-bin/playlist/fifo_lsplaylist
 
+# cssのテスト用のhtmlを除外
 cgi-bin/css_test.html
 cgi-bin/setting_test.html
