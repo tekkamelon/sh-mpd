@@ -60,9 +60,12 @@ next_song=$(
 
 	# "message"に実行結果がない場合のメッセージを代入
 	message="next song not found"
+	
+	# "mpc queued"を変数に代入
+	queued=$(mpc queued)
 
-	# "mpc queued"の実行結果があれば"message"に"mpc queued"の実行結果を代入
-	test -n "$(mpc queued)" && message=$(mpc queued)
+	# "mpc queued"の実行結果があれば"message"に"queued"を代入
+	test -n "${queued}" && message="${queued}"
 
 	# メッセージを出力
 	echo "${message}"
