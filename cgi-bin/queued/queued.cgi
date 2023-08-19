@@ -14,8 +14,6 @@ host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
-
-# "urldecode"にパスを通す
 export PATH="$PATH:../../bin"
 # ====== 環境変数の設定ここまで ======
 
@@ -51,8 +49,8 @@ mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
 
 	xargs mpc 2>&1 |
 
-	# # 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	mpc_status2html
 
 )
 

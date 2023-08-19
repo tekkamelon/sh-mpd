@@ -15,8 +15,6 @@ port="$(cat settings/port_conf)"
 
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
-
-# "urldecode"にパスを通す
 export PATH="$PATH:../bin"
 # ====== 環境変数の設定ここまで ======
 
@@ -50,8 +48,8 @@ control_button=$(# 変数展開で加工したPOSTの文字列の有無を判定
 	# mpcのエラー出力ごと渡す
 	xargs mpc 2>&1 | 
 
-	# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	mpc_status2html
 
 )
 

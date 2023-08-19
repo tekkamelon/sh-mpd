@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -14,8 +14,6 @@ host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
-
-# "urldecode"にパスを通す
 export PATH="$PATH:../../bin"
 # ====== 環境変数の設定ここまで ======
 
@@ -31,14 +29,14 @@ mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
 
 	xargs mpc 2>&1 |
 
-	# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	mpc_status2html
 
 	# 曲の削除の結果の表示,"cat_post"が空ではない場合に真
 	if [ -n "${cat_post}" ] ; then
 
 		# 真の場合,ステータスとメッセージを表示
-		mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>Remove selected song!</p>"
+		mpc status 2>&1 | mpc_status2html && echo "<p>Remove selected song!</p>"
 
 	fi
 

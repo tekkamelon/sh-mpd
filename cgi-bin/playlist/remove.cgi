@@ -6,6 +6,7 @@
 # v 変数の表示
 
 # ====== 環境変数の設定 ======
+export LC_ALL=C
 export LANG=C
 
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
@@ -13,29 +14,30 @@ host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
-
-# "urldecode"にパスを通す
 export PATH="$PATH:../../bin"
 # ====== 環境変数の設定ここまで ======
 
 
 # ===== スクリプトによる処理 ======
+# 名前付きパイプの有無を確認,あれば真
 if [ -e "fifo_listall" ] && [ -e "fifo_lsplaylist" ] ; then
 
+	# 真の場合は削除
 	rm fifo_listall fifo_lsplaylist
 
 fi
 
+# 名前付きパイプを作成
 mkfifo fifo_listall fifo_lsplaylist
 
 # POSTを加工しmpcに渡す
 mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
 
-			# POSTの"="をスペースに,"&rm"を"\nrm"に置換,デコードしmpcに渡す
-			cat | sed -e "s/=/ /g" -e "s/\&rm/\nrm/g"| urldecode | xargs -l mpc 2>&1 | 
+	# POSTの"="をスペースに,"&rm"を"\nrm"に置換,デコードしmpcに渡す
+	cat | sed -e "s/=/ /g" -e "s/\&rm/\nrm/g"| urldecode | xargs -l mpc 2>&1 | 
 
-			# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-			sed -e "3 s/: off/:<b> off<\/b>/g" -e "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	mpc_status2html
 
 )
 
@@ -60,6 +62,7 @@ playlist=$(# プレイリスト及びディレクトリの検索などの処理
 
 )
 
+# 名前付きパイプを作成
 rm fifo_listall fifo_lsplaylist
 # ====== スクリプトによる処理ここまで ======
 

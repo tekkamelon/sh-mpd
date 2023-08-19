@@ -1,4 +1,4 @@
-#!/bin/sh -euv
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -14,8 +14,6 @@ host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
-
-# "urldecode"にパスを通す
 export PATH="$PATH:../../bin"
 # ====== 環境変数の設定ここまで ======
 
@@ -37,12 +35,9 @@ mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
 	# POSTの"="をスペースに置換,デコードしmpcに渡す
 	cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
 
-	# 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
+	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	mpc_status2html
 
-	# 全ての曲を追加する
-	echo "<p><button name=add value=/>add all songs</button></p>"
-			
 )
 
 # プレイリスト及びトップディレクトリの表示
@@ -139,6 +134,9 @@ cat << EOS
 			<!-- ステータスを表示 -->
 			<p>${mpc_post}</p>
 
+			<!-- # 全ての曲を追加する -->
+			<p><button name=add value=/>add all songs</button></p>
+			
 		</form>
 
 		<!-- リンク -->
