@@ -18,23 +18,11 @@ $ sudo pacman -S mpc mpd
 # githubよりclone
 $ git clone https://github.com/tekkamelon/sh-mpd
 
-# "urldecode"コマンドに実行権限を付与
-$ chmod 755 sh-mpd/urldecode
-
-# "urldecode"をパスの通ったディレクトリに配置 
-$ sudo cp sh-mpd/urldecode /usr/local/bin # ※一例
-
 # cgi-bin/をwebサーバーで設定されたディレクトリにコピー
 $ sudo cp -r sh-mpd/cgi-bin /usr/lib/ # ※一例
 
 # 上記でコピーしたディレクトリに移動
 $ cd /usr/lib/cgi-bin
-
-# 名前付きパイプを作成
-$ mkfifo playlist/fifo_listall playlist/fifo_lsplaylist
-
-# 読み書きの権限を付与
-$ sudo chmod a+w playlist/fifo_listall playlist/fifo_lsplaylist
 
 #  各cgiファイルに実行権限を付与
 $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
