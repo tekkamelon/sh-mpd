@@ -54,14 +54,6 @@ mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
 	# # 3行目の": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	sed -e "3 s/: off/:<b> off<\/b>/g" -e  "3 s/: on/:<strong> on<\/strong>/g" -e "s/$/<br>/g"
 
-	# # プレイリストのセーブ時のステータスの表示,"save_playlist"が空ではない場合に真
-	if [ -n "${save_playlist}" ] ; then
-
-		# 真の場合,ステータスとメッセージを表示
-		mpc status 2>&1 | sed "s/$/<br>/g" && echo "<p>saved playlist:${save_playlist#* }</p>"
-
-	fi
-
 )
 
 # キュー内の曲の検索
