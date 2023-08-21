@@ -21,7 +21,7 @@ export PATH="$PATH:../bin"
 
 # ===== スクリプトによる処理 ======
 # "control button",入力欄から受け取ったPOSTやクエリの処理
-control_button=$(# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
+mpc_post=$(# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
 
 	# POSTを変数に代入
 	cat_post=$(cat) 
@@ -226,7 +226,7 @@ MPD UI using shellscript and CGI
 			<!-- 現在のステータス -->
 			<h3>current song</h3>
 	
-			<p>${control_button}</p>
+			<p>${mpc_post}</p>
 
 			<!-- 次の曲 -->
 			<h3>next song</h3>
