@@ -66,7 +66,7 @@ cat << EOS
 		cat_post=$(cat)
 
 		# POSTを変数展開で加工,ホスト名が有効であれば真,無効であれば偽
-		if mpc -q --host="${cat_post#*\=}" ; then
+		if [ -n "${cat_post#*\=}" ] && mpc -q --host="${cat_post#*\=}" ; then
 
 			# 真の場合はPOSTを変数展開で加工,設定ファイルへのリダイレクト
 			echo "${cat_post#*\=}" >| ../hostname &
@@ -76,7 +76,7 @@ cat << EOS
 
 			# POSTを環境変数に代入
 			export MPD_HOST="${cat_post#*\=}"
-			
+
 		# 偽の場合はPOSTがあれば真,無ければ偽
 		elif [ -n "${cat_post}" ] ; then
 
@@ -93,7 +93,6 @@ cat << EOS
 
 		)</p>
 			
-
     </body>
 
 
