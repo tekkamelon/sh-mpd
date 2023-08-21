@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/bash -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -12,6 +12,7 @@ export LANG=C
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
+
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
 export PATH="$PATH:../../bin"
@@ -19,15 +20,12 @@ export PATH="$PATH:../../bin"
 
 
 # ===== スクリプトによる処理 ======
-# 名前付きパイプがあれば削除
-if [ -e "fifo_listall" ] && [ -e "fifo_lsplaylist" ] ; then
+# 名前付きパイプが無ければ作成
+if [ ! -e "fifo_listall" ] && [ ! -e "fifo_lsplaylist" ] ; then
 
-	rm fifo_listall fifo_lsplaylist
+	mkfifo fifo_listall fifo_lsplaylist
 
 fi
-
-# 名前付きパイプを作成
-mkfifo fifo_listall fifo_lsplaylist
 
 # POSTを加工しmpcに渡す
 mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
@@ -79,9 +77,6 @@ playlist_and_directory=$(# プレイリスト及びディレクトリの検索�
 	awk '!a[$0]++{print $0}' &
 
 )
-	
-# 名前付きパイプを削除
-rm fifo_listall fifo_lsplaylist
 # ===== スクリプトによる処理ここまで ======
 
 
@@ -173,3 +168,4 @@ cat << EOS
 </html>
 EOS
 # ====== HTMLここまで ======
+
