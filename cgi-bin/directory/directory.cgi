@@ -59,9 +59,6 @@ mpc_post=$(# POSTの有無に応じてmpcでの処理を分岐
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
 
-	# 全ての曲を追加する
-	echo "<p><button name=add value=/>add all songs</button></p>"
-
 )
 
 # mpd管理下の全ての曲を表示
@@ -125,6 +122,9 @@ cat << EOS
 
 			<!-- ステータスを表示 --> 
 			<p>${mpc_post}</p>
+
+			<!-- 全ての曲を追加するボタン -->
+			<p><button name=add value=/>add all songs</button></p>
 
 		</form>
 
