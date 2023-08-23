@@ -12,7 +12,6 @@ export LANG=C
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 host="$(cat ../hostname)"
 port="$(cat ../port_conf)"
-
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
 export PATH="$PATH:../../../bin"

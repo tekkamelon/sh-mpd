@@ -12,11 +12,46 @@ export LANG=C
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 host="$(cat ../hostname)"
 port="$(cat ../port_conf)"
-
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
 export PATH="$PATH:../../../bin"
 # ====== 環境変数の設定ここまで ======
+
+
+# ===== スクリプトによる処理 ======
+mpc_post () {
+
+	# POSTを変数に代入
+	cat_post=$(cat)
+
+	# POSTを変数展開で加工,ポート番号が有効であれば真,無効であれば偽
+	if [ -n "${cat_post#*\=}" ] && mpc -q --port="${cat_post#*\=}" ; then
+
+		# POSTを変数展開で加工,設定ファイルへのリダイレクト
+		echo "${cat_post#*\=}" >| ../port_conf &
+
+		# メッセージの出力
+		echo "changed port number:${cat_post#*\=}<br>" &
+		
+		# POSTを環境変数に代入
+		export MPD_PORT="${cat_post#*\=}"
+
+	# 偽の場合はPOSTがあれば真,無ければ偽
+	elif [ -n "${cat_post}" ] ; then
+		
+		# 偽であればメッセージを表示
+		echo "not a valid port number!<br>"
+		
+	fi
+
+	# ステータスを表示
+	mpc status 2>&1 |
+		
+	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	mpc_status2html
+
+}
+# ===== スクリプトによる処理ここまで ======
 
 
 # ====== HTML ======
@@ -61,37 +96,7 @@ cat << EOS
 		</form>
 			
 		<!-- 実行結果を表示 -->
-		<p>$(# POSTを変数に代入
-
-		cat_post=$(cat)
-
-		# POSTを変数展開で加工,ポート番号が有効であれば真,無効であれば偽
-		if [ -n "${cat_post#*\=}" ] && mpc -q --port="${cat_post#*\=}" ; then
-
-			# POSTを変数展開で加工,設定ファイルへのリダイレクト
-			echo "${cat_post#*\=}" >| ../port_conf &
-
-			# メッセージの出力
-			echo "changed port number:${cat_post#*\=}<br>" &
-			
-			# POSTを環境変数に代入
-			export MPD_PORT="${cat_post#*\=}"
-
-		# 偽の場合はPOSTがあれば真,無ければ偽
-		elif [ -n "${cat_post}" ] ; then
-			
-			# 偽であればメッセージを表示
-			echo "not a valid port number!<br>"
-			
-		fi
-
-		# ステータスを表示
-		mpc status 2>&1 |
-			
-		# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-		mpc_status2html
-
-		)</p>
+		<p>$(mpc_post)</p>
 			
     </body>
 
