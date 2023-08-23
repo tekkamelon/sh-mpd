@@ -20,7 +20,9 @@ export PATH="$PATH:../../bin"
 
 # ===== スクリプトによる処理 ======
 # POSTを加工しmpcに渡す
-mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
+mpc_post () {
+
+	# 選択された曲の再生,プレイリストの保存の処理
 				
 	# POSTを変数に代入
 	cat_post=$(cat)
@@ -52,10 +54,10 @@ mpc_post=$(# 選択された曲の再生,プレイリストの保存の処理
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
 
-)
+}
 
 # キュー内の曲の検索
-queued_song=$(
+queued_song () {
 
 	# クエリを変数展開で加工
 	saved_tmp="${QUERY_STRING#*\=}"
@@ -86,7 +88,7 @@ queued_song=$(
 
 	}'
 
-)
+}
 # ===== スクリプトによる処理ここまで ======
 
 
@@ -152,7 +154,7 @@ cat << EOS
 		<form name="music" method="POST" >
 			
 			<!-- ステータスの表示 -->
-			<p>${mpc_post}</p>
+			<p>$(mpc_post)</p>
 
 		</form>
 
@@ -165,7 +167,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- キュー内の曲を表示 -->
-			${queued_song}
+			$(queued_song)
 
 		</form>
 

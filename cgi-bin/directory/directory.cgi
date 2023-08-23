@@ -6,6 +6,7 @@
 # v 変数の表示
 
 # ====== 環境変数の設定 ======
+export LC_ALL=C
 export LANG=C
 
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
@@ -19,7 +20,9 @@ export PATH="$PATH:../../bin"
 
 # ===== スクリプトによる処理 ======
 # POSTやクエリから受け取ったテキストの処理
-mpc_post=$(# POSTの有無に応じてmpcでの処理を分岐
+mpc_post () {
+
+	# POSTの有無に応じてmpcでの処理を分岐
 
 	# POSTで受け取った文字列を変数として宣言
 	cat_post=$(cat)
@@ -59,10 +62,12 @@ mpc_post=$(# POSTの有無に応じてmpcでの処理を分岐
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
 
-)
+}
 
 # mpd管理下の全ての曲を表示
-directory_list=$(# 曲の一覧をgrepで検索
+directory_list () {
+
+	# 曲の一覧をgrepで検索
 
 	# クエリをデコードし"search_str"に代入
 	search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
@@ -77,7 +82,7 @@ directory_list=$(# 曲の一覧をgrepで検索
 
 	}'
 
-)
+}
 # ===== スクリプトによる処理ここまで ======
 
 
@@ -121,7 +126,7 @@ cat << EOS
 		<p><a href="#bottom">jump to bottom</a></p>
 
 			<!-- ステータスを表示 --> 
-			<p>${mpc_post}</p>
+			<p>$(mpc_post)</p>
 
 			<!-- 全ての曲を追加するボタン -->
 			<p><button name=add value=/>add all songs</button></p>
@@ -136,7 +141,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- mpc管理下のディレクトリを再帰的に表示 -->
-			${directory_list}
+			$(directory_list)
 			
 			<!-- 検索結果を挿入するボタン -->
 			<p><button name=insertresult value=>insert search result</button></p>

@@ -21,7 +21,9 @@ export PATH="$PATH:../../../bin"
 
 # ===== スクリプトによる処理 ======
 # POSTを加工しmpcに渡す
-mpc_post=$(# POSTを変数に代入
+mpc_post () {
+
+	# POSTを変数に代入
 
 	cat_post=$(cat)
 
@@ -48,10 +50,10 @@ mpc_post=$(# POSTを変数に代入
 
 	}'
 
-)
+}
 
 # ステータスを表示
-mpc_status=$(
+mpc_status () {
 			
 	# mpcのエラー出力ごとsedに渡す
 	mpc status 2>&1 |
@@ -59,7 +61,7 @@ mpc_status=$(
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
 
-)
+}
 # ===== スクリプトによる処理 ======
 
 
@@ -90,10 +92,10 @@ cat << EOS
 
 			<!-- 出力先デバイスの設定 -->
 			<h3>ountput devices list</h3>
-			${mpc_post}
+			$(mpc_post)
 
 			<!-- ステータスの表示 -->
-			<p>${mpc_status}</p>
+			<p>$(mpc_status)</p>
 
 		</form>
     </body>

@@ -20,7 +20,9 @@ export PATH="$PATH:../../bin"
 
 # ===== スクリプトによる処理 ======
 # POSTを加工しmpcに渡す
-mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
+mpc_post () {
+
+	# POSTの処理,POSTが無い場合はステータスの表示
 
 	# POSTの"="をスペースに,"&rm"を"\nrm"に置換,デコードしmpcに渡す
 	cat | sed -e "s/=/ /g" -e "s/\&rm/\nrm/g"| urldecode | xargs -l mpc 2>&1 | 
@@ -28,10 +30,12 @@ mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
 
-)
+}
 
 # プレイリスト一覧をチェックボックス付きで表示
-playlist=$(# プレイリスト及びディレクトリの検索などの処理
+playlist () {
+
+	# プレイリスト及びディレクトリの検索などの処理
 
 	# クエリを変数展開で加工,デコード,変数に代入
 	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
@@ -49,7 +53,7 @@ playlist=$(# プレイリスト及びディレクトリの検索などの処理
 
 	}'
 
-)
+}
 # ====== スクリプトによる処理ここまで ======
 
 
@@ -99,7 +103,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- ステータスを表示 -->
-			<p>${mpc_post}</p>
+			<p>$(mpc_post)</p>
 
 		</form>
 
@@ -115,7 +119,7 @@ cat << EOS
 			<p><input type="submit" value="Remove select playlist"></p>
 
 			<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
-			${playlist}
+			$(playlist)
 
 			<!-- 削除ボタン -->
 			<p><input type="submit" value="Remove select playlist"></p>

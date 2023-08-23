@@ -12,7 +12,6 @@ export LANG=C
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 host="$(cat settings/hostname)"
 port="$(cat settings/port_conf)"
-
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
 export PATH="$PATH:../bin"
@@ -21,7 +20,9 @@ export PATH="$PATH:../bin"
 
 # ===== スクリプトによる処理 ======
 # "control button",入力欄から受け取ったPOSTやクエリの処理
-mpc_post=$(# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
+mpc_post () {
+
+	# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
 
 	# POSTを変数に代入
 	cat_post=$(cat) 
@@ -51,10 +52,10 @@ mpc_post=$(# 変数展開で加工したPOSTの文字列の有無を判定,あ�
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
 
-)
+}
 
 # 次の曲の処理
-next_song=$(
+next_song () {
 
 	# "message"に実行結果がない場合のメッセージを代入
 	message="next song not found"
@@ -68,7 +69,7 @@ next_song=$(
 	# メッセージを出力
 	echo "${message}"
 
-)
+}
 # ===== スクリプトによる処理ここまで ======
 
 
@@ -226,11 +227,11 @@ MPD UI using shellscript and CGI
 			<!-- 現在のステータス -->
 			<h3>current song</h3>
 	
-			<p>${mpc_post}</p>
+			<p>$(mpc_post)</p>
 
 			<!-- 次の曲 -->
 			<h3>next song</h3>
-			<p><button name=button value=next>${next_song}</button></p>
+			<p><button name=button value=next>$(next_song)</button></p>
 	
 		</form>
 

@@ -12,7 +12,6 @@ export LANG=C
 # ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
 host="$(cat ../settings/hostname)"
 port="$(cat ../settings/port_conf)"
-
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
 export PATH="$PATH:../../bin"
@@ -28,7 +27,9 @@ if [ ! -e "fifo_listall" ] && [ ! -e "fifo_lsplaylist" ] ; then
 fi
 
 # POSTを加工しmpcに渡す
-mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
+mpc_post () {
+
+	# POSTの処理,POSTが無い場合はステータスの表示
 
 	# POSTの"="をスペースに置換,デコードしmpcに渡す
 	cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
@@ -36,10 +37,12 @@ mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
 
-)
+}
 
 # プレイリスト及びトップディレクトリの表示
-playlist_and_directory=$(# プレイリスト及びディレクトリの検索などの処理
+playlist_and_directory () {
+
+	# プレイリスト及びディレクトリの検索などの処理
 
 	# クエリを変数展開で加工,デコード,変数に代入
 	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
@@ -76,7 +79,7 @@ playlist_and_directory=$(# プレイリスト及びディレクトリの検索�
 	# 重複を削除
 	awk '!a[$0]++{print $0}' &
 
-)
+}
 # ===== スクリプトによる処理ここまで ======
 
 
@@ -127,7 +130,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- ステータスを表示 -->
-			<p>${mpc_post}</p>
+			<p>$(mpc_post)</p>
 
 			<!-- # 全ての曲を追加する -->
 			<p><button name=add value=/>add all songs</button></p>
@@ -143,7 +146,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
-			${playlist_and_directory}
+			$(playlist_and_directory)
 
 		</form>
 
