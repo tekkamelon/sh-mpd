@@ -22,10 +22,13 @@ export PATH="$PATH:../../bin"
 # POSTを加工しmpcに渡す
 mpc_post () {
 
-	# 選択された曲の再生,プレイリストの保存の処理
-				
+	# ====== 変数の宣言 ======			
 	# POSTを変数に代入
 	cat_post=$(cat)
+
+	# クエリの先頭のみを抽出
+	query_check="${QUERY_STRING#*\=}"
+	query_check="${query_check%%&*}"
 
  	# クエリを変数展開で加工,sedでの処理結果を変数に代入
 	save_playlist=$(
@@ -37,6 +40,46 @@ mpc_post () {
 
 	)
 
+	# POSTを変数展開で加工,"save_playlist"があれば出力しmpcに渡す
+	mpc_result=$(
+
+		# POSTがあれば真,無ければ偽
+		if [ -n "${cat_post}" ] ; then
+			
+			# 真の場合はPOSTを変数展開で加工し出力
+			echo "${cat_post%%\=*}" "${cat_post#*\=}"  
+
+		else
+
+			# 偽の場合は"save_playlist"を出力
+			echo "${save_playlist}"
+
+		fi | 
+
+		# 出力結果をmpcに渡す,エラー出力を変数に代入するためにcatを通す
+		xargs mpc 2>&1 | cat -
+
+	)
+
+	# mpc_resultの結果を確認
+	mpc_error_check=$(
+
+		echo "${mpc_result}" |
+
+		# 1行目の先頭が"MPD error: "であれば真
+		awk 'NR == 1{
+
+			if(/^MPD error: /){
+
+				# 真の場合はそのまま出力
+				print $0
+
+			}
+
+		}'
+
+	)
+
 	# プレイリスト作成後にキュー内の曲を再生するための処理
 	# "cat_post"と"save_playlist"の両方があれば真
 	if [ -n "${cat_post}" ] && [ -n "${save_playlist}" ] ; then
@@ -45,11 +88,27 @@ mpc_post () {
 		save_playlist=""
 
 	fi
+	# ====== 変数の宣言ここまで ======			
 
-	# POSTを変数展開で加工,"save_playlist"を出力
-	echo "${cat_post%%\=*}" "${cat_post#*\=}""${save_playlist}" |
 
-	xargs mpc 2>&1 |
+	# "mpc_error_check"があり,なおかつ"query_check"が"save"の場合に真,それ以外で偽
+	if [ -n "${mpc_error_check}" ] && [ "${query_check}" = "save" ] ; then
+
+		echo "${mpc_result}"
+
+	# 偽の場合は"save_playlist"があれば真,それ以外で偽
+	elif [ -n "${save_playlist}" ] ; then
+
+		# ステータスとメッセージを出力
+		mpc status
+
+		echo "saved playlist:${save_playlist#* }"
+
+	else
+
+		echo "${mpc_result}"
+
+	fi |
 
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
@@ -59,12 +118,12 @@ mpc_post () {
 # キュー内の曲の検索
 queued_song () {
 
-	# クエリを変数展開で加工
-	saved_tmp="${QUERY_STRING#*\=}"
-	saved="${saved_tmp%%\&*}"
+	# クエリの先頭のみを抽出
+	query_check="${QUERY_STRING#*\=}"
+	query_check="${query_check%%&*}"
 
-	# "saved"が"save"で真,それ以外で偽
-	if [ "${saved}" = "save" ] ; then
+	# "query_check"が"save"で真,それ以外で偽
+	if [ "${query_check}" = "save" ] ; then
 
 		# 真の場合は"search_str"に空文字を代入
 		search_str=""
