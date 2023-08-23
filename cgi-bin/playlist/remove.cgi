@@ -19,17 +19,6 @@ export PATH="$PATH:../../bin"
 
 
 # ===== スクリプトによる処理 ======
-# 名前付きパイプの有無を確認,あれば真
-if [ -e "fifo_listall" ] && [ -e "fifo_lsplaylist" ] ; then
-
-	# 真の場合は削除
-	rm fifo_listall fifo_lsplaylist
-
-fi
-
-# 名前付きパイプを作成
-mkfifo fifo_listall fifo_lsplaylist
-
 # POSTを加工しmpcに渡す
 mpc_post=$(# POSTの処理,POSTが無い場合はステータスの表示
 
@@ -61,9 +50,6 @@ playlist=$(# プレイリスト及びディレクトリの検索などの処理
 	}'
 
 )
-
-# 名前付きパイプを作成
-rm fifo_listall fifo_lsplaylist
 # ====== スクリプトによる処理ここまで ======
 
 
