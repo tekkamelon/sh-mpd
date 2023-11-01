@@ -6,8 +6,12 @@
 # v 変数の表示
 
 # ====== 環境変数の設定 ======
+# ロケールの設定
 export LC_ALL=C
 export LANG=C
+
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
 
 # クエリを変数展開で加工,文字列があれば真,なければ偽
 if [ -n "${QUERY_STRING#*\=}" ] ; then

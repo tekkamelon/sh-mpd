@@ -6,15 +6,21 @@
 # v 変数の表示
 
 # ====== 環境変数の設定 ======
+# ロケールの設定
 export LC_ALL=C
 export LANG=C
 
-# ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
+
+# 独自コマンドへPATHを通す
+export PATH="$PATH:../../bin"
+
+# ホスト名,ポート番号を設定
 host="$(cat settings/hostname)"
 port="$(cat settings/port_conf)"
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
-export PATH="$PATH:../bin"
 # ====== 環境変数の設定ここまで ======
 
 
