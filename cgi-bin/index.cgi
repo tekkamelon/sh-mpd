@@ -14,7 +14,7 @@ export LANG=C
 export POSIXLY_CORRECT=1
 
 # 独自コマンドへPATHを通す
-export PATH="$PATH:../../bin"
+export PATH="$PATH:../bin"
 
 # ホスト名,ポート番号を設定
 host="$(cat settings/hostname)"
