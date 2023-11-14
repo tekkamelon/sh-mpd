@@ -30,15 +30,15 @@ mpc_post () {
 
 	# POSTで受け取った文字列を変数として宣言
 	cat_post=$(cat)
+	# echo "${cat_post#\=*}" | tbug
 
-	# POSTを変数展開で加工,文字列があれば真,無ければ偽
-	if [ -n "${cat_post#*\=}" ] ; then 
+	# POSTを変数展開で加工,文字列が1以上の数値であれば真,それ以外で偽
+	if [ "${cat_post#*\=}" -gt 0 ] ; then
 
-		# 真の場合の処理
 		# POSTを変数に代入
 		line_number="${cat_post#*\=}"
 
-		# 曲の一覧から"line_number"の番号の行を抽出,結果を挿入
+		# 楽曲の一覧から"line_number"の番号の行を抽出,結果を挿入
 		mpc listall | sed -n "${line_number}"p | mpc insert &
 
 		echo "next"
@@ -46,20 +46,29 @@ mpc_post () {
 	# 偽の場合はPOSTを変数展開,"insertresult="であれば真,それ以外で偽
 	elif [ "${cat_post#\=*}" = "insertresult=" ] ; then
 
-		# 真の場合はクエリをデコードし"search_str"に代入
+		# クエリをデコードし"search_str"に代入
 		search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
-		# 曲の一覧から"search_str"で検索,結果を挿入
+		# 楽曲の一覧から"search_str"で検索,結果を挿入
 		mpc listall | grep -F -i "${search_str}" | mpc insert &
 
 		echo "next"
+
+	# 偽の場合はPOSTが"add-all"であれば真,それ以外で偽
+	elif [ "${cat_post}" = "add=all" ] ; then
+
+		# すべての楽曲をキューに追加
+		mpc add / &
+
+		echo "status"
 
 	else
 
 		# 偽の場合は"status"を出力
 		echo "status"
 	
-	fi |
+	# エラー出力を捨てる
+	fi 2> /dev/null |
 
 	# 出力をmpcに渡す
 	xargs mpc 2>&1 |
@@ -72,18 +81,15 @@ mpc_post () {
 # mpd管理下の全ての曲を表示
 directory_list () {
 
-	# 曲の一覧をgrepで検索
-
 	# クエリをデコードし"search_str"に代入
 	search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
-	# 曲の一覧から"search_str"で検索
+	# 曲の一覧を出力,grepで検索,idと区切り文字":"を付与
 	mpc listall | grep -F -i -n "${search_str}" |
 
+	# ":"を">"に置換,標準入力をタグ付きで出力
 	awk '{
 
-		# 出力をボタン化
-		# print "<p><button name=insert value="$0">"$0"</button></p>"
 		sub(":" , ">")
 
 		print "<p><button name=insert value="$0"</button></p>"
@@ -137,7 +143,7 @@ cat << EOS
 			<p>$(mpc_post)</p>
 
 			<!-- 全ての曲を追加するボタン -->
-			<p><button name=add value=/>add all songs</button></p>
+			<p><button name=add value=all>add all songs</button></p>
 
 		</form>
 
