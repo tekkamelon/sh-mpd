@@ -25,10 +25,8 @@ export MPD_PORT="${port}"
 
 
 # ===== スクリプトによる処理 ======
-# POSTやクエリから受け取ったテキストの処理
+# POSTの有無に応じてmpcでの処理を分岐
 mpc_post () {
-
-	# POSTの有無に応じてmpcでの処理を分岐
 
 	# POSTで受け取った文字列を変数として宣言
 	cat_post=$(cat)
@@ -36,11 +34,12 @@ mpc_post () {
 	# POSTを変数展開で加工,文字列があれば真,無ければ偽
 	if [ -n "${cat_post#*\=}" ] ; then 
 
-		# 真の場合はPOSTを変数展開で"="をスペースに置換,曲名をダブルクォートで括って出力
-		echo "${cat_post%\=*} ""\"${cat_post#*\=}\"" |
+		# 真の場合の処理
+		# POSTを変数に代入
+		line_number="${cat_post#*\=}"
 
-		# デコード,mpcに渡す
-		urldecode | xargs mpc &
+		# 曲の一覧から"line_number"の番号の行を抽出,結果を挿入
+		mpc listall | sed -n "${line_number}"p | mpc insert &
 
 		echo "next"
 
@@ -79,12 +78,15 @@ directory_list () {
 	search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
 	# 曲の一覧から"search_str"で検索
-	mpc listall | grep -F -i "${search_str}" |
+	mpc listall | grep -F -i -n "${search_str}" |
 
 	awk '{
 
 		# 出力をボタン化
-		print "<p><button name=insert value="$0">"$0"</button></p>"
+		# print "<p><button name=insert value="$0">"$0"</button></p>"
+		sub(":" , ">")
+
+		print "<p><button name=insert value="$0"</button></p>"
 
 	}'
 
