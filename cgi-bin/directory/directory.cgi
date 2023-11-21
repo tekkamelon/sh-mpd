@@ -30,7 +30,6 @@ mpc_post () {
 
 	# POSTで受け取った文字列を変数として宣言
 	cat_post=$(cat)
-	# echo "${cat_post#\=*}" | tbug
 
 	# POSTを変数展開で加工,文字列が1以上の数値であれば真,それ以外で偽
 	if [ "${cat_post#*\=}" -gt 0 ] ; then
@@ -39,20 +38,23 @@ mpc_post () {
 		line_number="${cat_post#*\=}"
 
 		# 楽曲の一覧から"line_number"の番号の行を抽出,結果を挿入
-		mpc listall | sed -n "${line_number}"p | mpc insert &
+		mpc listall | sed -n "${line_number}"p | mpc add &&
 
-		echo "next"
+		# キュー内の楽曲数を変数に代入
+		last_line=$(mpc playlist | wc -l)
 
-	# 偽の場合はPOSTを変数展開,"insertresult="であれば真,それ以外で偽
-	elif [ "${cat_post#\=*}" = "insertresult=" ] ; then
+		echo "play ${last_line}"
+
+	# 偽の場合はPOSTを変数展開,"addresult="であれば真,それ以外で偽
+	elif [ "${cat_post#\=*}" = "addresult=" ] ; then
 
 		# クエリをデコードし"search_str"に代入
 		search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
 		# 楽曲の一覧から"search_str"で検索,結果を挿入
-		mpc listall | grep -F -i "${search_str}" | mpc insert &
+		mpc listall | grep -F -i "${search_str}" | mpc add &
 
-		echo "next"
+		echo "status"
 
 	# 偽の場合はPOSTが"add-all"であれば真,それ以外で偽
 	elif [ "${cat_post}" = "add=all" ] ; then
@@ -92,7 +94,7 @@ directory_list () {
 
 		sub(":" , ">")
 
-		print "<p><button name=insert value="$0"</button></p>"
+		print "<p><button name=add value="$0"</button></p>"
 
 	}'
 
@@ -158,7 +160,7 @@ cat << EOS
 			$(directory_list)
 			
 			<!-- 検索結果を挿入するボタン -->
-			<p><button name=insertresult value=>insert search result</button></p>
+			<p><button name=addresult value=>add search result</button></p>
 
 		</form>
 		
