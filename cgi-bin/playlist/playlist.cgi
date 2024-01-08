@@ -26,7 +26,7 @@ export MPD_PORT="${port}"
 
 # ===== スクリプトによる処理 ======
 # 名前付きパイプが無ければ作成
-if [ ! -e "listall" ] && [ ! -e "lsplaylist" ] ; then
+if [ ! -e "listall.fifo" ] && [ ! -e "lsplaylist.fifo" ] ; then
 
 	mkfifo listall.fifo lsplaylist.fifo
 
