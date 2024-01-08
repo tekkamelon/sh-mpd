@@ -26,16 +26,14 @@ export MPD_PORT="${port}"
 
 # ===== スクリプトによる処理 ======
 # 名前付きパイプが無ければ作成
-if [ ! -e "fifo_listall" ] && [ ! -e "fifo_lsplaylist" ] ; then
+if [ ! -e "listall" ] && [ ! -e "lsplaylist" ] ; then
 
-	mkfifo fifo_listall fifo_lsplaylist
+	mkfifo listall.fifo lsplaylist.fifo
 
 fi
 
-# POSTを加工しmpcに渡す
+# POSTの処理,POSTが無い場合はステータスの表示
 mpc_post () {
-
-	# POSTの処理,POSTが無い場合はステータスの表示
 
 	# POSTの"="をスペースに置換,デコードしmpcに渡す
 	cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
@@ -45,22 +43,20 @@ mpc_post () {
 
 }
 
-# プレイリスト及びトップディレクトリの表示
+# プレイリスト及びディレクトリの検索,表示
 playlist_and_directory () {
-
-	# プレイリスト及びディレクトリの検索などの処理
 
 	# クエリを変数展開で加工,デコード,変数に代入
 	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
 	
 	# プレイリスト一覧を出力,名前付きパイプにリダイレクト
-	mpc lsplaylist >| fifo_lsplaylist &
+	mpc lsplaylist >| lsplaylist.fifo &
 	
 	# ディレクトリを再帰的に出力,1フィールド目と"/"を出力,名前付きパイプにリダイレクト
-	mpc listall | awk -F"/" '{print $1"/"}' >| fifo_listall &
+	mpc listall | awk -F"/" '{print $1"/"}' >| listall.fifo &
 
 	# 名前付きパイプ内のデータを出力,grepで固定文字列を大文字,小文字を区別せずに検索
-	cat fifo_lsplaylist fifo_listall | grep -F -i "${search_str}" |
+	cat lsplaylist.fifo listall.fifo | grep -F -i "${search_str}" |
 
 	# 区切り文字を"/"に指定
 	awk -F"/" '{
@@ -71,9 +67,7 @@ playlist_and_directory () {
 			# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
 			print "<p><button name=add value="$1">"$1"</button></p>"
 
-		}
-
-		else{
+		}else{
 
 			# 偽の場合はPOSTの1フィールド目に"lsplaylist"を指定しボタン化
 			print "<p><button name=load value="$0">"$0"</button></p>"

@@ -1,6 +1,6 @@
 # 名前付きパイプを除外
-cgi-bin/playlist/fifo_listall
-cgi-bin/playlist/fifo_lsplaylist
+cgi-bin/playlist/listall.fifo
+cgi-bin/playlist/lsplaylist.fifo
 
 # cssのテスト用のhtmlを除外
 cgi-bin/css_test.html
