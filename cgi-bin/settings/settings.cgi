@@ -56,6 +56,14 @@ cat << EOS
 		<h3>port:${MPD_PORT}</h3>
 		<p><button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change_port</button></p>
 
+		<!-- 画像サーバー用のホスト名の表示 -->
+		<h3>img server hostname</h3>
+		<p><button onclick="location.href='/cgi-bin/settings/img_host/host.cgi'">change_host</button></p>
+			
+		<!-- 画像サーバー用のポート番号の設定 -->
+		<h3>img server port</h3>
+		<p><button onclick="location.href='/cgi-bin/settings/img_port/port.cgi'">change_port</button></p>
+
 		<!-- 出力先デバイスの設定 -->
 		<h3>ountput devices list</h3>
 		<p><button onclick="location.href='/cgi-bin/settings/outputs/outputs.cgi'">select_output_device</button></p>
