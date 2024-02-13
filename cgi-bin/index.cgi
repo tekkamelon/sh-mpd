@@ -21,6 +21,10 @@ host="$(cat settings/hostname)"
 port="$(cat settings/port_conf)"
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
+
+# 画像サーバーのホスト名,ポート番号を設定
+img_host="$(cat settings/img_host.conf)"
+img_port="$(cat settings/img_port.conf)"
 # ====== 環境変数の設定ここまで ======
 
 
@@ -74,6 +78,23 @@ next_song () {
 
 	# メッセージを出力
 	echo "${message}"
+
+}
+
+# カバーアートの表示
+coverart () {
+	
+	# ステータスから曲名を抽出
+	current_song=$(mpc status | head -n 1 | awk -F" - " '{print $2}')
+
+	# 曲一覧から曲名で検索
+	search_dir=$(mpc listall | grep "${current_song}")
+
+	# ディレクトリのみ抽出
+	dir=$(dirname "${search_dir}")
+
+	# 画像のパスを生成,それ以外を除外
+	echo "${dir}/Folder.jpg"| grep "Folder.jpg"
 
 }
 # ===== スクリプトによる処理ここまで ======
@@ -230,9 +251,12 @@ MPD UI using shellscript and CGI
 
 		<form name="FORM" method="GET" >
 
-			<!-- 現在のステータス -->
 			<h3>current song</h3>
-	
+
+			<!-- カバーアートの表示 -->
+			<img src="http://${img_host}:${img_port}/$(coverart)" alt="coverart" />
+
+			<!-- 現在のステータス -->
 			<p>$(mpc_post)</p>
 
 			<!-- 次の曲 -->
