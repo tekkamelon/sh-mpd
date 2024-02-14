@@ -5,7 +5,7 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# ====== 環境変数の設定 ======
+# ====== 変数の設定 ======
 # ロケールの設定
 export LC_ALL=C
 export LANG=C
@@ -25,10 +25,24 @@ export MPD_PORT="${port}"
 # 画像サーバーのホスト名,ポート番号を設定
 img_host="$(cat settings/img_host.conf)"
 img_port="$(cat settings/img_port.conf)"
-# ====== 環境変数の設定ここまで ======
+# ====== 変数の設定ここまで ======
 
 
 # ===== スクリプトによる処理 ======
+# カバーアートの取得
+coverart () {
+
+	# 再生中の曲の相対パスを抽出
+	current_song=$(mpc current -f "%file%")
+
+	# ディレクトリのみ抽出
+	dir=$(dirname "${current_song}")
+
+	# 画像のパスを生成
+	echo "<img src=http://${img_host}:${img_port}/${dir}/Folder.jpg alt=coverart />"
+
+}
+
 # "control button",入力欄から受け取ったPOSTやクエリの処理
 mpc_post () {
 
@@ -78,23 +92,6 @@ next_song () {
 
 	# メッセージを出力
 	echo "${message}"
-
-}
-
-# カバーアートの表示
-coverart () {
-	
-	# ステータスから曲名を抽出
-	current_song=$(mpc status | head -n 1 | awk -F" - " '{print $2}')
-
-	# 曲一覧から曲名で検索
-	search_dir=$(mpc listall | grep "${current_song}")
-
-	# ディレクトリのみ抽出
-	dir=$(dirname "${search_dir}")
-
-	# 画像のパスを生成,それ以外を除外
-	echo "${dir}/Folder.jpg"| grep "Folder.jpg"
 
 }
 # ===== スクリプトによる処理ここまで ======
@@ -254,7 +251,7 @@ MPD UI using shellscript and CGI
 			<h3>current song</h3>
 
 			<!-- カバーアートの表示 -->
-			<img src="http://${img_host}:${img_port}/$(coverart)" alt="coverart" />
+			$(coverart)
 
 			<!-- 現在のステータス -->
 			<p>$(mpc_post)</p>
@@ -262,7 +259,7 @@ MPD UI using shellscript and CGI
 			<!-- 次の曲 -->
 			<h3>next song</h3>
 			<p><button name=button value=next>$(next_song)</button></p>
-	
+
 		</form>
 
 	</main>
