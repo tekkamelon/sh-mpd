@@ -5,7 +5,7 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# ====== 環境変数の設定 ======
+# ====== 変数の設定 ======
 # ロケールの設定
 export LC_ALL=C
 export LANG=C
@@ -13,28 +13,33 @@ export LANG=C
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
 
-# 独自コマンドへPATHを通す
-export PATH="$PATH:../../../bin"
-
 # ホスト名,ポート番号を設定
-host="$(cat ../hostname)"
-port="$(cat ../port_conf)"
-export MPD_HOST="${host}"
-export MPD_PORT="${port}"
-# ====== 環境変数の設定ここまで ======
+img_server_host="$(cat ../img_host.conf)"
+img_server_port="$(cat ../img_port.conf)"
+# ====== 変数の設定ここまで ======
 
 
 # ===== スクリプトによる処理 ======
-mpc_post () {
+post () {
 
 	# POSTを変数に代入
 	cat_post=$(cat)
 
-	# POSTを変数展開で加工,設定ファイルへのリダイレクト
-	echo "${cat_post#*\=}" >| ../img_host.conf &
+	# POSTを変数展開で加工,あれば真,なければ偽
+	if [ -n "${cat_post#*\=}" ] ; then
 
-	# メッセージの出力
-	echo "changed host:${cat_post#*\=}<br>" &
+		# 真の場合はPOSTを変数展開で加工,設定ファイルへのリダイレクト
+		echo "${cat_post#*\=}" >| ../img_host.conf &
+
+		# メッセージの出力
+		echo "changed coverart server host:${cat_post#*\=}<br>" &
+
+	# 偽の場合はPOSTがあれば真
+	elif [ -n "${cat_post}" ] ; then
+
+		echo "please enter hostname!"
+		
+	fi
 
 }
 # ===== スクリプトによる処理ここまで ======
@@ -61,28 +66,28 @@ cat << EOS
 
 	<header>
 
-		<h1>settings</h1>
+		<h1>coverart server setting</h1>
 
 	</header>
 
     <body>
 
 		<!-- ホスト名,ポート番号の表示-->
-		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
+		<h4>host:${img_server_host}<br>port:${img_server_port}<br></h4>
 
 		<form name="setting" method="POST" >
 
 			<span>
 
 				<!-- ホスト名又はIPアドレスの入力欄 -->
-				<p><input type="text" placeholder="enter hostname or local IP default:localhost" name="MPD_HOST"></p>
+				<p><input type="text" placeholder="enter hostname or local IP default:localhost" name="8080"></p>
 
 			</span>
 			
 		</form>
 
 		<!-- 実行結果を表示 -->
-		<p>$(mpc_post)</p>
+		<p>$(post)</p>
 			
     </body>
 

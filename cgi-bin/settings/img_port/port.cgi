@@ -13,27 +13,33 @@ export LANG=C
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
 
-# 独自コマンドへPATHを通す
-export PATH="$PATH:../../../bin"
-# ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
-host="$(cat ../hostname)"
-port="$(cat ../port_conf)"
-export MPD_HOST="${host}"
-export MPD_PORT="${port}"
+# ホスト名,ポート番号を設定
+img_server_host="$(cat ../img_host.conf)"
+img_server_port="$(cat ../img_port.conf)"
 # ====== 環境変数の設定ここまで ======
 
 
 # ===== スクリプトによる処理 ======
-mpc_post () {
+post () {
 
 	# POSTを変数に代入
 	cat_post=$(cat)
 
-	# POSTを変数展開で加工,設定ファイルへのリダイレクト
-	echo "${cat_post#*\=}" >| ../img_port.conf &
+	# POSTがありかつ数値であれば真
+	if [ -n "${cat_post#*\=}" ] && [ "${cat_post#*\=}" -ge 1 ]; then
 
-	# メッセージの出力
-	echo "changed port number:${cat_post#*\=}<br>" &
+		# POSTを変数展開で加工,設定ファイルへのリダイレクト
+		echo "${cat_post#*\=}" >| ../img_port.conf &
+
+		# メッセージの出力
+		echo "changed port number:${cat_post#*\=}<br>" &
+
+	# 偽の場合はPOSTがあれば真
+	elif [ -n "${cat_post}" ] ; then
+
+		echo "please enter port number!"
+		
+	fi
 		
 }
 # ===== スクリプトによる処理ここまで ======
@@ -66,7 +72,7 @@ cat << EOS
 
     <body>
 
-		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
+		<h4>host:${img_server_host}<br>port:${img_server_port}<br></h4>
 
 		<!-- ポート番号の設定 -->
 		<form name="setting" method="POST" >
@@ -81,7 +87,7 @@ cat << EOS
 		</form>
 			
 		<!-- 実行結果を表示 -->
-		<p>$(mpc_post)</p>
+		<p>$(post)</p>
 			
     </body>
 

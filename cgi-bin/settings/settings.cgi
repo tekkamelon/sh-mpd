@@ -18,6 +18,9 @@ host="$(cat hostname)"
 port="$(cat port_conf)"
 export MPD_HOST="${host}"
 export MPD_PORT="${port}"
+
+img_host="$(cat img_host.conf)"
+img_port="$(cat img_port.conf)"
 # ====== 環境変数の設定ここまで ======
 
 
@@ -56,12 +59,12 @@ cat << EOS
 		<h3>port:${MPD_PORT}</h3>
 		<p><button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change_port</button></p>
 
-		<!-- 画像サーバー用のホスト名の表示 -->
-		<h3>img server hostname</h3>
+		<!-- 画像サーバー用のホスト名の設定 -->
+		<h3>coverart server hostname:${img_host}</h3>
 		<p><button onclick="location.href='/cgi-bin/settings/img_host/host.cgi'">change_host</button></p>
 			
 		<!-- 画像サーバー用のポート番号の設定 -->
-		<h3>img server port</h3>
+		<h3>coverart server port:${img_port}</h3>
 		<p><button onclick="location.href='/cgi-bin/settings/img_port/port.cgi'">change_port</button></p>
 
 		<!-- 出力先デバイスの設定 -->
