@@ -28,7 +28,7 @@ img_port="$(cat settings/img_port.conf)"
 # ====== 変数の設定ここまで ======
 
 
-# ===== スクリプトによる処理 ======
+# ===== 関数の宣言 ======
 # カバーアートの取得
 coverart () {
 
@@ -39,7 +39,7 @@ coverart () {
 	dir=$(dirname "${current_song}")
 
 	# 画像のパスを生成
-	echo "<img src=http://${img_host}:${img_port}/${dir}/Folder.jpg alt=coverart />"
+	echo "${dir}"
 
 }
 
@@ -94,7 +94,7 @@ next_song () {
 	echo "${message}"
 
 }
-# ===== スクリプトによる処理ここまで ======
+# ===== 関数の宣言ここまで ======
 
 
 # ====== HTML ======
@@ -251,7 +251,7 @@ MPD UI using shellscript and CGI
 			<h3>current song</h3>
 
 			<!-- カバーアートの表示 -->
-			$(coverart)
+			<img src="http://${img_host}:${img_port}/$(coverart)/Folder.jpg" alt="coverart" />
 
 			<!-- 現在のステータス -->
 			<p>$(mpc_post)</p>
