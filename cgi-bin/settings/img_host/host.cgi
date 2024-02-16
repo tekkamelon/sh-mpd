@@ -13,13 +13,12 @@ export LANG=C
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
 
-# ホスト名,ポート番号を設定
-img_server_host="$(cat ../img_host.conf)"
-img_server_port="$(cat ../img_port.conf)"
+# ". (ドット)"コマンドで設定ファイルの読み込み
+. ../shmpd.conf
 # ====== 変数の設定ここまで ======
 
 
-# ===== スクリプトによる処理 ======
+# ===== 関数の宣言 ======
 post () {
 
 	# POSTを変数に代入
@@ -28,8 +27,17 @@ post () {
 	# POSTを変数展開で加工,あれば真,なければ偽
 	if [ -n "${cat_post#*\=}" ] ; then
 
-		# 真の場合はPOSTを変数展開で加工,設定ファイルへのリダイレクト
-		echo "${cat_post#*\=}" >| ../img_host.conf &
+		# 真の場合はPOSTを環境変数に代入
+		img_server_host="${cat_post#*\=}"
+
+		# 変数の一覧を出力,設定ファイルへリダイレクト
+		cat <<- EOF >| ../shmpd.conf
+		export MPD_HOST="${MPD_HOST}"
+		export MPD_PORT="${MPD_PORT}"
+		img_server_host="${img_server_host}"
+		img_server_port="${img_server_port}"
+		stylesheet="${stylesheet}"
+		EOF
 
 		# メッセージの出力
 		echo "changed coverart server host:${cat_post#*\=}<br>" &
@@ -37,12 +45,13 @@ post () {
 	# 偽の場合はPOSTがあれば真
 	elif [ -n "${cat_post}" ] ; then
 
+		# 真の場合はメッセージを表示
 		echo "please enter hostname!"
 		
 	fi
 
 }
-# ===== スクリプトによる処理ここまで ======
+# ===== 関数の宣言ここまで ======
 
 
 # ====== HTML ======
@@ -57,7 +66,7 @@ cat << EOS
 
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf)">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>

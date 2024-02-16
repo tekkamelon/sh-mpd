@@ -5,7 +5,7 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# ====== 環境変数の設定 ======
+# ====== 変数の設定 ======
 # ロケールの設定
 export LC_ALL=C
 export LANG=C
@@ -13,13 +13,12 @@ export LANG=C
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
 
-# ホスト名,ポート番号を設定
-img_server_host="$(cat ../img_host.conf)"
-img_server_port="$(cat ../img_port.conf)"
-# ====== 環境変数の設定ここまで ======
+# ". (ドット)"コマンドで設定ファイルの読み込み
+. ../shmpd.conf
+# ====== 変数の設定ここまで ======
 
 
-# ===== スクリプトによる処理 ======
+# ===== 関数の宣言 ======
 post () {
 
 	# POSTを変数に代入
@@ -28,8 +27,17 @@ post () {
 	# POSTがありかつ数値であれば真
 	if [ -n "${cat_post#*\=}" ] && [ "${cat_post#*\=}" -ge 1 ]; then
 
-		# POSTを変数展開で加工,設定ファイルへのリダイレクト
-		echo "${cat_post#*\=}" >| ../img_port.conf &
+		# 真の場合はPOSTを環境変数に代入
+		img_server_port="${cat_post#*\=}"
+
+		# 変数の一覧を出力,設定ファイルへリダイレクト
+		cat <<- EOF >| ../shmpd.conf
+		export MPD_HOST="${MPD_HOST}"
+		export MPD_PORT="${MPD_PORT}"
+		img_server_host="${img_server_host}"
+		img_server_port="${img_server_port}"
+		stylesheet="${stylesheet}"
+		EOF
 
 		# メッセージの出力
 		echo "changed port number:${cat_post#*\=}<br>" &
@@ -42,7 +50,7 @@ post () {
 	fi
 		
 }
-# ===== スクリプトによる処理ここまで ======
+# ===== 関数の宣言ここまで ======
 
 
 # ====== HTML ======
@@ -57,7 +65,7 @@ cat << EOS
 
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../css_conf)">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>

@@ -5,7 +5,7 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# ====== 環境変数の設定 ======
+# ====== 変数の設定 ======
 # ロケールの設定
 export LC_ALL=C
 export LANG=C
@@ -13,15 +13,9 @@ export LANG=C
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
 
-# ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
-host="$(cat hostname)"
-port="$(cat port_conf)"
-export MPD_HOST="${host}"
-export MPD_PORT="${port}"
-
-img_host="$(cat img_host.conf)"
-img_port="$(cat img_port.conf)"
-# ====== 環境変数の設定ここまで ======
+# ". (ドット)"コマンドで設定ファイルの読み込み
+. ./shmpd.conf
+# ====== 変数の設定ここまで ======
 
 
 # ====== HTML ======
@@ -36,7 +30,7 @@ cat << EOS
 
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat css_conf)">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="image/favicon.svg">
 		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
@@ -60,11 +54,11 @@ cat << EOS
 		<p><button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change_port</button></p>
 
 		<!-- 画像サーバー用のホスト名の設定 -->
-		<h3>coverart server hostname:${img_host}</h3>
+		<h3>coverart server hostname:${img_server_host}</h3>
 		<p><button onclick="location.href='/cgi-bin/settings/img_host/host.cgi'">change_host</button></p>
 			
 		<!-- 画像サーバー用のポート番号の設定 -->
-		<h3>coverart server port:${img_port}</h3>
+		<h3>coverart server port:${img_server_port}</h3>
 		<p><button onclick="location.href='/cgi-bin/settings/img_port/port.cgi'">change_port</button></p>
 
 		<!-- 出力先デバイスの設定 -->
