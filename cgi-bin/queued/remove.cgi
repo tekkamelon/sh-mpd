@@ -5,7 +5,7 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# ====== 環境変数の設定 ======
+# ====== 変数の設定 ======
 # ロケールの設定
 export LC_ALL=C
 export LANG=C
@@ -16,15 +16,12 @@ export POSIXLY_CORRECT=1
 # 独自コマンドへPATHを通す
 export PATH="$PATH:../../bin"
 
-# ホスト名,ポート番号を設定,データがない場合は"localhost","6600"
-host="$(cat ../settings/hostname)"
-port="$(cat ../settings/port_conf)"
-export MPD_HOST="${host}"
-export MPD_PORT="${port}"
-# ====== 環境変数の設定ここまで ======
+# ". (ドット)"コマンドで設定ファイルの読み込み
+. ../settings/shmpd.conf
+# ====== 変数の設定ここまで ======
 
 
-# ===== スクリプトによる処理 ======
+# ===== 関数の宣言 ======
 mpc_post () {
 
 	# 選択された曲の再生,プレイリストの保存の処理
@@ -69,7 +66,7 @@ queued_song () {
 	}'
 
 }
-# ===== スクリプトによる処理ここまで ======
+# ===== 関数の宣言ここまで ======
 
 
 # ====== HTML ======
@@ -84,7 +81,7 @@ cat << EOS
 
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat ../settings/css_conf)">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="image/favicon_ios.ico">
 		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
 		<title>sh-MPD</title>

@@ -16,15 +16,8 @@ export POSIXLY_CORRECT=1
 # 独自コマンドへPATHを通す
 export PATH="$PATH:../bin"
 
-# ホスト名,ポート番号を設定
-host="$(cat settings/hostname)"
-port="$(cat settings/port_conf)"
-export MPD_HOST="${host}"
-export MPD_PORT="${port}"
-
-# 画像サーバーのホスト名,ポート番号を設定
-img_host="$(cat settings/img_host.conf)"
-img_port="$(cat settings/img_port.conf)"
+# ". (ドット)"コマンドで設定ファイルの読み込み
+. settings/shmpd.conf
 # ====== 変数の設定ここまで ======
 
 
@@ -107,7 +100,7 @@ cat << EOS
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/$(cat settings/css_conf)">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="image/favicon.png">
 		<link rel="apple-touch-icon" href="image/favicon.png">
         <title>sh-MPD</title>
@@ -251,7 +244,7 @@ MPD UI using shellscript and CGI
 			<h3>current song</h3>
 
 			<!-- カバーアートの表示 -->
-			<img src="http://${img_host}:${img_port}/$(coverart)/Folder.jpg" alt="coverart" />
+			<img src="http://${img_server_host}:${img_server_port}/$(coverart)/Folder.jpg" alt="coverart" />
 
 			<!-- 現在のステータス -->
 			<p>$(mpc_post)</p>
