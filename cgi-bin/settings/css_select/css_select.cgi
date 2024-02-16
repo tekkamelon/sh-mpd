@@ -5,7 +5,7 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
-# ====== 環境変数の設定 ======
+# ====== 変数の設定 ======
 # ロケールの設定
 export LC_ALL=C
 export LANG=C
@@ -13,11 +13,20 @@ export LANG=C
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
 
+# ". (ドット)"コマンドで設定ファイルの読み込み
+. ../shmpd.conf
+
 # クエリを変数展開で加工,文字列があれば真,なければ偽
 if [ -n "${QUERY_STRING#*\=}" ] ; then
 
-	# 真の場合は設定ファイルにリダイレクト
-	echo "${QUERY_STRING#*\=}" >| ../css_conf &
+	# 真の場合は変数の一覧を出力,設定ファイルへリダイレクト
+	cat <<- EOF >| ../shmpd.conf
+	export MPD_HOST="${MPD_HOST}"
+	export MPD_PORT="${MPD_PORT}"
+	img_server_host="${img_server_host}"
+	img_server_port="${img_server_port}"
+	stylesheet="${QUERY_STRING#*\=}"
+	EOF
 
 	# メッセージを代入
 	export ECHO_MESSAGE="<p>changed css:${QUERY_STRING#*\=}</p>"
@@ -25,19 +34,17 @@ if [ -n "${QUERY_STRING#*\=}" ] ; then
 else
 
 	# 設定ファイル内のcssを代入
-	css_config="$(cat ../css_conf)"
-
-	export QUERY_STRING="${css_config}"
+	export QUERY_STRING="${stylesheet}"
 
 	# 空文字を代入
 	export ECHO_MESSAGE=""
 
 fi
-# ====== 環境変数の設定ここまで ======
+# ====== 変数の設定ここまで ======
 
 
-# ===== スクリプトによる処理 ======
-css_list=$(# css一覧を表示
+# ===== 関数の宣言 ======
+css_list () {
 
 	# cssの一覧を変数として宣言
 	css_list=$(ls ../../stylesheet)
@@ -51,8 +58,8 @@ css_list=$(# css一覧を表示
 
 	}'
 
-)
-# ===== スクリプトによる処理ここまで ======
+}
+# ===== 関数の宣言ここまで ======
 
 
 # ====== HTML ======
@@ -88,7 +95,7 @@ cat << EOS
 			<!-- css変更時のメッセージを表示 -->
 			${ECHO_MESSAGE}
 
-			${css_list}
+			$(css_list)
  
 		</form>
     </body>
