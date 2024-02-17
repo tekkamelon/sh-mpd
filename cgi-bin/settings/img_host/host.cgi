@@ -19,16 +19,20 @@ export POSIXLY_CORRECT=1
 
 
 # ===== 関数の宣言 ======
-post () {
+setting_post () {
 
 	# POSTを変数に代入
 	cat_post=$(cat)
 
-	# POSTを変数展開で加工,あれば真,なければ偽
-	if [ -n "${cat_post#*\=}" ] ; then
+	# hostかportを変数展開で抽出
+	host_or_port="${cat_post#*\=}"
+	host_or_port="${host_or_port%%&*}"
+
+	# "host_or_port"が"host"であれば真,それ以外で偽
+	if [ "${host_or_port}" = "host" ] ; then
 
 		# 真の場合はPOSTを環境変数に代入
-		img_server_host="${cat_post#*\=}"
+		img_server_host="${cat_post#*\&*\=}"
 
 		# 変数の一覧を出力,設定ファイルへリダイレクト
 		cat <<- EOF >| ../shmpd.conf
@@ -40,13 +44,32 @@ post () {
 		EOF
 
 		# メッセージの出力
-		echo "changed coverart server host:${cat_post#*\=}<br>" &
+		echo "changed coverart server host:${img_server_host}<br>"
 
+	# "host_or_port"が"port"かつPOSTが数値であればであれば真,それ以外で偽
+	elif [ "${host_or_port}" = "port" ] && [ "${cat_post#*\&*\=}" -ge 1 ] ; then
+
+		# 真の場合はPOSTを環境変数に代入
+		img_server_port="${cat_post#*\&*\=}"
+
+		# 変数の一覧を出力,設定ファイルへリダイレクト
+		cat <<- EOF >| ../shmpd.conf
+		export MPD_HOST="${MPD_HOST}"
+		export MPD_PORT="${MPD_PORT}"
+		img_server_host="${img_server_host}"
+		img_server_port="${img_server_port}"
+		stylesheet="${stylesheet}"
+		EOF
+
+		# メッセージの出力
+		echo "changed coverart server port:${img_server_port}<br>"
+
+	
 	# 偽の場合はPOSTがあれば真
 	elif [ -n "${cat_post}" ] ; then
 
 		# 真の場合はメッセージを表示
-		echo "please enter hostname!"
+		echo "please enter hostname or port number!<br>"
 		
 	fi
 
@@ -88,15 +111,41 @@ cat << EOS
 
 			<span>
 
-				<!-- ホスト名又はIPアドレスの入力欄 -->
-				<p><input type="text" placeholder="enter hostname or local IP default:localhost" name="8080"></p>
+				hostname or port number :
 
 			</span>
+
+				<!-- ドロップダウンメニュー -->
+	            <select name="args">
+
+	                <option value="host">hostname</option>
+
+	                <option value="port">port_number</option>
+
+					</form>
+
+					<!-- 入力フォーム -->
+					<form method="POST">
+
+						<p>
+						
+							<span>
+
+								<!-- ホスト名又はIPアドレスの入力欄 -->
+								<p><input type="text" placeholder="default:localhost" name="8080"></p>
+
+							</span>
+
+						</p>
+
+				    </form>
+
+	            </select>
 			
 		</form>
 
 		<!-- 実行結果を表示 -->
-		<p>$(post)</p>
+		<p>$(setting_post)</p>
 			
     </body>
 
