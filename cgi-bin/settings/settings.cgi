@@ -53,13 +53,11 @@ cat << EOS
 		<h3>port:${MPD_PORT}</h3>
 		<p><button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change_port</button></p>
 
-		<!-- 画像サーバー用のホスト名の設定 -->
-		<h3>coverart server hostname:${img_server_host}</h3>
-		<p><button onclick="location.href='/cgi-bin/settings/img_host/host.cgi'">change_host</button></p>
-			
-		<!-- 画像サーバー用のポート番号の設定 -->
-		<h3>coverart server port:${img_server_port}</h3>
-		<p><button onclick="location.href='/cgi-bin/settings/img_port/port.cgi'">change_port</button></p>
+		<!-- カバーアート用サーバー用の設定 -->
+		<h3>coverart server</h3>
+		hostname:${img_server_host}<br>
+		port:${img_server_port}</br>
+		<p><button onclick="location.href='/cgi-bin/settings/coverart_server/coverart_setting.cgi'">coverart server setting</button></p>
 
 		<!-- 出力先デバイスの設定 -->
 		<h3>ountput devices list</h3>
