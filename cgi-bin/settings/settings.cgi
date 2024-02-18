@@ -46,26 +46,27 @@ cat << EOS
     <body>
 	 
 		<!-- ホスト名の表示 -->
-		<h3>hostname:${MPD_HOST}</h3>
-		<p><button onclick="location.href='/cgi-bin/settings/host/host.cgi'">change_host</button></p>
+		<h3>MPD server</h3>
+		<p>hostname:${MPD_HOST}</p>
+		<p>port:${MPD_PORT}</p>
+		<p><button onclick="location.href='/cgi-bin/settings/host/host.cgi'">change host</button></p>
 			
 		<!-- ポート番号の設定 -->
-		<h3>port:${MPD_PORT}</h3>
-		<p><button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change_port</button></p>
+		<p><button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change port</button></p>
 
 		<!-- カバーアート用サーバー用の設定 -->
 		<h3>coverart server</h3>
-		hostname:${img_server_host}<br>
-		port:${img_server_port}</br>
+		<p>hostname:${img_server_host}</p>
+		<p>port:${img_server_port}</p>
 		<p><button onclick="location.href='/cgi-bin/settings/coverart_server/coverart_setting.cgi'">coverart server setting</button></p>
 
 		<!-- 出力先デバイスの設定 -->
 		<h3>ountput devices list</h3>
-		<p><button onclick="location.href='/cgi-bin/settings/outputs/outputs.cgi'">select_output_device</button></p>
+		<p><button onclick="location.href='/cgi-bin/settings/outputs/outputs.cgi'">select output device</button></p>
 		
 		<!-- CSSの設定 -->
 		<h3>CSS setting</h3>
-		<p><button onclick="location.href='/cgi-bin/settings/css_select/css_select.cgi'">select_css</button></p>
+		<p><button onclick="location.href='/cgi-bin/settings/css_select/css_select.cgi'">select css</button></p>
 			
     </body>
 
