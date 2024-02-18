@@ -49,10 +49,10 @@ cat << EOS
 		<h3>MPD server</h3>
 		<p>hostname:${MPD_HOST}</p>
 		<p>port:${MPD_PORT}</p>
-		<p><button onclick="location.href='/cgi-bin/settings/host/host.cgi'">change host</button></p>
+		<p><button onclick="location.href='/cgi-bin/settings/mpd_server/mpd_setting.cgi'">MPD server setting</button></p>
 			
 		<!-- ポート番号の設定 -->
-		<p><button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change port</button></p>
+		<!-- <p><button onclick="location.href='/cgi-bin/settings/port/port.cgi'">change port</button></p> -->
 
 		<!-- カバーアート用サーバー用の設定 -->
 		<h3>coverart server</h3>

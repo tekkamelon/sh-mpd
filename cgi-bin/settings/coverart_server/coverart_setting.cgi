@@ -64,7 +64,6 @@ setting_post () {
 		# メッセージの出力
 		echo "changed coverart server port:${img_server_port}<br>"
 
-	
 	# 偽の場合はPOSTがあれば真
 	elif [ -n "${cat_post}" ] ; then
 
