@@ -188,26 +188,24 @@ cat << EOS
 		<!-- playlistの処理 -->
 		<form name="FORM" method="GET" >
 
-				<p>
-					<!-- ドロップダウンリスト -->
-	             	<select name="button">
-						
-						<!-- 検索 -->
-						<option value="search">search</option>
+			<!-- ドロップダウンリスト -->
+			<select name="button">
+				
+				<!-- 検索 -->
+				<option value="search">search</option>
 
-						<!-- 保存 -->
-						<option value="save">save playlist</option>
+				<!-- 保存 -->
+				<option value="save">save playlist</option>
 
-		            </select>
+			</select>
 
-					<!-- 検索ワードの入力欄 -->
-					<span>
+			<!-- 検索ワードの入力欄 -->
+			<span>
 
-						<p><input type="text" placeholder="search word or playlist name" name="input_string"></p>
+				<p><input type="text" placeholder="search word or playlist name" name="input_string"></p>
 
-					</span>
+			</span>
 
-				</p>
 		</form>
 
 		<!-- 最下部へのジャンプ -->

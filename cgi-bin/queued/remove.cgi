@@ -104,18 +104,14 @@ cat << EOS
 		<!-- playlistの処理 -->
 		<form name="FORM" method="GET" >
 
-				<p>
+			</select>
 
-		            </select>
+			<!-- 検索ワードの入力欄 -->
+			<span>
 
-					<!-- 検索ワードの入力欄 -->
-					<span>
+				<p><input type="text" placeholder="search word" name="input_string"></p>
 
-						<p><input type="text" placeholder="search word" name="input_string"></p>
-
-					</span>
-
-				</p>
+			</span>
 
 		</form>
 

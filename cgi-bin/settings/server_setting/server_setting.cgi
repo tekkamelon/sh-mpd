@@ -122,7 +122,6 @@ cat << EOS
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="image/favicon.svg">
-		<!-- <link rel="apple-touch-icon" href="image/favicon.svg"> -->
         <title>sh-MPD</title>
 
     </head>
@@ -137,10 +136,10 @@ cat << EOS
 
 		<!-- ホスト名,ポート番号の表示-->
 		<h3>MPD</h3>
-		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
+		<p>host:${MPD_HOST}<br>port:${MPD_PORT}</p>
 
 		<h3>Coverart server</h3>
-		<h4>host:${img_server_host}<br>port:${img_server_port}<br></h4>
+		<p>host:${img_server_host}<br>port:${img_server_port}</p>
 		<form name="setting" method="POST" >
 
 			<span>
@@ -149,36 +148,32 @@ cat << EOS
 
 			</span>
 
-				<!-- ドロップダウンメニュー -->
-	            <select name="args">
+			<!-- ドロップダウンメニュー -->
+			<select name="args">
 
-	                <option value="mpd_host">MPD host</option>
+				<option value="mpd_host">MPD host</option>
 
-	                <option value="mpd_port">MPD port</option>
+				<option value="mpd_port">MPD port</option>
 
-	                <option value="img_server_host">coverart server host</option>
+				<option value="img_server_host">coverart server host</option>
 
-	                <option value="img_server_port">coverart server port</option>
+				<option value="img_server_port">coverart server port</option>
 
-					</form>
+				</form>
 
-					<!-- 入力フォーム -->
-					<form method="POST">
+				<!-- 入力フォーム -->
+				<form method="POST">
 
-						<p>
-						
-							<span>
+					<span>
 
-								<!-- ホスト名又はIPアドレスの入力欄 -->
-								<p><input type="text" placeholder="default:localhost" name="host_or_port"></p>
+						<!-- ホスト名又はIPアドレスの入力欄 -->
+						<p><input type="text" placeholder="default:localhost" name="host_or_port"></p>
 
-							</span>
+					</span>
 
-						</p>
+				</form>
 
-				    </form>
-
-	            </select>
+			</select>
 			
 		</form>
 

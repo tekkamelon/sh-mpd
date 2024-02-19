@@ -204,11 +204,16 @@ MPD UI using shellscript and CGI
 
         </form>
 
+		<!-- 入力フォーム -->
 		<form name="format" method="POST" >
+
 			<span>
+
 				searchplay queued song :
+
 			</span>
 
+				<!-- ドロップダウンメニュー -->
 	            <select name="args">
 	
 	                <option value="searchplay">fuzzy</option>
@@ -225,15 +230,11 @@ MPD UI using shellscript and CGI
 
 					<form method="POST">
 
-						<p>
+						<span>
 
-							<span>
+							<input type="text" placeholder="search word" name="search">
 
-								<input type="text" placeholder="search word" name="search">
-
-							</span>
-
-						</p>
+						</span>
 
 				    </form>
 
