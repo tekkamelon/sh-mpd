@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -euxv
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -30,9 +30,10 @@ mpc_post () {
 	# hostかportを変数展開で抽出
 	host_or_port="${cat_post#*\=}"
 	host_or_port="${host_or_port%%&*}"
+	echo "${cat_post#*\&*\=}"
 
 	# "host_or_port"が"host"であれば真,それ以外で偽
-	if [ "${host_or_port}" = "host" ] && mpc -q --host="${cat_post#*\&*\=}" ; then
+	if [ "${host_or_port}" = "mpd_host" ] && mpc -q --host="${cat_post#*\&*\=}" ; then
 
 		# 真の場合はPOSTを環境変数に代入
 		export MPD_HOST="${cat_post#*\&*\=}"
@@ -52,7 +53,7 @@ mpc_post () {
 		mpc status | mpc_status2html
 
 	# "host_or_port"が"port"かつPOSTが数値であればであれば真,それ以外で偽
-	elif [ "${host_or_port}" = "port" ] && mpc -q --port="${cat_post#*\&*\=}" ; then
+	elif [ "${host_or_port}" = "mpd_port" ] && mpc -q --port="${cat_post#*\&*\=}" ; then
 
 		# 真の場合はPOSTを環境変数に代入
 		export MPD_PORT="${cat_post#*\&*\=}"
@@ -70,6 +71,41 @@ mpc_post () {
 		echo "changed MPD port:${MPD_PORT}<br>"
 	
 		mpc status | mpc_status2html
+
+	elif [ "${host_or_port}" = "img_host" ] ; then
+
+		# 真の場合はPOSTを環境変数に代入
+		img_server_host="${cat_post#*\&*\=}"
+
+		# 変数の一覧を出力,設定ファイルへリダイレクト
+		cat <<- EOF >| ../shmpd.conf
+		export MPD_HOST="${MPD_HOST}"
+		export MPD_PORT="${MPD_PORT}"
+		img_server_host="${img_server_host}"
+		img_server_port="${img_server_port}"
+		stylesheet="${stylesheet}"
+		EOF
+
+		# メッセージの出力
+		echo "changed coverart server host:${img_server_host}<br>"
+
+	# "host_or_port"が"port"かつPOSTが数値であればであれば真,それ以外で偽
+	elif [ "${host_or_port}" = "img_port" ] && [ "${cat_post#*\&*\=}" -ge 1 ] ; then
+
+		# 真の場合はPOSTを環境変数に代入
+		img_server_port="${cat_post#*\&*\=}"
+
+		# 変数の一覧を出力,設定ファイルへリダイレクト
+		cat <<- EOF >| ../shmpd.conf
+		export MPD_HOST="${MPD_HOST}"
+		export MPD_PORT="${MPD_PORT}"
+		img_server_host="${img_server_host}"
+		img_server_port="${img_server_port}"
+		stylesheet="${stylesheet}"
+		EOF
+
+		# メッセージの出力
+		echo "changed coverart server port:${img_server_port}<br>"
 
 	# 偽の場合はPOSTがあれば真
 	elif [ -n "${cat_post}" ] ; then
@@ -104,29 +140,36 @@ cat << EOS
 
 	<header>
 
-		<h1>MPD server setting</h1>
+		<h1>Server setting</h1>
 
 	</header>
 
     <body>
 
 		<!-- ホスト名,ポート番号の表示-->
+		<h3>MPD</h3>
 		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
 
+		<h3>Coverart server</h3>
+		<h4>host:${img_server_host}<br>port:${img_server_port}<br></h4>
 		<form name="setting" method="POST" >
 
 			<span>
 
-				hostname or port number :
+				select setting items :
 
 			</span>
 
 				<!-- ドロップダウンメニュー -->
 	            <select name="args">
 
-	                <option value="host">hostname</option>
+	                <option value="mpd_host">MPD host</option>
 
-	                <option value="port">port_number</option>
+	                <option value="mpd_port">MPD port</option>
+
+	                <option value="img_host">coverart server host</option>
+
+	                <option value="img_port">coverart server port</option>
 
 					</form>
 
@@ -138,7 +181,7 @@ cat << EOS
 							<span>
 
 								<!-- ホスト名又はIPアドレスの入力欄 -->
-								<p><input type="text" placeholder="default:localhost" name="6600"></p>
+								<p><input type="text" placeholder="default:localhost" name="host_or_port"></p>
 
 							</span>
 
