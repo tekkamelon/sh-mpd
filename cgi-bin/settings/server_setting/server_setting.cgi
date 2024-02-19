@@ -135,11 +135,26 @@ cat << EOS
     <body>
 
 		<!-- ホスト名,ポート番号の表示-->
-		<h3>MPD</h3>
-		<p>host:${MPD_HOST}<br>port:${MPD_PORT}</p>
+		<div class="box">
 
-		<h3>Coverart server</h3>
-		<p>host:${img_server_host}<br>port:${img_server_port}</p>
+			<div>
+
+				<h4>MPD</h4>
+				<p>host:${MPD_HOST}</p>
+				<p>port:${MPD_PORT}</p>
+
+			</div>
+
+			<div>
+
+				<h4>Coverart server</h4>
+				<p>host:${img_server_host}</p>
+				<p>port:${img_server_port}</p>
+
+			</div>
+
+		</div>
+
 		<form name="setting" method="POST" >
 
 			<span>

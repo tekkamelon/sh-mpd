@@ -44,15 +44,29 @@ cat << EOS
 
     <body>
 	 
-		<!-- ホスト名の表示 -->
 		<h3>Server setting</h3>
-		<h4>MPD server</h4>
-		<p>hostname:${MPD_HOST}</p>
-		<p>port:${MPD_PORT}</p>
 
-		<h4>coverart server</h4>
-		<p>hostname:${img_server_host}</p>
-		<p>port:${img_server_port}</p>
+		<!-- ホスト名,ポート番号の表示-->
+		<div class="box">
+
+			<div>
+
+				<h4>MPD</h4>
+				<p>hostname:${MPD_HOST}</p>
+				<p>port:${MPD_PORT}</p>
+
+			</div>
+
+			<div>
+
+				<h4>coverart server</h4>
+				<p>hostname:${img_server_host}</p>
+				<p>port:${img_server_port}</p>
+
+			</div>
+
+		</div>
+
 		<p><button onclick="location.href='/cgi-bin/settings/server_setting/server_setting.cgi'">MPD & coverart server setting</button></p>
 
 		<!-- 出力先デバイスの設定 -->
