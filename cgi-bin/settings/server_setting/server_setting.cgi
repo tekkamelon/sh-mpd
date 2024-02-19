@@ -1,4 +1,4 @@
-#!/bin/sh -euxv
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -22,7 +22,21 @@ export PATH="$PATH:../../../bin"
 
 
 # ===== 関数の宣言 ======
-mpc_post () {
+# ヒアドキュメントで設定ファイルの変数を出力
+heredocs () {
+
+	cat <<- EOF
+	export MPD_HOST="${MPD_HOST}"
+	export MPD_PORT="${MPD_PORT}"
+	img_server_host="${img_server_host}"
+	img_server_port="${img_server_port}"
+	stylesheet="${stylesheet}"
+	EOF
+
+}
+
+# POSTの文字列に応じて処理を分岐
+branch_post () {
 
 	# POSTを変数に代入
 	cat_post=$(cat)
@@ -30,7 +44,6 @@ mpc_post () {
 	# hostかportを変数展開で抽出
 	host_or_port="${cat_post#*\=}"
 	host_or_port="${host_or_port%%&*}"
-	echo "${cat_post#*\&*\=}"
 
 	# "host_or_port"が"host"であれば真,それ以外で偽
 	if [ "${host_or_port}" = "mpd_host" ] && mpc -q --host="${cat_post#*\&*\=}" ; then
@@ -39,13 +52,7 @@ mpc_post () {
 		export MPD_HOST="${cat_post#*\&*\=}"
 
 		# 変数の一覧を出力,設定ファイルへリダイレクト
-		cat <<- EOF >| ../shmpd.conf
-		export MPD_HOST="${MPD_HOST}"
-		export MPD_PORT="${MPD_PORT}"
-		img_server_host="${img_server_host}"
-		img_server_port="${img_server_port}"
-		stylesheet="${stylesheet}"
-		EOF
+ 		heredocs >| ../shmpd.conf
 
 		# メッセージの出力
 		echo "changed MPD host:${MPD_HOST}<br>"
@@ -59,50 +66,32 @@ mpc_post () {
 		export MPD_PORT="${cat_post#*\&*\=}"
 
 		# 変数の一覧を出力,設定ファイルへリダイレクト
-		cat <<- EOF >| ../shmpd.conf
-		export MPD_HOST="${MPD_HOST}"
-		export MPD_PORT="${MPD_PORT}"
-		img_server_host="${img_server_host}"
-		img_server_port="${img_server_port}"
-		stylesheet="${stylesheet}"
-		EOF
+ 		heredocs >| ../shmpd.conf
 
 		# メッセージの出力
 		echo "changed MPD port:${MPD_PORT}<br>"
 	
 		mpc status | mpc_status2html
 
-	elif [ "${host_or_port}" = "img_host" ] ; then
+	elif [ "${host_or_port}" = "img_server_host" ] ; then
 
 		# 真の場合はPOSTを環境変数に代入
 		img_server_host="${cat_post#*\&*\=}"
 
 		# 変数の一覧を出力,設定ファイルへリダイレクト
-		cat <<- EOF >| ../shmpd.conf
-		export MPD_HOST="${MPD_HOST}"
-		export MPD_PORT="${MPD_PORT}"
-		img_server_host="${img_server_host}"
-		img_server_port="${img_server_port}"
-		stylesheet="${stylesheet}"
-		EOF
+ 		heredocs >| ../shmpd.conf
 
 		# メッセージの出力
 		echo "changed coverart server host:${img_server_host}<br>"
 
 	# "host_or_port"が"port"かつPOSTが数値であればであれば真,それ以外で偽
-	elif [ "${host_or_port}" = "img_port" ] && [ "${cat_post#*\&*\=}" -ge 1 ] ; then
+	elif [ "${host_or_port}" = "img_server_port" ] && [ "${cat_post#*\&*\=}" -ge 1 ] ; then
 
 		# 真の場合はPOSTを環境変数に代入
 		img_server_port="${cat_post#*\&*\=}"
 
 		# 変数の一覧を出力,設定ファイルへリダイレクト
-		cat <<- EOF >| ../shmpd.conf
-		export MPD_HOST="${MPD_HOST}"
-		export MPD_PORT="${MPD_PORT}"
-		img_server_host="${img_server_host}"
-		img_server_port="${img_server_port}"
-		stylesheet="${stylesheet}"
-		EOF
+ 		heredocs >| ../shmpd.conf
 
 		# メッセージの出力
 		echo "changed coverart server port:${img_server_port}<br>"
@@ -167,9 +156,9 @@ cat << EOS
 
 	                <option value="mpd_port">MPD port</option>
 
-	                <option value="img_host">coverart server host</option>
+	                <option value="img_server_host">coverart server host</option>
 
-	                <option value="img_port">coverart server port</option>
+	                <option value="img_server_port">coverart server port</option>
 
 					</form>
 
@@ -194,7 +183,7 @@ cat << EOS
 		</form>
 
 		<!-- 実行結果を表示 -->
-		<p>$(mpc_post)</p>
+		<p>$(branch_post)</p>
 			
     </body>
 
