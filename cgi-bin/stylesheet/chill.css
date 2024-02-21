@@ -154,6 +154,20 @@ button:hover{
 	margin-top: 15px;
 }
 
+/* 要素を左右に並べる */
+.box {
+
+	display: flex;
+	justify-content: flex-start;
+
+}
+
+.box div {
+
+	width: 160px;
+
+}
+
 /* index.cgi */
 .layout{
    display:flex;
