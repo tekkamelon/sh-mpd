@@ -97,138 +97,158 @@ echo ""
 cat << EOS
 <!DOCTYPE html>
 <html>
+
     <head>
+
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="image/favicon.png">
 		<link rel="apple-touch-icon" href="image/favicon.png">
         <title>sh-MPD</title>
+
     </head>
 
-<body>
-<div class="layout">
-	<header>
-		<pre> 
+	<body>
+
+		<div class="layout">
+
+			<!-- ヘッダー -->
+			<header>
+
+				<pre> 
          __          __  _______  ____ 
    _____/ /_        /  |/  / __ \\/ __ \\
   / ___/ __ \______/ /|_/ / /_/ / / / /
  (__  ) / / /_____/ /  / / ____/ /_/ / 
 /____/_/ /_/     /_/  /_/_/   /_____/  
-	    </pre>
-<span>
-MPD UI using shellscript and CGI
-</span>
-	</header>
+				</pre>
 
-    <main>
-		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
-
-		<!-- 入力フォーム -->
-		<form name="FORM" method="GET" >
-
-			<!-- 音楽の操作ボタンをtableでレイアウト -->
-			<table border="1" cellspacing="5">
-
-				<!-- ヘッダ行 -->
-				<thead>
-					<tr>
-						<th colspan=4>control button</th>
-					</tr>
-				</thead>
-
-				<!-- 1行目 -->
-				<tr>
-					<td>
-				 		<button name="button" value="status">status</button>
-					</td>
-					<td>
-				 		<button name="button" value="volume_-100">mute</button>
-					</td>
-					<td>
-				 		<button name="button" value="volume_-5">volume -5</button>
-					</td>
-					<td>
-				 		<button name="button" value="volume_+5">volume +5</button>
-					</td>
-				</tr>	
-
-				<!-- 2行目 -->
-				<tr>
-					<td>
-						<button name="button" value="prev">previous</button>
-					</td>
-					<td>
-				 		<button name="button" value="toggle" >play/pause</button>
-					</td>
-					<td>
-				 		<button name="button" value="stop">stop</button>
-					</td>
-					<td>
-				 		<button name="button" value="next">next</button>
-					</td>
-				</tr>
-				 
-				<!-- 3行目 -->
-				<tr>
-					<td>
-				 		<button name="button" value="repeat">repeat</button>
-					</td>
-					<td>
-				 		<button name="button" value="random">random</button>
-					</td>
-					<td>
-				 		<button name="button" value="single">single</button>
-					</td>
-					<td>
-				 		<button name="button" value="shuffle">shuffle</button>
-					</td>
-				</tr>
-
-				<!-- 4行目 -->
-				<tr>
-					<td>
-				 		<button name="button" value="clear">clear</button>
-					</td>
-					<td>
-				 		<button name="button" value="update">update</button>
-					</td>
-					<td>
-				 		<button name="button" value="seek_-5%">seek -5%</button>
-					</td>
-					<td>
-				 		<button name="button" value="seek_+5%">seek +5%</button>
-					</td>
-				</tr>
-			</table>
-
-        </form>
-
-		<!-- 入力フォーム -->
-		<form name="format" method="POST" >
-
-			<span>
-
-				searchplay queued song :
-
-			</span>
-
-				<!-- ドロップダウンメニュー -->
-	            <select name="args">
+				<span>
+	MPD UI using shellscript and CGI
+				</span>
 	
-	                <option value="searchplay">fuzzy</option>
+			</header>
 
-	                <option value="searchplay artist">artist</option>
+			<!-- control buttonからnext_songまで -->
+			<main>
 
-	                <option value="searchplay album">album</option>
-					
-	                <option value="searchplay title">title</option>
-							
-	                <option value="searchplay filename">filename</option>
+				<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
 
-					</form>
+				<!-- 入力フォーム -->
+				<form name="FORM" method="GET" >
 
-					<form method="POST">
+					<!-- 音楽の操作ボタンをtableでレイアウト -->
+					<table border="1" cellspacing="5">
+
+						<!-- ヘッダ行 -->
+						<thead>
+
+							<tr>
+
+								<th colspan=4>control button</th>
+
+							</tr>
+
+						</thead>
+
+						<!-- 1行目 -->
+						<tr>
+
+							<td>
+								<button name="button" value="status">status</button>
+							</td>
+							<td>
+								<button name="button" value="volume_-100">mute</button>
+							</td>
+							<td>
+								<button name="button" value="volume_-5">volume -5</button>
+							</td>
+							<td>
+								<button name="button" value="volume_+5">volume +5</button>
+							</td>
+
+						</tr>	
+
+						<!-- 2行目 -->
+						<tr>
+
+							<td>
+								<button name="button" value="prev">previous</button>
+							</td>
+							<td>
+								<button name="button" value="toggle" >play/pause</button>
+							</td>
+							<td>
+								<button name="button" value="stop">stop</button>
+							</td>
+							<td>
+								<button name="button" value="next">next</button>
+							</td>
+
+						</tr>
+						 
+						<!-- 3行目 -->
+						<tr>
+
+							<td>
+								<button name="button" value="repeat">repeat</button>
+							</td>
+							<td>
+								<button name="button" value="random">random</button>
+							</td>
+							<td>
+								<button name="button" value="single">single</button>
+							</td>
+							<td>
+								<button name="button" value="shuffle">shuffle</button>
+							</td>
+
+						</tr>
+
+						<!-- 4行目 -->
+						<tr>
+
+							<td>
+								<button name="button" value="clear">clear</button>
+							</td>
+							<td>
+								<button name="button" value="update">update</button>
+							</td>
+							<td>
+								<button name="button" value="seek_-5%">seek -5%</button>
+							</td>
+							<td>
+								<button name="button" value="seek_+5%">seek +5%</button>
+							</td>
+
+						</tr>
+
+					</table>
+
+				</form>
+
+				<!-- 入力フォーム -->
+				<form name="format" method="POST" >
+
+					<span>
+
+						searchplay queued song :
+
+					</span>
+
+					<!-- ドロップダウンメニュー -->
+					<select name="args">
+
+						<option value="searchplay">fuzzy</option>
+
+						<option value="searchplay artist">artist</option>
+
+						<option value="searchplay album">album</option>
+						
+						<option value="searchplay title">title</option>
+								
+						<option value="searchplay filename">filename</option>
 
 						<span>
 
@@ -236,59 +256,61 @@ MPD UI using shellscript and CGI
 
 						</span>
 
-				    </form>
+					</select>
 
-	            </select>
+				</form>
 
-		<form name="FORM" method="GET" >
+				<form name="FORM" method="GET" >
 
-			<h3>current song</h3>
+					<h3>current song</h3>
 
-			<!-- カバーアートの表示 -->
-			<img src="http://${img_server_host}:${img_server_port}/$(coverart)/Folder.jpg" alt="coverart" />
+					<!-- カバーアートの表示 -->
+					<img src="http://${img_server_host}:${img_server_port}/$(coverart)/Folder.jpg" alt="coverart" >
 
-			<!-- 現在のステータス -->
-			<p>$(mpc_post)</p>
+					<!-- 現在のステータス -->
+					<p>$(mpc_post)</p>
 
-			<!-- 次の曲 -->
-			<h3>next song</h3>
-			<p><button name=button value=next>$(next_song)</button></p>
+					<!-- 次の曲 -->
+					<h3>next song</h3>
+					<p><button name=button value=next>$(next_song)</button></p>
 
-		</form>
+				</form>
 
-	</main>
+			</main>
 
-	<aside>
+			<!-- サイドバー -->
+			<aside>
 
-		<!-- リンク -->
-		<h3>MENU</h3>
-		<button onclick="location.href='queued/queued.cgi'">Queued</button>
-		<button onclick="location.href='directory/directory.cgi'">Directoty</button>
-		<button onclick="location.href='playlist/playlist.cgi'">Playlist</button>
-		<button onclick="location.href='settings/settings.cgi'">Settings</button>
+				<!-- リンク -->
+				<h3>MENU</h3>
+				<button onclick="location.href='queued/queued.cgi'">Queued</button>
+				<button onclick="location.href='directory/directory.cgi'">Directoty</button>
+				<button onclick="location.href='playlist/playlist.cgi'">Playlist</button>
+				<button onclick="location.href='settings/settings.cgi'">Settings</button>
 
-		<!-- mpdの統計を表示 -->
-		<h3>MPD statistics</h3>
+				<!-- mpdの統計を表示 -->
+				<h3>MPD statistics</h3>
 
-			<p>$(mpc stats | sed "s/$/<br>/g")</p>
+					<p>$(mpc stats | sed "s/$/<br>/g")</p>
 
-		<!-- ソースコードのリンク -->
-		<footer>
+				<!-- ソースコードのリンク -->
+				<footer>
 
-			<h3>source code</h3>
-			<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
+					<h3>source code</h3>
+					<p><a href="https://github.com/tekkamelon/sh-mpd">git repository</a></p>
 
-			<h3>reference source code</h3>
-			<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urldecode"</a></p>
-			<p><a href="https://github.com/andybrewer/mvp/">"mvp.css"</a></p>
-			<p><a href="https://github.com/xz/new.css">"new.css"</a></p>
+					<h3>reference source code</h3>
+					<p><a href="https://github.com/ShellShoccar-jpn/misc-tools">"urldecode"</a></p>
+					<p><a href="https://github.com/andybrewer/mvp/">"mvp.css"</a></p>
+					<p><a href="https://github.com/xz/new.css">"new.css"</a></p>
 
-		</footer>
+				</footer>
 
-	</aside>
+			</aside>
 
-</div>
-</body>
+		</div>
+
+	</body>
 
 </html>
 EOS
