@@ -52,7 +52,7 @@ cat << EOS
 			<div>
 
 				<h4>MPD</h4>
-				<p>hostname:${MPD_HOST}</p>
+				<p>host:${MPD_HOST}</p>
 				<p>port:${MPD_PORT}</p>
 
 			</div>
@@ -60,7 +60,7 @@ cat << EOS
 			<div>
 
 				<h4>coverart server</h4>
-				<p>hostname:${img_server_host}</p>
+				<p>host:${img_server_host}</p>
 				<p>port:${img_server_port}</p>
 
 			</div>
