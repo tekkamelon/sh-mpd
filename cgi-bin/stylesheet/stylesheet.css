@@ -2,137 +2,184 @@
 /* stylesheet.css: 標準のスタイル,ダークテーマのcss */
 
 /* 見出しの色 */
-:root{
+:root {
+
     --main-bg-color: rgb(0, 255, 10);
     --letter-color: rgb(35, 35, 35);
+
 }
 /* アスキーアート */
-pre{
+pre {
+
 	color: var(--main-bg-color);
     text-align:center
+
 }
 
 /* サブタイトル */
-span{
+span {
+
 	color: var(--main-bg-color);
+
 }
 
 /* リンクの文字色 */
-a{
+a {
+
     color: var(--main-bg-color);
+
 }
 
 /* ヘッダー */
-header{
+header {
+
 	width:70%;
     color: var(--main-bg-color);
     text-align:center
+
 }
 
 /* 背景色 */
-body{
+body {
+
     background-color: rgb(10, 10, 10);
     text-align: left;
+	 
 }
 
 /* 大見出し */
-h1{
+h1 {
+	
     color: var(--main-bg-color);
     font-size: 35px;
     text-align: left;
+	
 }
  
 /* 中見出し */
-h2{
+h2 {
+
     color: var(--main-bg-color);
     text-align: left;
+
 }
 
 /* 小見出し */
-h3{
+h3 {
+
     color: var(--main-bg-color);
     text-align: left;
+
 }
 
-h4{
+h4 {
+
     color: teal;
     text-align: left;
+
 }
 
-l1{
+l1 {
+
     color:white ;
     text-align: left;
+
 }
 
-l2{
+l2 {
+
     color:white ;
     text-align: left;
+
 }
 
-strong{
+strong {
+
 	color:red;
+
 }
 
-b{
+b {
+
 	color:blue;
+
 }
 
 /* 本文 */
-p{
+p {
+
     color: white;
     font-size: 15px;
     text-align: left;
+
 }
 
-select{
+select {
+
 	color: var(--main-bg-color);
 	background-color: black;
 	border: 1px solid teal;
 	border-radius: 6px;
     text-align: center;
+
 }
 
 /* 折りたたみ */
-details{
+details {
+
     color: var(--main-bg-color);
+
 }
 
-summary{
+summary {
+
     font-size: 15px;
+
 }
 
-input{
+input {
+
 	margin-top: 20px;
 	color: var(--main-bg-color);
 	background-color: black;
 	border: 1px solid teal;
 	border-radius: 6px;
-}
 
-table {
-	border-collapse:collapse;
-	border-color: green;
 }
 
 /* table */
-table th{
+table {
+
+	border-collapse:collapse;
+	border-color: green;
+
+}
+
+table th {
+
 	border-color: green;
 	color: white;
 	text-align: center
+
 }
 
 tr {
+
 	border-color: green;
+
 }
 	 
-table td{
+table td {
+
 	border-color: green;
 	color: white;
 	text-align: center
+
 }
 
 /* button */
-button{
+button {
+
 	margin: 3px;
 	padding: 7px 14px;
 	color: white;
@@ -140,9 +187,11 @@ button{
 	border: 1px solid teal;
 	border-radius: 12px;
 	text-align: center;
+
 }
 
-button:hover{
+button:hover {
+
 	margin: 3px;
 	padding: 7px 14px;
 	color: var(--main-bg-color);
@@ -150,11 +199,66 @@ button:hover{
 	border: 1px solid orange;
 	border-radius: 12px;
 	text-align: center;
+
 }
 
-/* div class */
-.link{
+/* index.cgi */
+.layout {
+
+   display:flex;
+   flex-wrap:wrap;
+   flex-direction: row-reverse;
+   justify-content:space-between;
+
+}
+
+header,main,aside,footer {
+
+   padding:10px 0;
+
+}
+
+main {
+
+	width:75%;
+
+}
+
+/* サイドバー */
+aside {
+
+	width:25%;
+    text-align:center
+
+}
+
+footer {
+
+	width:100%;
+
+}
+
+/* 画像のリサイズ */
+.resize img {
+
+	 width: 400px;
+
+}
+
+@media (max-width:500px) {
+
+  header,main,aside,footer{
+    width:100%;
+
+  }
+  
+}
+
+/* setting.cgi */
+.link {
+
 	margin-top: 15px;
+
 }
 
 /* 要素を左右に並べる */
@@ -169,36 +273,5 @@ button:hover{
 
 	width: 160px;
 
-}
-
-/* index.cgi */
-.layout{
-   display:flex;
-   flex-wrap:wrap;
-   flex-direction: row-reverse;
-   justify-content:space-between;
-}
-
-header,main,aside,footer{
-   padding:10px 0;
-}
-
-main{
-	width:75%;
-}
-
-aside{
-	width:25%;
-    text-align:center
-}
-
-footer{
-	width:100%;
-}
-
-@media (max-width:500px){
-  header,main,aside,footer{
-    width:100%;
-  }
 }
 
