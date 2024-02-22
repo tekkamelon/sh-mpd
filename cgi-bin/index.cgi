@@ -262,16 +262,20 @@ cat << EOS
 
 				<form name="FORM" method="GET" >
 
-					<h3>current song</h3>
-
-					<!-- カバーアートの表示 -->
-					<img src="http://${img_server_host}:${img_server_port}/$(coverart)/Folder.jpg" alt="coverart" >
+					<h3>Current</h3>
 
 					<!-- 現在のステータス -->
 					<p>$(mpc_post)</p>
 
+					<!-- カバーアートの表示 -->
+					<div class="resize">
+
+						<img src="http://${img_server_host}:${img_server_port}/$(coverart)/Folder.jpg" alt="coverart" >
+
+					</div>
+
 					<!-- 次の曲 -->
-					<h3>next song</h3>
+					<h3>Next</h3>
 					<p><button name=button value=next>$(next_song)</button></p>
 
 				</form>
