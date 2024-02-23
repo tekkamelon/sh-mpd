@@ -2,131 +2,175 @@
 /* dark.css: ダークテーマのcss */
 
 /* 見出しの色 */
-:root{
+
+:root {
+
     --main-bg-color: rgb(50, 50, 50);
     --letter-color: rgb(160, 160, 160);
+
 }
 
 /* アスキーアート */
-pre{
+pre {
+
 	color: rgb(180, 190, 190);
     text-align: center;
+
 }
 
 /* サブタイトル */
-span{
+span {
+
 	color: rgb(150, 155, 155);
+
 }
 
 /* リンクの文字色 */
-a{
+a {
+
     color: var(--main-bg-color);
+
 }
 
 /* ヘッダー */
-header{
+header {
+
 	width: 70%;
 	color: rgb(150, 155, 155);
     text-align: center;
+
 }
 
 /* 背景色 */
-body{
+body {
+
     background-color: rgb(10, 10, 10);
 	color: rgb(0, 0, 0);
     text-align: left;
+
 }
 
 /* 大見出し */
-h1{
+h1 {
+
 	color: rgb(150, 155, 155);
     font-size: 35px;
     text-align: left;
+
 }
 
 /* 中見出し */
-h2{
+h2 {
+
 	color: rgb(150, 155, 155);
     text-align: left;
+
 }
 
 /* 小見出し */
-h3{
+h3 {
+
 	color: rgb(150, 155, 155);
     text-align: left;
+
 }
 
-h4{
+h4 {
+
 	color: rgb(150, 155, 155);
     text-align: left;
+
 }
 
-l1{
+l1 {
+
     color:rgb(150, 155, 155) ;
     text-align: left;
+
 }
 
-l2{
+l2 {
+
     color:rgb(150, 155, 155) ;
     text-align: left;
+
 }
 
 /* 本文 */
-p{
+p {
+
     color: rgb(140, 140, 140);
     font-size: 15px;
     text-align: left;
+
 }
 
-a{
+a {
+
     color: rgb(150, 155, 155);
     text-align: left;
+
 }
 
-select{
+select {
+
     color: rgb(140, 140, 140);
 	background-color: rgb(30, 30, 30);
 	border: 1px solid rgb(30, 30, 30);
 	border-radius: 6px;
     text-align:center
+
 }
 
 /* 折りたたみ */
-details{
+details {
+
     color: rgb(140, 140, 140);
+
 }
 
-summary{
+summary {
+
     font-size: 15px;
+
 }
 
-input{
+input {
+
 	margin-top: 20px;
     color: rgb(155, 160, 160);
 	background-color: rgb(30, 30, 30);
 	border: 1px solid rgb(30, 30, 30);
 	border-radius: 5px;
+
 }
 
-table{
+table {
+
 	border: none;
+
 }
 
 /* table */
-table th{
+table th {
+
 	border: none;
 	color: rgb(150, 155, 155);
 	text-align: center
+
 }
 
-table td{
+table td {
+
 	border: none;
 	color: rgb(150, 155, 155);
 	text-align: center
+
 }
 
 /* button */
-button{
+button {
+
 	margin: 3px;
 	padding: 7px 14px;
 	color: rgb(95, 95, 95);
@@ -134,9 +178,11 @@ button{
 	border: 1px solid rgb(30, 30, 30);
 	border-radius: 6px;
 	text-align: center;
+
 }
 
-button:hover{
+button:hover {
+
 	margin: 3px;
 	padding: 7px 14px;
 	color: rgb(15, 20, 20);
@@ -144,11 +190,14 @@ button:hover{
 	border: 1px solid rgb(70,70,70);
 	border-radius: 6px;
 	text-align: center;
+
 }
 
 /* div class */
-.link{
+.link {
+
 	margin-top: 15px;
+
 }
 
 /* 要素を左右に並べる */
@@ -166,33 +215,77 @@ button:hover{
 }
 
 /* index.cgi */
-.layout{
+.layout {
+
    display:flex;
    flex-wrap:wrap;
    flex-direction: row-reverse;
    justify-content:space-between;
+
 }
 
-header,main,aside,footer{
+header,main,aside,footer {
+
    padding:10px 0;
+
 }
 
-main{
+main {
+
 	width:75%;
+
 }
 
-aside{
+aside {
+
 	width:25%;
     text-align:center
+
 }
 
-footer{
+footer {
+
 	width:100%;
+
 }
 
-@media (max-width:500px){
-  header,main,aside,footer{
-    width:100%;
-  }
+/* 画像のリサイズ */
+.resize img {
+
+	 width: 400px;
+
 }
+
+@media (max-width:500px) {
+
+  header,main,aside,footer {
+
+    width:100%;
+
+  }
+
+}
+
+/* setting.cgi */
+.link {
+
+	margin-top: 15px;
+
+}
+
+/* 要素を左右に並べる */
+.box {
+
+	display: flex;
+	justify-content: flex-start;
+
+}
+
+.box div {
+
+	width: 160px;
+
+}
+
+
 
