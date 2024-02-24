@@ -22,37 +22,8 @@ export PATH="$PATH:../bin"
 
 
 # ===== 関数の宣言 ======
-# カバーアートの取得
-coverart () {
-
-	# 再生中の曲の相対パスを抽出
-	current_song=$(mpc current -f "%file%")
-
-	# ディレクトリのみ抽出
-	dirname "${current_song}" |
-
-	awk '{
-
-		# "dir"の行頭が"http"であれば真,それ以外で偽
-		if(/^http:/){
-
-			# 真の場合はウェブラジオ用の画像を指定
-			printf "image/web_radio.svg"
-
-		}else{
-
-			# 偽の場合はカバーアート用の画像サーバーを指定
-			printf "http://'${img_server_host}':'${img_server_port}'/"$0"/Folder.jpg"
-
-		}
-
-	}'
-
-}
-
 # 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
 mpc_post () {
-
 
 	# POSTを変数に代入
 	cat_post=$(cat) 
@@ -84,20 +55,52 @@ mpc_post () {
 
 }
 
-# 次の曲の処理
+# カバーアートの取得
+coverart () {
+
+	# 再生中の曲の相対パスを抽出
+	current_song=$(mpc current -f "%file%")
+
+	# ディレクトリのみ抽出
+	dirname "${current_song}" |
+
+	awk '{
+
+		# "dir"の行頭が"http"であれば真,それ以外で偽
+		if(/^http:/){
+
+			# 真の場合はウェブラジオ用の画像を指定
+			printf "image/web_radio.svg"
+
+		}else{
+
+			# 偽の場合はカバーアート用の画像サーバーを指定
+			printf "http://'${img_server_host}':'${img_server_port}'/"$0"/Folder.jpg"
+
+		}
+
+	}'
+
+}
+
+# 次の曲の表示
 next_song () {
 
-	# "message"に実行結果がない場合のメッセージを代入
-	message="next song not found"
-	
 	# "mpc queued"を変数に代入
 	queued=$(mpc queued)
 
-	# "mpc queued"の実行結果があれば"message"に"queued"を代入
-	test -n "${queued}" && message="${queued}"
+	# "queued"があれば真,なければ偽
+	if [ -n "${queued}" ] ; then
 
-	# メッセージを出力
-	echo "${message}"
+		# 真の場合は"queued"を表示
+		echo "${queued}"
+
+	else
+
+		# 偽の場合はメッセージを表示
+		echo "next song not found"
+
+	fi
 
 }
 # ===== 関数の宣言ここまで ======
@@ -283,7 +286,6 @@ cat << EOS
 					<!-- カバーアートの表示 -->
 					<div class="resize">
 
-						<!-- <img src="http://${img_server_host}:${img_server_port}/$(coverart)/Folder.jpg" alt="coverart" > -->
 						<img src="$(coverart)" alt="coverart" >
 
 					</div>
