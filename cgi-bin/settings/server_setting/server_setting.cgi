@@ -45,7 +45,7 @@ branch_post () {
 	host_or_port="${cat_post#*\=}"
 	host_or_port="${host_or_port%%&*}"
 
-	# "host_or_port"が"host"であれば真,それ以外で偽
+	# "host_or_port"が"mpd_host"かつmpdと疎通確認できれば真,そうでなければ偽
 	if [ "${host_or_port}" = "mpd_host" ] && mpc -q --host="${cat_post#*\&*\=}" ; then
 
 		# 真の場合はPOSTを環境変数に代入
@@ -59,7 +59,7 @@ branch_post () {
 
 		mpc status | mpc_status2html
 
-	# "host_or_port"が"port"かつPOSTが数値であればであれば真,それ以外で偽
+	# "host_or_port"が"mpd_port"かつmpdと疎通確認できれば真,そうでなければ偽
 	elif [ "${host_or_port}" = "mpd_port" ] && mpc -q --port="${cat_post#*\&*\=}" ; then
 
 		# 真の場合はPOSTを環境変数に代入
@@ -73,6 +73,7 @@ branch_post () {
 	
 		mpc status | mpc_status2html
 
+	# "host_or_port"が"img_server_host"であれば真,それ以外で偽
 	elif [ "${host_or_port}" = "img_server_host" ] ; then
 
 		# 真の場合はPOSTを環境変数に代入
@@ -84,8 +85,8 @@ branch_post () {
 		# メッセージの出力
 		echo "changed coverart server host:${img_server_host}<br>"
 
-	# "host_or_port"が"port"かつPOSTが数値であればであれば真,それ以外で偽
-	elif [ "${host_or_port}" = "img_server_port" ] && [ "${cat_post#*\&*\=}" -ge 1 ] ; then
+	# "host_or_port"が"img_server_port"かつPOSTが1以上かつ65535以下であれば真,それ以外で偽
+	elif [ "${host_or_port}" = "img_server_port" ] && [ "${cat_post#*\&*\=}" -ge 1 ] && [ "${cat_post#*\&*\=}" -le 65535 ] ; then
 
 		# 真の場合はPOSTを環境変数に代入
 		img_server_port="${cat_post#*\&*\=}"
