@@ -60,26 +60,22 @@ coverart () {
 
 	# 再生中の曲の相対パスを抽出
 	current_song=$(mpc current -f "%file%")
-
+	
 	# ディレクトリのみ抽出
-	dirname "${current_song}" |
+	dir=$(dirname "${current_song}") 
 
-	awk '{
+	# "dir"が"http:"であれば真,それ以外で偽
+	if [ "${dir}" = "http:" ] ; then
 
-		# "dir"の行頭が"http"であれば真,それ以外で偽
-		if(/^http:/){
+		# 真の場合はウェブラジオ用の画像を指定
+		echo "image/web_radio.svg"
 
-			# 真の場合はウェブラジオ用の画像を指定
-			printf "image/web_radio.svg"
+	else
 
-		}else{
+		# 偽の場合はカバーアート用の画像サーバーを指定
+		echo "http://${img_server_host}:${img_server_port}/${dir}/Folder.jpg"
 
-			# 偽の場合はカバーアート用の画像サーバーを指定
-			printf "http://'${img_server_host}':'${img_server_port}'/"$0"/Folder.jpg"
-
-		}
-
-	}'
+	fi
 
 }
 
