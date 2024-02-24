@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/sh -eu
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -21,7 +21,6 @@ export PATH="$PATH:../../bin"
 # ====== 変数の設定ここまで ======
 
 
-# ===== 関数の宣言 ======
 # 名前付きパイプが無ければ作成
 if [ ! -e "listall.fifo" ] && [ ! -e "lsplaylist.fifo" ] ; then
 
@@ -29,11 +28,16 @@ if [ ! -e "listall.fifo" ] && [ ! -e "lsplaylist.fifo" ] ; then
 
 fi
 
+
+# ===== 関数の宣言 ======
 # POSTの処理,POSTが無い場合はステータスの表示
 mpc_post () {
 
-	# POSTの"="をスペースに置換,デコードしmpcに渡す
-	cat | sed "s/=/ /" | urldecode | xargs mpc 2>&1 | 
+	# POSTを変数に代入
+	cat_post=$(cat)
+
+	# 変数展開でPOSTの"="をスペースに置換,デコードしmpcに渡す
+	echo "${cat_post%=*} ${cat_post#*\=}"| urldecode | xargs mpc 2>&1 |
 
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
