@@ -60,22 +60,32 @@ coverart () {
 
 	# 再生中の曲の相対パスを抽出
 	current_song=$(mpc current -f "%file%")
-	
+
 	# ディレクトリのみ抽出
-	dir=$(dirname "${current_song}") 
+	dirname "${current_song}" |
 
-	# "dir"が"http:"であれば真,それ以外で偽
-	if [ "${dir}" = "http:" ] ; then
+	awk '{
 
-		# 真の場合はウェブラジオ用の画像を指定
-		echo "image/web_radio.svg"
+		# "dir"の行頭が"http:"もしくは"https:"であれば真,それ以外で偽
+		if(/^http:/ || /^https:/){
 
-	else
+			# 真の場合はウェブラジオ用の画像を指定
+			printf "/cgi-bin/image/web_radio.svg"
 
-		# 偽の場合はカバーアート用の画像サーバーを指定
-		echo "http://${img_server_host}:${img_server_port}/${dir}/Folder.jpg"
+		# 偽の場合は"$0"が"."であれば真,それ以外で偽
+		}else if($0 == "."){
 
-	fi
+			# 真の場合は停止中の画像を指定
+			printf "/cgi-bin/image/not_playing.svg"
+
+		}else{
+
+			# 偽の場合はカバーアート用の画像サーバーを指定
+			printf "http://'${img_server_host}':'${img_server_port}'/"$0"/Folder.jpg"
+
+		}
+
+	}'
 
 }
 
@@ -115,8 +125,8 @@ cat << EOS
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="icon" ref="image/favicon.png">
-		<link rel="apple-touch-icon" href="image/favicon.png">
+		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
+		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
         <title>sh-MPD</title>
 
     </head>
@@ -272,7 +282,7 @@ cat << EOS
 
 				</form>
 
-				<form name="FORM" method="GET" >
+				<form name="FORM" method="GET">
 
 					<h3>Current</h3>
 
@@ -282,7 +292,7 @@ cat << EOS
 					<!-- カバーアートの表示 -->
 					<div class="resize">
 
-						<img src="$(coverart)" alt="coverart" >
+						<img src="$(coverart)" alt="coverart">
 
 					</div>
 
