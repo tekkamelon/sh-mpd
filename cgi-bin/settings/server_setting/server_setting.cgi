@@ -36,7 +36,7 @@ heredocs () {
 }
 
 # POSTの文字列に応じて処理を分岐
-branch_post () {
+post_proc () {
 
 	# POSTを変数に代入
 	cat_post=$(cat)
@@ -54,7 +54,6 @@ branch_post () {
 		# 変数の一覧を出力,設定ファイルへリダイレクト
  		heredocs >| ../shmpd.conf
 
-		# メッセージの出力
 		echo "changed MPD host:${MPD_HOST}<br>"
 
 		mpc status | mpc_status2html
@@ -68,7 +67,6 @@ branch_post () {
 		# 変数の一覧を出力,設定ファイルへリダイレクト
  		heredocs >| ../shmpd.conf
 
-		# メッセージの出力
 		echo "changed MPD port:${MPD_PORT}<br>"
 	
 		mpc status | mpc_status2html
@@ -82,7 +80,6 @@ branch_post () {
 		# 変数の一覧を出力,設定ファイルへリダイレクト
  		heredocs >| ../shmpd.conf
 
-		# メッセージの出力
 		echo "changed coverart server host:${img_server_host}<br>"
 
 	# "host_or_port"が"img_server_port"かつPOSTが1以上かつ65535以下であれば真,それ以外で偽
@@ -94,14 +91,13 @@ branch_post () {
 		# 変数の一覧を出力,設定ファイルへリダイレクト
  		heredocs >| ../shmpd.conf
 
-		# メッセージの出力
 		echo "changed coverart server port:${img_server_port}<br>"
 
 	# 偽の場合はPOSTがあれば真
 	elif [ -n "${cat_post}" ] ; then
 
 		# 真の場合はメッセージを表示
-		echo "please enter hostname or port number!<br>"
+		echo "invalid input!"
 		
 	fi
 
@@ -194,7 +190,7 @@ cat << EOS
 		</form>
 
 		<!-- 実行結果を表示 -->
-		<p>$(branch_post)</p>
+		<p>$(post_proc)</p>
 			
     </body>
 
