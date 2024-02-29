@@ -69,14 +69,14 @@ cat << EOS
 <html>
 
     <head>
-	
+
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="icon" ref="image/favicon_ios.ico">
-		<link rel="apple-touch-icon" href="image/favicon_ios.ico">
+		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
+		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
         <title>sh-MPD</title>
-		
+
     </head>
 	
 	<!-- "jump to top"のジャンプ先 -->
@@ -89,6 +89,7 @@ cat << EOS
 	</header>
 
     <body>
+
 		<h4>${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
 
 		<!-- 入力欄の設定 -->
