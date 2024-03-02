@@ -2,32 +2,6 @@
 
 webブラウザ上からmpdを操作できるCGIシェルスクリプト
 
-## インストール 
-
-- 各種cgiを実行可能なwebサーバーをセットアップ(ここでは割愛)
-
-```sh
-# 必要なソフトのインストール
-
-# debian系
-$ sudo apt install mpc mpd
-
-# arch系
-$ sudo pacman -S mpc mpd
-
-# githubよりclone
-$ git clone https://github.com/tekkamelon/sh-mpd
-
-# cgi-bin/をwebサーバーで設定されたディレクトリにコピー
-$ sudo cp -r sh-mpd/cgi-bin /usr/lib/ # ※一例
-
-# 上記でコピーしたディレクトリに移動
-$ cd /usr/lib/cgi-bin
-
-#  各cgiファイルに実行権限を付与
-$ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
-```
-
 ## 開発の目標
 
 ### 高い移植性
@@ -54,9 +28,46 @@ $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
 
 - yash ver. 2.50
 
-##### 一部不具合あり
+## インストール 
 
-- busybox ash ver. 1.30.1 (シバンのオプションを指定しない場合のみ動作)
+- 各種cgiを実行可能なwebサーバーをセットアップ(ここでは割愛)
+
+```sh
+# 必要なソフトのインストール
+
+# debian系
+sudo apt install mpc mpd
+
+# arch系
+sudo pacman -S mpc mpd
+
+# githubよりclone
+git clone https://github.com/tekkamelon/sh-mpd
+
+# cgi-bin/をwebサーバーで設定されたディレクトリにコピー
+sudo cp -r sh-mpd/cgi-bin /usr/lib/ # ※一例
+
+# 上記でコピーしたディレクトリに移動
+cd /usr/lib/cgi-bin
+
+#  各cgiファイルに実行権限を付与
+find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
+```
+
+## カバーアートの表示
+
+- ファイル名を"Folder.jpg"とした画像ファイルを用意
+
+- "Folder.jpg"を各アルバムの音楽ファイルの入ったディレクトリに配置
+
+- 各種webサーバーでmpd.confの"music_directory"以下をホスティング,direcroty listingを行う
+
+```sh
+# python3でホスティングする例
+cd # mpd.confの"music_directory"
+python3 -m http.server 8080 # ポート番号は例
+```
+- "Server setting"で"cover art host","cover art host"を設定
 
 ## トラブルシューティング
 
@@ -64,34 +75,34 @@ $ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
 
 ```sh
 # apache2の実行ユーザーを確認
-$ cat /etc/apache2/envvars | grep -e "^export APACHE_RUN_USER" -e "^export APACHE_RUN_GROUP"
+cat /etc/apache2/envvars | grep -e "^export APACHE_RUN_USER" -e "^export APACHE_RUN_GROUP"
 
 # 実行結果(例)
 export APACHE_RUN_USER=www-data
 export APACHE_RUN_GROUP=www-data
 
 # ホスティングしているディレクトリに移動
-$ cd /"YOUR_DIRECTORY"/cgi-bin/
+cd /"YOUR_DIRECTORY"/cgi-bin/
 
 # "APACHE_RUN_USER","APACHE_RUN_GROUP"に合わせてディレクトリの所有ユーザー,グループを変更
-$ sudo chown www-data:www-data settings/
+sudo chown www-data:www-data settings/
 ```
 
 ### "Playlist"ページが開けない場合(apache2)
 
 ```sh
 # apache2の実行ユーザーを確認
-$ cat /etc/apache2/envvars | grep -e "^export APACHE_RUN_USER" -e "^export APACHE_RUN_GROUP"
+cat /etc/apache2/envvars | grep -e "^export APACHE_RUN_USER" -e "^export APACHE_RUN_GROUP"
 
 # 実行結果(例)
 export APACHE_RUN_USER=www-data
 export APACHE_RUN_GROUP=www-data
 
 # ホスティングしているディレクトリに移動
-$ cd /"YOUR_DIRECTORY"/cgi-bin/playlist/
+cd /"YOUR_DIRECTORY"/cgi-bin/playlist/
 
 # "APACHE_RUN_USER","APACHE_RUN_GROUP"に合わせて名前付きパイプの所有ユーザー,グループを変更
-$ sudo chown www-data:www-data fifo_l*
+sudo chown www-data:www-data fifo_l*
 ```
 
 ## 各種引用先
