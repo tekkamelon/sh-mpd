@@ -21,14 +21,6 @@ export PATH="$PATH:../../bin"
 # ====== 変数の設定ここまで ======
 
 
-# 名前付きパイプが無ければ作成
-if [ ! -e "listall.fifo" ] && [ ! -e "lsplaylist.fifo" ] ; then
-
-	mkfifo listall.fifo lsplaylist.fifo
-
-fi
-
-
 # ===== 関数の宣言 ======
 # POSTの処理,POSTが無い場合はステータスの表示
 mpc_post () {
@@ -82,6 +74,14 @@ playlist_and_directory () {
 
 }
 # ===== 関数の宣言ここまで ======
+
+
+# 名前付きパイプが無ければ作成
+if [ ! -e "listall.fifo" ] && [ ! -e "lsplaylist.fifo" ] ; then
+
+	mkfifo listall.fifo lsplaylist.fifo
+
+fi
 
 
 # ====== HTML ======
@@ -173,3 +173,10 @@ cat << EOS
 EOS
 # ====== HTMLここまで ======
 
+
+# 名前付きパイプがあれば削除
+if [ -e "listall.fifo" ] && [ -e "lsplaylist.fifo" ] ; then
+
+	rm listall.fifo lsplaylist.fifo
+
+fi
