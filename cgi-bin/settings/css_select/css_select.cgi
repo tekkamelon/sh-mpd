@@ -20,7 +20,7 @@ export POSIXLY_CORRECT=1
 if [ -n "${QUERY_STRING#*\=}" ] ; then
 
 	# 真の場合は変数の一覧を出力,設定ファイルへリダイレクト
-	cat <<- EOF >| ../shmpd.conf
+	cat <<- EOF >| ../shmpd.conf &
 	export MPD_HOST="${MPD_HOST}"
 	export MPD_PORT="${MPD_PORT}"
 	img_server_host="${img_server_host}"
@@ -28,13 +28,13 @@ if [ -n "${QUERY_STRING#*\=}" ] ; then
 	stylesheet="${QUERY_STRING#*\=}"
 	EOF
 
+	# "stylesheet"にクエリを代入
+	stylesheet="${QUERY_STRING#*\=}"
+
 	# メッセージを代入
-	export ECHO_MESSAGE="<p>changed css:${QUERY_STRING#*\=}</p>"
+	export ECHO_MESSAGE="<p>changed css:${stylesheet}</p>"
 
 else
-
-	# 設定ファイル内のcssを代入
-	export QUERY_STRING="${stylesheet}"
 
 	# 空文字を代入
 	export ECHO_MESSAGE=""
