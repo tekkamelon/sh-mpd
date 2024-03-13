@@ -292,7 +292,8 @@ cat << EOS
 					<!-- カバーアートの表示 -->
 					<div class="resize">
 
-						<img src="$(coverart)" alt="coverart">
+						<!-- カバーアートの表示,画像がない場合はタグを非表示 -->
+						<img src="$(coverart)" alt="coverart" onerror="this.style.display='none'">
 
 					</div>
 
