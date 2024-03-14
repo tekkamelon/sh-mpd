@@ -62,31 +62,10 @@ coverart () {
 	current_song=$(mpc current -f "%file%")
 
 	# ディレクトリのみ抽出
-	dirname "${current_song}" |
+	song_path=$(dirname "${current_song}")
 
-	awk '{
-
-		# "dir"の行頭が"http:"もしくは"https:"であれば真,それ以外で偽
-		if(/^http:/ || /^https:/){
-
-			# 真の場合はウェブラジオ用の画像を指定
-			printf "/cgi-bin/image/web_radio.svg"
-
-		# 偽の場合は"$0"が"."であれば真,それ以外で偽
-		}else if($0 == "."){
-
-			# 真の場合は停止中の画像を指定
-			printf "/cgi-bin/image/not_playing.svg"
-
-		}else{
-
-			# 偽の場合はカバーアート用の画像サーバーを指定
-			printf "http://'${img_server_host}':'${img_server_port}'/"$0"/Folder.jpg"
-
-		}
-
-	}'
-
+	echo "http://${img_server_host}:${img_server_port}/${song_path}/Folder.jpg"
+	
 }
 
 # 次の曲の表示
