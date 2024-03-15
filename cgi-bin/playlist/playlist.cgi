@@ -58,12 +58,14 @@ playlist_and_directory () {
 		if(/.\/$/){
 
 			# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
-			print "<p><button name=add value="$1">"$1"</button><button name=playlist value="$1">...</button>"
+			print "<p><button name=add value="$1">"$1"</button></p>"
 
 		}else{
 
 			# 偽の場合はPOSTの1フィールド目に"lsplaylist"を指定しボタン化
-			print "<p><button name=load value="$0">"$0"</button></p>"
+			print "<p><button name=load value="$0">"$0"</button>"
+			print "<a href=#top>"
+			print "<button name=playlist value="$0">...</button></a></p>"
 
 		}
 	
