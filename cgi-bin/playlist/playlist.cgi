@@ -54,11 +54,11 @@ playlist_and_directory () {
 	# 区切り文字を"/"に指定
 	awk -F"/" '{
 		
-		# 行末に"/"がある場合は真,なければ偽
+		# ディレクトリの場合は真,プレイリストの場合は偽
 		if(/.\/$/){
 
 			# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
-			print "<p><button name=add value="$1">"$1"</button></p>"
+			print "<p><button name=add value="$1">"$1"</button><button name=playlist value="$1">...</button>"
 
 		}else{
 
