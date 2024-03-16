@@ -49,8 +49,18 @@ mpc_post () {
 
 		{
 
-			# プレイリスト内を出力
-			print $0"<br>"
+			# ウェブラジオの判定,行頭が"http:"もしくは"https:"であれば真,それ以外で偽
+			if(/http:/ || /https:/){
+
+				# 新規タブで開くリンクの出力
+				print "<a href="$0" target=_blank rel=noopener noreferrer>"$0"</a>"
+
+			}else{
+
+				# プレイリスト内を出力
+				print $0"<br>"
+
+			}
 
 		}
 
