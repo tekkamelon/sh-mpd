@@ -38,39 +38,7 @@ mpc_post () {
 		echo "${cat_post%=*} ${playlist_name}" | xargs mpc 2>&1 |
 
 		# シェル変数"playlist_name"をawkの変数に渡す
-		awk -v playlist_name="${playlist_name}" '
-
-		BEGIN{
-
-			# プレイリスト名を出力
-			print "["playlist_name"]<br>"
-
-		}
-
-		{
-
-			# ウェブラジオの判定,行頭が"http:"もしくは"https:"であれば真,それ以外で偽
-			if(/http:/ || /https:/){
-
-				# 新規タブで開くリンクの出力
-				print "<a href="$0" target=_blank rel=noopener noreferrer>"$0"</a>"
-
-			}else{
-
-				# プレイリスト内を出力
-				print $0"<br>"
-
-			}
-
-		}
-
-		END{
-
-			# プレイリストをキューに追加するボタン
-			print "<p><button name=load value="playlist_name">add queue</button>"
-
-		}
-		'
+		playlist_content -v playlist_name="${playlist_name}"
 
 	else
 
