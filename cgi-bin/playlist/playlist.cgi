@@ -62,10 +62,15 @@ playlist_and_directory () {
 
 		}else{
 
-			# 偽の場合はPOSTの1フィールド目に"lsplaylist"を指定しボタン化
+			# 偽の場合の処理
+			# プレイリストをキューに追加するボタン
 			print "<p><button name=load value="$0">"$0"</button>"
+
+			# クリック時にトップに移動
 			print "<a href=#top>"
-			print "<button name=playlist value="$0">...</button></a></p>"
+
+			# プレイリスト内を表示するボタン
+			print "<button name=playlist value="$0">⋯</button></a></p>"
 
 		}
 	
