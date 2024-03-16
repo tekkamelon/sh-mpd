@@ -294,3 +294,22 @@ footer {
 
 }
 
+.content {
+
+	color: black;
+
+	/* 文字列の幅に合わせる */
+	display:inline-block;
+	padding: 10px;
+  	border: 1px solid orange;
+	border-radius: 10px;
+
+}
+
+/* ボタンを中央寄せ */
+#playlist_button {
+
+	display: block;
+  	margin: auto;
+
+}

@@ -177,8 +177,8 @@ button:hover {
 
 	margin: 3px;
 	padding: 7px 14px;
-	color:  #ffffd7;
-	background-color: #657b83;
+	color: #2aa198;
+	background-color: #eee8d5;
 	border: 1px solid #dc322f;
 	border-radius: 12px;
 	text-align: center;
@@ -278,4 +278,25 @@ footer {
 	width: 160px;
 
 }
+
+/* playlist.cgi */
+/* プレイリストの内容の表示 */
+.content {
+
+    color: #657b83;
+    background-color: #ffffd7;
+
+	/* 文字列の幅に合わせる */
+	display:inline-block;
+	padding: 10px;
+	border: 1px solid #2aa198;
+	border-radius: 10px;
+
+}
+
+/* ボタンを中央寄せ */
+#playlist_button {
+
+	display: block;
+  	margin: auto;
 

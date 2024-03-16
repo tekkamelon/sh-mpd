@@ -278,3 +278,25 @@ footer {
 
 }
 
+/* playlist.cgi */
+/* プレイリストの内容の表示 */
+.content {
+
+    color: #657b83;
+    background-color: #002b36;
+
+	/* 文字列の幅に合わせる */
+	display:inline-block;
+	padding: 10px;
+	border: 1px solid #2aa198;
+	border-radius: 10px;
+
+}
+
+/* ボタンを中央寄せ */
+#playlist_button {
+
+	display: block;
+  	margin: auto;
+
+}
