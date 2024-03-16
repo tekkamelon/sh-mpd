@@ -27,12 +27,50 @@ mpc_post () {
 
 	# POSTを変数に代入
 	cat_post=$(cat)
+	
+	# プレイリスト名およびディレクトリ名をデコード
+	playlist_name=$(echo "${cat_post#*\=}" | urldecode)
 
-	# 変数展開でPOSTの"="をスペースに置換,デコードしmpcに渡す
-	echo "${cat_post%=*} ${cat_post#*\=}"| urldecode | xargs mpc 2>&1 |
+	# POSTの"name"が"playlist"であれば真,それ以外で偽
+	if [ "${cat_post%=*}" = "playlist" ] ; then
 
-	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-	mpc_status2html
+		# 変数展開でPOSTの"="をスペースに置換しmpcに渡す
+		echo "${cat_post%=*} ${playlist_name}" | xargs mpc 2>&1 |
+
+		# シェル変数"playlist_name"をawkの変数に渡す
+		awk -v playlist_name="${playlist_name}" '
+
+		BEGIN{
+
+			# プレイリスト名を出力
+			print "["playlist_name"]<br>"
+
+		}
+
+		{
+
+			# プレイリスト内を出力
+			print $0"<br>"
+
+		}
+
+		END{
+
+			# プレイリストをキューに追加するボタン
+			print "<p><button name=load value="playlist_name">add queue</button>"
+
+		}
+		'
+
+	else
+
+		# 変数展開でPOSTの"="をスペースに置換しmpcに渡す
+		echo "${cat_post%=*} ${playlist_name}" | xargs mpc 2>&1 |
+
+		# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+		mpc_status2html
+
+	fi
 
 }
 
