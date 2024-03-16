@@ -3,8 +3,10 @@
 # 引数として"-v playlist_name="${playlist_name}"が必須
 BEGIN{
 
-	# プレイリスト名を出力
-	print "["playlist_name"]<br>"
+	print "<div class=content>"
+
+	# プレイリストをキューに追加するボタン
+	print "<p><button id=playlist_button name=load value="playlist_name">"playlist_name"</button></p>"
 
 }
 
@@ -27,7 +29,6 @@ BEGIN{
 
 END{
 
-	# プレイリストをキューに追加するボタン
-	print "<p><button name=load value="playlist_name">add queue</button>"
+	print "</div>"
 
 }
