@@ -37,7 +37,8 @@ mpc_post () {
 		# 変数展開でPOSTの"="をスペースに置換しmpcに渡す
 		echo "${cat_post%=*} ${playlist_name}" | xargs mpc 2>&1 |
 
-		# シェル変数"playlist_name"をawkの変数に渡す
+		# プレイリスト内を表示
+		# "playlist_content"にシェル変数"playlist_name"を渡す
 		playlist_content -v playlist_name="${playlist_name}"
 
 	else
@@ -58,53 +59,26 @@ playlist_and_directory () {
 	# クエリを変数展開で加工,デコード,変数に代入
 	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
 	
-	# プレイリスト一覧を出力,名前付きパイプにリダイレクト
-	mpc lsplaylist >| lsplaylist.fifo &
+	# プレイリスト一覧を出力
+	mpc lsplaylist |
+
+	# 固定文字列を大文字,小文字を区別せずに検索
+	grep -F -i "${search_str}" |
+
+	# プレイリストをHTMLに加工
+	awk '{
+
+		# プレイリストをキューに追加するボタン
+		print "<p><button name=load value="$0">"$0"</button>"
+
+		# プレイリスト内を表示するボタン,クリック時にトップに移動
+		print "<a href=#top>"
+		print "<button name=playlist value="$0">⋯</button></a></p>"
 	
-	# ディレクトリを再帰的に出力,1フィールド目と"/"を出力,名前付きパイプにリダイレクト
-	mpc listall | awk -F"/" '{print $1"/"}' >| listall.fifo &
-
-	# 名前付きパイプ内のデータを出力,grepで固定文字列を大文字,小文字を区別せずに検索
-	cat lsplaylist.fifo listall.fifo | grep -F -i "${search_str}" |
-
-	# 区切り文字を"/"に指定
-	awk -F"/" '{
-		
-		# ディレクトリの場合は真,プレイリストの場合は偽
-		if(/.\/$/){
-
-			# 真の場合はPOSTのvalueに"add"を指定し,1フィールド目をボタン化
-			print "<p><button name=add value="$1">"$1"</button></p>"
-
-		}else{
-
-			# 偽の場合の処理
-			# プレイリストをキューに追加するボタン
-			print "<p><button name=load value="$0">"$0"</button>"
-
-			# クリック時にトップに移動
-			print "<a href=#top>"
-
-			# プレイリスト内を表示するボタン
-			print "<button name=playlist value="$0">⋯</button></a></p>"
-
-		}
-	
-	}' |
-
-	# 重複を削除
-	awk '!a[$0]++{print $0}' &
+	}'
 
 }
 # ===== 関数の宣言ここまで ======
-
-
-# 名前付きパイプが無ければ作成
-if [ ! -e "listall.fifo" ] && [ ! -e "lsplaylist.fifo" ] ; then
-
-	mkfifo listall.fifo lsplaylist.fifo
-
-fi
 
 
 # ====== HTML ======
@@ -195,11 +169,3 @@ cat << EOS
 </html>
 EOS
 # ====== HTMLここまで ======
-
-
-# 名前付きパイプがあれば削除
-if [ -e "listall.fifo" ] && [ -e "lsplaylist.fifo" ] ; then
-
-	rm listall.fifo lsplaylist.fifo
-
-fi
