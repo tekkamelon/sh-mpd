@@ -3,6 +3,7 @@
 # 引数として"-v playlist_name="${playlist_name}"が必須
 BEGIN{
 
+	# クラス"content"を宣言
 	print "<div class=content>"
 
 	# プレイリストをキューに追加するボタン
@@ -12,10 +13,10 @@ BEGIN{
 
 {
 
-	# ウェブラジオの判定,行頭が"http:"もしくは"https:"であれば真,それ以外で偽
-	if(/http:/ || /https:/){
+	# ウェブラジオの判定,行頭が"http://"もしくは"https://"であれば真,それ以外で偽
+	if(/^http:\/\// || /^https:\/\//){
 
-		# 新規タブで開くリンクの出力
+		# 新規タブで開くリンクを出力
 		print "<a href="$0" target=_blank rel=noopener noreferrer>"$0"</a>"
 
 	}else{
