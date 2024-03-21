@@ -53,8 +53,8 @@ mpc_post () {
 
 }
 
-# プレイリスト及びディレクトリの検索,表示
-playlist_and_directory () {
+# プレイリスト検索,表示
+list_playlist () {
 
 	# クエリを変数展開で加工,デコード,変数に代入
 	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
@@ -144,7 +144,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
-			$(playlist_and_directory)
+			$(list_playlist)
 
 		</form>
 
