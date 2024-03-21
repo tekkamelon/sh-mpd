@@ -22,13 +22,17 @@ export PATH="$PATH:../../bin"
 
 
 # ===== 関数の宣言 ======
-# POSTを加工しmpcに渡す
+# POSTの処理,POSTが無い場合はステータスの表示
 mpc_post () {
 
-	# POSTの処理,POSTが無い場合はステータスの表示
+	# POSTを変数に代入
+	cat_post=$(cat)
 
-	# POSTの"="をスペースに,"&rm"を"\nrm"に置換,デコードしmpcに渡す
-	cat | sed -e "s/=/ /g" -e "s/\&rm/\nrm/g"| urldecode | xargs -l mpc 2>&1 | 
+	# プレイリスト名およびディレクトリ名をデコード
+	playlist_name=$(echo "${cat_post#*\=}" | urldecode)
+
+	# 変数展開でPOSTの"="をスペースに置換しmpcに渡す
+	echo "${cat_post%=*} ${playlist_name}" | xargs mpc 2>&1 |
 
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
