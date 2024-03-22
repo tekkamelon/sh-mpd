@@ -24,20 +24,18 @@ export PATH="$PATH:../../bin"
 # ===== 関数の宣言 ======
 mpc_post () {
 
-	# 選択された曲の再生,プレイリストの保存の処理
-			
 	# POSTを変数に代入
 	cat_post=$(cat)
 
+	# 複数の項目の削除に対応
 	# POSTの"="を" "に置換,"&del"を削除
 	echo "${cat_post}" | sed -e "s/=/ /g" -e "s/\&del//g" |
 
 	xargs mpc 2>&1 |
 
-	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
 
-	# 曲の削除の結果の表示,"cat_post"が空ではない場合に真
+	# 曲の削除の結果の表示,"cat_post"があれば真
 	if [ -n "${cat_post}" ] ; then
 
 		# 真の場合,ステータスとメッセージを表示
@@ -47,7 +45,7 @@ mpc_post () {
 
 }
 
-# キュー内の曲の検索
+# キュー内の曲の検索,チェックボックス付きで表示
 queued_song () {
 
 	# クエリを変数展開で加工,デコード,変数に代入
