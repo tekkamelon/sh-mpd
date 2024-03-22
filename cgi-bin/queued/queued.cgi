@@ -21,91 +21,90 @@ export PATH="$PATH:../../bin"
 # ====== 変数の設定ここまで ======
 
 
+# ====== 変数の処理 ======			
+# POSTを変数に代入
+cat_post=$(cat)
+
+# クエリの先頭のみを抽出
+query_check="${QUERY_STRING#*\=}"
+query_check="${query_check%%&*}"
+
+# クエリを変数展開で加工,プレイリストの保存時のみmpcに渡す引数
+save_playlist_args=$(
+
+	echo "${QUERY_STRING#*\=}" |
+
+	# "&input_string"をスペースに置換,"search[任意の１文字以上]"を削除しデコード
+	sed -e "s/&input_string=/ /" -e "s/search.*//g" | urldecode
+
+)
+
+# POSTの有無によりmpcに渡す引数を分岐した結果
+mpc_result=$(
+
+	# POSTがあれば真,無ければ偽
+	if [ -n "${cat_post}" ] ; then
+		
+		# 真の場合はPOSTを変数展開で加工し出力
+		echo "${cat_post%%\=*}" "${cat_post#*\=}"
+
+	else
+
+		echo "${save_playlist_args}" 
+
+	fi |
+
+	# エラー出力を変数に代入するためにcatを通す
+	xargs mpc 2>&1 | cat -
+
+)
+
+# "mpc_result"の結果がエラー
+mpc_error_check=$(
+
+	echo "${mpc_result}" |
+
+	# 1行目の先頭が"MPD error: "であれば真
+	awk 'NR == 1{
+
+		if(/^MPD error: /){
+
+			# 真の場合はそのまま出力
+			print $0
+
+		}
+
+	}'
+
+)
+
+# プレイリスト作成後,キュー内の曲選択時にメッセージを表示しないようにする
+# "cat_post"と"save_playlist_args"の両方があれば真
+if [ -n "${cat_post}" ] && [ -n "${save_playlist_args}" ] ; then
+
+	# 真の場合は"save_playlist_args"に空文字を代入
+	save_playlist_args=""
+
+fi
+# ====== 変数の処理ここまで ======			
+
+
 # ===== 関数の宣言 ======
 # POSTを加工しmpcに渡す
 mpc_post () {
 
-	# ====== 変数の宣言 ======			
-	# POSTを変数に代入
-	cat_post=$(cat)
-
-	# クエリの先頭のみを抽出
-	query_check="${QUERY_STRING#*\=}"
-	query_check="${query_check%%&*}"
-
- 	# クエリを変数展開で加工,sedでの処理結果を変数に代入
-	save_playlist=$(
-
-		echo "${QUERY_STRING#*\=}" |
-	
- 		# "&input_string"をスペースに,"search[任意の１文字以上]"を置換しデコード
-		sed -e "s/&input_string=/ /" -e "s/search.*//g" | urldecode
-
-	)
-
-	# POSTを変数展開で加工,"save_playlist"があれば出力しmpcに渡す
-	mpc_result=$(
-
-		# POSTがあれば真,無ければ偽
-		if [ -n "${cat_post}" ] ; then
-			
-			# 真の場合はPOSTを変数展開で加工し出力
-			echo "${cat_post%%\=*}" "${cat_post#*\=}"  
-
-		else
-
-			# 偽の場合は"save_playlist"を出力
-			echo "${save_playlist}"
-
-		fi | 
-
-		# 出力結果をmpcに渡す,エラー出力を変数に代入するためにcatを通す
-		xargs mpc 2>&1 | cat -
-
-	)
-
-	# mpc_resultの結果を確認
-	mpc_error_check=$(
-
-		echo "${mpc_result}" |
-
-		# 1行目の先頭が"MPD error: "であれば真
-		awk 'NR == 1{
-
-			if(/^MPD error: /){
-
-				# 真の場合はそのまま出力
-				print $0
-
-			}
-
-		}'
-
-	)
-
-	# プレイリスト作成後にキュー内の曲を再生するための処理
-	# "cat_post"と"save_playlist"の両方があれば真
-	if [ -n "${cat_post}" ] && [ -n "${save_playlist}" ] ; then
-
-		# 真の場合は"save_playlist"に空文字を代入
-		save_playlist=""
-
-	fi
-	# ====== 変数の宣言ここまで ======			
-
-
-	# "mpc_error_check"があり,なおかつ"query_check"が"save"の場合に真,それ以外で偽
+	# 同名のプレイリストが既に存在した場合に真
 	if [ -n "${mpc_error_check}" ] && [ "${query_check}" = "save" ] ; then
 
 		echo "${mpc_result}"
 
-	# 偽の場合は"save_playlist"があれば真,それ以外で偽
-	elif [ -n "${save_playlist}" ] ; then
+	# 偽の場合は同名のプレイリストがなければ保存成功と判定
+	elif [ -n "${save_playlist_args}" ] ; then
 
 		# ステータスとメッセージを出力
 		mpc status
 
-		echo "saved playlist:${save_playlist#* }"
+		echo "saved playlist:${save_playlist_args#* }"
 
 	else
 
@@ -113,7 +112,6 @@ mpc_post () {
 
 	fi |
 
-	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html
 
 }
