@@ -28,7 +28,7 @@ mpc_post () {
 	# POSTを変数に代入
 	cat_post=$(cat)
 	
-	# プレイリスト名およびディレクトリ名をデコード
+	# POSTを変数展開で加工,プレイリスト名およびディレクトリ名をデコード
 	playlist_name=$(echo "${cat_post#*\=}" | urldecode)
 
 	# POSTの"name"が"playlist"であれば真,それ以外で偽
@@ -72,8 +72,7 @@ list_playlist () {
 		print "<p><button name=load value="$0">"$0"</button>"
 
 		# プレイリスト内を表示するボタン,クリック時にトップに移動
-		print "<a href=#top>"
-		print "<button name=playlist value="$0">⋯</button></a></p>"
+		print "<a href=#top><button name=playlist value="$0">⋯</button></a></p>"
 	
 	}'
 

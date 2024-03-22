@@ -26,7 +26,7 @@ export PATH="$PATH:../bin"
 mpc_post () {
 
 	# POSTを変数に代入
-	cat_post=$(cat) 
+	cat_post=$(cat)
 	
 	# POSTの有無を確認,あれば真,なければ偽
 	if [ -n "${cat_post#*\&*\=}" ] ; then
@@ -35,7 +35,7 @@ mpc_post () {
 		cat_post="${cat_post#*\=}"
 
 		# POSTを変数展開で加工,最後の引数をシングルクォート付きで出力,デコード
-		echo "${cat_post%%\&*}" "'${cat_post#*\&*\=}'" | urldecode
+		echo "${cat_post%\&*}" "'${cat_post#*\&*\=}'" | urldecode
 
 	else
 
