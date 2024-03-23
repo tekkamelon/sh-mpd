@@ -25,10 +25,6 @@ export PATH="$PATH:../../bin"
 # POSTを変数に代入
 cat_post=$(cat)
 
-# クエリの先頭のみを抽出
-query_check="${QUERY_STRING#*\=}"
-query_check="${query_check%%&*}"
-
 # クエリを変数展開で加工,プレイリストの保存時のみmpcに渡す引数
 save_playlist_args=$(
 
@@ -54,7 +50,7 @@ mpc_result=$(
 
 	fi |
 
-	# エラー出力を変数に代入するためにcatを通す
+	# このcatがないと正常に動作しない
 	xargs mpc 2>&1 | cat -
 
 )
@@ -78,7 +74,7 @@ mpc_error_check=$(
 
 )
 
-# プレイリスト作成後,キュー内の曲選択時にメッセージを表示しないようにする
+# プレイリスト作成後,キュー内の曲選択時にメッセージを非表示
 # "cat_post"と"save_playlist_args"の両方があれば真
 if [ -n "${cat_post}" ] && [ -n "${save_playlist_args}" ] ; then
 

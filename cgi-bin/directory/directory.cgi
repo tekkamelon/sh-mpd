@@ -22,9 +22,9 @@ export PATH="$PATH:../../bin"
 
 
 # ===== 関数の宣言 ======
-# POSTの有無に応じてmpcでの処理を分岐
 mpc_post () {
 
+	# POSTの内容に応じてmpcに渡す引数を変更
 	# POSTで受け取った文字列を変数として宣言
 	cat_post=$(cat)
 
@@ -35,14 +35,14 @@ mpc_post () {
 		line_number="${cat_post#*\=}"
 
 		# 楽曲の一覧から"line_number"の番号の行を抽出,結果を挿入
-		mpc listall | sed -n "${line_number}"p | mpc add &&
+		mpc listall | sed -n "${line_number}"p | mpc add
 
 		# キュー内の楽曲数を変数に代入
 		last_line=$(mpc playlist | wc -l)
 
 		echo "play ${last_line}"
 
-	# 偽の場合はPOSTを変数展開,"addresult="であれば真,それ以外で偽
+	# 偽の場合は"addresult="であれば真,それ以外で偽
 	elif [ "${cat_post#\=*}" = "addresult=" ] ; then
 
 		# クエリをデコードし"search_str"に代入
@@ -53,7 +53,7 @@ mpc_post () {
 
 		echo "status"
 
-	# 偽の場合はPOSTが"add-all"であれば真,それ以外で偽
+	# 偽の場合は"add=all"であれば真,それ以外で偽
 	elif [ "${cat_post}" = "add=all" ] ; then
 
 		# すべての楽曲をキューに追加
