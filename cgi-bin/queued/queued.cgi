@@ -55,25 +55,6 @@ mpc_result=$(
 
 )
 
-# "mpc_result"の結果がエラー
-mpc_error_check=$(
-
-	echo "${mpc_result}" |
-
-	# 1行目の先頭が"MPD error: "であれば真
-	awk 'NR == 1{
-
-		if(/^MPD error: /){
-
-			# 真の場合はそのまま出力
-			print $0
-
-		}
-
-	}'
-
-)
-
 # プレイリスト作成後,キュー内の曲選択時にメッセージを非表示
 # "cat_post"と"save_playlist_args"の両方があれば真
 if [ -n "${cat_post}" ] && [ -n "${save_playlist_args}" ] ; then
@@ -90,7 +71,7 @@ fi
 mpc_post () {
 
 	# 同名のプレイリストが既に存在した場合に真
-	if [ -n "${mpc_error_check}" ] && [ "${query_check}" = "save" ] ; then
+	if [ "${mpc_result}" = "MPD error: Playlist already exists" ] ; then
 
 		echo "${mpc_result}"
 
