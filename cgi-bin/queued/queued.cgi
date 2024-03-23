@@ -18,53 +18,38 @@ export PATH="$PATH:../../bin"
 
 # ". (ドット)"コマンドで設定ファイルの読み込み
 . ../settings/shmpd.conf
-# ====== 変数の設定ここまで ======
 
-
-# ====== 変数の処理 ======			
 # POSTを変数に代入
 cat_post=$(cat)
 
-# クエリの処理
 query_check="${QUERY_STRING#*\=}"
 
-# mpcの第1引数となる部分の抽出
+# "search"か"save"を抽出
 search_or_save="${query_check%%&*}"
 
-# 入力されたプレイリスト名の抽出,デコード
+# テキストエリアからの入力を抽出,デコード
 str_name=$(echo "${query_check#*\&input_string\=}" | urldecode)
 
-# POSTがあれば選択された楽曲の再生,なければプレイリストの保存
-mpc_result=$(
-
-	# POSTがあれば真,無ければ偽
-	if [ -n "${cat_post}" ] ; then
-		
-		# 真の場合はPOSTを変数展開で加工し出力
-		echo "${cat_post%%\=*}" "${cat_post#*\=}"
-		
-		str_name=""
-
-	elif [ "${search_or_save}" = "save" ] ; then
-
-		echo "${search_or_save}" "${str_name}"
-
-	fi |
-
-	# このcatがないと正常に動作しない
-	xargs mpc 2>&1 | cat -
-
-)
-
-# プレイリスト作成後,キュー内の曲選択時にメッセージを非表示
-# POSTがあれば真
+# POSTがあれば真,無ければ偽
 if [ -n "${cat_post}" ] ; then
-
-	# 真の場合は"str_name"に空文字を代入
+	
+	# POSTがあれば選択された楽曲を再生
+	mpc_result=$(mpc "${cat_post%%\=*}" "${cat_post#*\=}")
+	
 	str_name=""
 
+# 偽の場合は"search_or_save"が"save"であれば真
+elif [ "${search_or_save}" = "save" ] ; then
+
+	# このcatがないと正常に動作しない
+	mpc_result=$(mpc "${search_or_save}" "${str_name}" 2>&1 | cat -)
+
+else
+
+	mpc_result=$(mpc status)
+
 fi
-# ====== 変数の処理ここまで ======			
+# ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
@@ -77,9 +62,10 @@ mpc_post () {
 		echo "${mpc_result}"
 
 	# 偽の場合は同名のプレイリストがなければ保存成功と判定
-	elif [ -n "${str_name}" ]  && [ "${search_or_save}" = "save" ]; then
+	elif [ -n "${str_name}" ] && [ "${search_or_save}" = "save" ] ; then
 
 		# ステータスとメッセージを出力
+		# プレイリストの保存時にはステータスを返さないため
 		mpc status
 
 		echo "saved playlist:${str_name}"
