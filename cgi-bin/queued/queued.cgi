@@ -25,17 +25,29 @@ export PATH="$PATH:../../bin"
 # POSTを変数に代入
 cat_post=$(cat)
 
+# クエリの処理
+query_check="${QUERY_STRING#*\=}"
+
+# mpcの第1引数となる部分の抽出
+search_or_save="${query_check%%&*}"
+
+# 入力されたプレイリスト名の抽出
+playlist_name="${query_check#save\&input_string\=}"
+
 # クエリを変数展開で加工,プレイリストの保存時のみmpcに渡す引数
 save_playlist_args=$(
 
-	echo "${QUERY_STRING#*\=}" |
+	if [ "${search_or_save}" = "save" ] ; then
 
-	# "&input_string"をスペースに置換,"search[任意の１文字以上]"を削除しデコード
-	sed -e "s/&input_string=/ /" -e "s/search.*//g" | urldecode
+		echo "${search_or_save}" "${playlist_name}"
+
+	fi |
+
+	urldecode
 
 )
 
-# POSTの有無によりmpcに渡す引数を分岐した結果
+# POSTがあれば選択された楽曲の再生,なければプレイリストの保存
 mpc_result=$(
 
 	# POSTがあれば真,無ければ偽
@@ -76,12 +88,12 @@ mpc_post () {
 		echo "${mpc_result}"
 
 	# 偽の場合は同名のプレイリストがなければ保存成功と判定
-	elif [ -n "${save_playlist_args}" ] ; then
+	elif [ -n "${playlist_name}" ] ; then
 
 		# ステータスとメッセージを出力
 		mpc status
 
-		echo "saved playlist:${save_playlist_args#* }"
+		echo "saved playlist:${playlist_name}"
 
 	else
 
@@ -96,12 +108,8 @@ mpc_post () {
 # キュー内の曲の検索
 queued_song () {
 
-	# クエリの先頭のみを抽出
-	query_check="${QUERY_STRING#*\=}"
-	query_check="${query_check%%&*}"
-
-	# "query_check"が"save"で真,それ以外で偽
-	if [ "${query_check}" = "save" ] ; then
+	# "search_or_save"が"save"で真,それ以外で偽
+	if [ "${search_or_save}" = "save" ] ; then
 
 		# 真の場合は"search_str"に空文字を代入
 		search_str=""
