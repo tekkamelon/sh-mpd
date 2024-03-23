@@ -31,21 +31,8 @@ query_check="${QUERY_STRING#*\=}"
 # mpcの第1引数となる部分の抽出
 search_or_save="${query_check%%&*}"
 
-# 入力されたプレイリスト名の抽出
-playlist_name="${query_check#save\&input_string\=}"
-
-# クエリを変数展開で加工,プレイリストの保存時のみmpcに渡す引数
-save_playlist_args=$(
-
-	if [ "${search_or_save}" = "save" ] ; then
-
-		echo "${search_or_save}" "${playlist_name}"
-
-	fi |
-
-	urldecode
-
-)
+# 入力されたプレイリスト名の抽出,デコード
+str_name=$(echo "${query_check#*\&input_string\=}" | urldecode)
 
 # POSTがあれば選択された楽曲の再生,なければプレイリストの保存
 mpc_result=$(
@@ -55,10 +42,13 @@ mpc_result=$(
 		
 		# 真の場合はPOSTを変数展開で加工し出力
 		echo "${cat_post%%\=*}" "${cat_post#*\=}"
+		
+		str_name=""
 
 	else
 
-		echo "${save_playlist_args}" 
+		# echo "${save_playlist_args}" 
+		echo "${search_or_save}" "${str_name}"
 
 	fi |
 
@@ -68,11 +58,11 @@ mpc_result=$(
 )
 
 # プレイリスト作成後,キュー内の曲選択時にメッセージを非表示
-# "cat_post"と"save_playlist_args"の両方があれば真
-if [ -n "${cat_post}" ] && [ -n "${save_playlist_args}" ] ; then
+# POSTがあれば真
+if [ -n "${cat_post}" ] ; then
 
-	# 真の場合は"save_playlist_args"に空文字を代入
-	save_playlist_args=""
+	# 真の場合は"str_name"に空文字を代入
+	str_name=""
 
 fi
 # ====== 変数の処理ここまで ======			
@@ -88,12 +78,12 @@ mpc_post () {
 		echo "${mpc_result}"
 
 	# 偽の場合は同名のプレイリストがなければ保存成功と判定
-	elif [ -n "${playlist_name}" ] ; then
+	elif [ -n "${str_name}" ] ; then
 
 		# ステータスとメッセージを出力
 		mpc status
 
-		echo "saved playlist:${playlist_name}"
+		echo "saved playlist:${str_name}"
 
 	else
 
@@ -116,8 +106,7 @@ queued_song () {
 
 	else
 
-		# 偽の場合はクエリを変数展開で加工,デコード,変数に代入
-		search_str="$(echo "${QUERY_STRING#*\=*&*\=}" | urldecode)"
+		search_str="${str_name}"
 
 	fi
 
