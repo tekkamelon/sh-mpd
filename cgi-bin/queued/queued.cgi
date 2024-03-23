@@ -45,9 +45,8 @@ mpc_result=$(
 		
 		str_name=""
 
-	else
+	elif [ "${search_or_save}" = "save" ] ; then
 
-		# echo "${save_playlist_args}" 
 		echo "${search_or_save}" "${str_name}"
 
 	fi |
@@ -78,7 +77,7 @@ mpc_post () {
 		echo "${mpc_result}"
 
 	# 偽の場合は同名のプレイリストがなければ保存成功と判定
-	elif [ -n "${str_name}" ] ; then
+	elif [ -n "${str_name}" ]  && [ "${search_or_save}" = "save" ]; then
 
 		# ステータスとメッセージを出力
 		mpc status
