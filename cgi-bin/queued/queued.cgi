@@ -36,25 +36,31 @@ if [ -n "${cat_post}" ] ; then
 	# POSTがあれば選択された楽曲を再生
 	mpc_result=$(mpc "${cat_post%%\=*}" "${cat_post#*\=}")
 	
+	# プレイリストの保存後に楽曲が選択された場合の処理
 	str_name=""
+	search_str=""
 
 # 偽の場合は"search_or_save"が"save"であれば真
 elif [ "${search_or_save}" = "save" ] ; then
 
-	# このcatがないと正常に動作しない
+	# catを通し終了ステータスが0を返すようにする
 	mpc_result=$(mpc "${search_or_save}" "${str_name}" 2>&1 | cat -)
+
+	# 検索ワードに空文字を指定
+	search_str=""
 
 else
 
+	# プレイリスト内の検索時の処理
 	mpc_result=$(mpc status)
+	search_str="${str_name}"
 
 fi
 # ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
-# POSTを加工しmpcに渡す
-mpc_post () {
+mpc_var () {
 
 	# 同名のプレイリストが既に存在した場合に真
 	if [ "${mpc_result}" = "MPD error: Playlist already exists" ] ; then
@@ -82,18 +88,6 @@ mpc_post () {
 
 # キュー内の曲の検索
 queued_song () {
-
-	# "search_or_save"が"save"で真,それ以外で偽
-	if [ "${search_or_save}" = "save" ] ; then
-
-		# 真の場合は"search_str"に空文字を代入
-		search_str=""
-
-	else
-
-		search_str="${str_name}"
-
-	fi
 
 	# キューされた曲をgrepで検索,idと区切り文字":"を付与
 	mpc playlist | grep -F -i -n "${search_str}" |
@@ -172,7 +166,7 @@ cat << EOS
 		<form name="music" method="POST" >
 			
 			<!-- ステータスの表示 -->
-			<p>$(mpc_post)</p>
+			<p>$(mpc_var)</p>
 
 		</form>
 
