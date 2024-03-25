@@ -18,21 +18,27 @@ export PATH="$PATH:../../bin"
 
 # ". (ドット)"コマンドで設定ファイルの読み込み
 . ../settings/shmpd.conf
+
+# POSTを変数に代入
+cat_post=$(cat)
+
+# "foo=bar"の"bar"
+post_check="${cat_post#*\=}"
+
+# "foo=bar"の"foo"
+post_check1="${cat_post%\="${post_check}"}"
 # ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
+# POSTの処理
 mpc_post () {
 
-	# POSTの内容に応じてmpcに渡す引数を変更
-	# POSTで受け取った文字列を変数として宣言
-	cat_post=$(cat)
-
 	# POSTを変数展開で加工,文字列が1以上の数値であれば真,それ以外で偽
-	if [ "${cat_post#*\=}" -gt 0 ] ; then
+	if [ "${post_check}" -gt 0 ] ; then
 
 		# POSTを変数に代入
-		line_number="${cat_post#*\=}"
+		line_number="${post_check}"
 
 		# 楽曲の一覧から"line_number"の番号の行を抽出,結果を挿入
 		mpc listall | sed -n "${line_number}"p | mpc add
@@ -42,8 +48,8 @@ mpc_post () {
 
 		echo "play ${last_line}"
 
-	# 偽の場合は"addresult="であれば真,それ以外で偽
-	elif [ "${cat_post#\=*}" = "addresult=" ] ; then
+	# 偽の場合は"addresult"であれば真,それ以外で偽
+	elif [ "${post_check1}" = "addresult" ] ; then
 
 		# クエリをデコードし"search_str"に代入
 		search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
@@ -53,8 +59,8 @@ mpc_post () {
 
 		echo "status"
 
-	# 偽の場合は"add=all"であれば真,それ以外で偽
-	elif [ "${cat_post}" = "add=all" ] ; then
+	# 偽の場合は"all"であれば真,それ以外で偽
+	elif [ "${post_check}" = "all" ] ; then
 
 		# すべての楽曲をキューに追加
 		mpc add / &
