@@ -47,8 +47,10 @@ if [ -n "${cat_post}" ] ; then
 # 偽の場合は"search_or_save"が"save"であれば真
 elif [ "${search_or_save}" = "save" ] ; then
 
-	# catを通し終了ステータスが0を返すようにする
-	mpc_result=$(mpc "${search_or_save}" "${str_name}" 2>&1 | cat -)
+	# 標準エラー出力も変数に代入するために一時的に"set -e"を解除
+	set +e
+	mpc_result=$(mpc "${search_or_save}" "${str_name}" 2>&1)
+	set -e
 
 else
 
@@ -61,13 +63,8 @@ fi
 # ===== 関数の宣言 ======
 mpc_var () {
 
-	# 同名のプレイリストが既に存在した場合に真
-	if [ "${mpc_result}" = "MPD error: Playlist already exists" ] ; then
-
-		echo "${mpc_result}"
-
-	# 偽の場合は同名のプレイリストがなければ保存成功と判定
-	elif [ -n "${str_name}" ] && [ "${search_or_save}" = "save" ] ; then
+	# プレイリスト名が入力されかつ重複がない場合に真
+	if [ -n "${str_name}" ] && [ "${search_or_save}" = "save" ] && [ "${mpc_result}" != "MPD error: Playlist already exists" ] ; then
 
 		# ステータスとメッセージを出力
 		mpc status
