@@ -22,11 +22,12 @@ export PATH="$PATH:../../bin"
 # POSTを変数に代入
 cat_post=$(cat)
 
-# "foo=bar"の"bar"
+# "foo=bar"の"foo","bar"をそれぞれ抽出
 post_left="${cat_post%\=*}"
-
-# "foo=bar"の"foo"
 post_right="${cat_post#"${post_left}"\=}"
+
+# クエリをデコードし"search_str"に代入
+search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 # ====== 変数の設定ここまで ======
 
 
@@ -47,9 +48,6 @@ mpc_post () {
 
 	# 偽の場合は"addresult"であれば真,それ以外で偽
 	elif [ "${post_left}" = "addresult" ] ; then
-
-		# クエリをデコードし"search_str"に代入
-		search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
 		# 楽曲の一覧から"search_str"で検索,結果を挿入
 		mpc listall | grep -F -i "${search_str}" | mpc add &
@@ -82,9 +80,6 @@ mpc_post () {
 
 # mpd管理下の全ての曲を表示
 directory_list () {
-
-	# クエリをデコードし"search_str"に代入
-	search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
 	# 曲の一覧を出力,行番号と区切り文字":"の付与,検索
 	mpc listall | grep -F -i -n "${search_str}" |
