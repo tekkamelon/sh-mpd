@@ -22,23 +22,27 @@ export PATH="$PATH:../../bin"
 # POSTを変数に代入
 cat_post=$(cat)
 
+# "foo=bar"の"foo","bar"をそれぞれ抽出
+post_left="${cat_post%\=*}"
+post_right="${cat_post#"${post_left}"\=}"
+
+# クエリを変数に代入
 query_check="${QUERY_STRING#*\=}"
 
 # "search"か"save"を抽出
 search_or_save="${query_check%%&*}"
 
 # テキストエリアからの入力を抽出,デコード
-str_name=$(echo "${query_check#*\&input_string\=}" | urldecode)
+str_name=$(echo "${query_check#"${search_or_save}"\&input_string\=}" | urldecode)
 
 # POSTがあれば真,無ければ偽
 if [ -n "${cat_post}" ] ; then
 	
 	# POSTがあれば選択された楽曲を再生
-	mpc_result=$(mpc "${cat_post%%\=*}" "${cat_post#*\=}")
+	mpc_result=$(mpc "${post_left}" "${post_right}")
 	
 	# プレイリストの保存後に楽曲が選択された場合の処理
 	str_name=""
-	search_str=""
 
 # 偽の場合は"search_or_save"が"save"であれば真
 elif [ "${search_or_save}" = "save" ] ; then
@@ -46,14 +50,9 @@ elif [ "${search_or_save}" = "save" ] ; then
 	# catを通し終了ステータスが0を返すようにする
 	mpc_result=$(mpc "${search_or_save}" "${str_name}" 2>&1 | cat -)
 
-	# 検索ワードに空文字を指定
-	search_str=""
-
 else
 
-	# プレイリスト内の検索時の処理
 	mpc_result=$(mpc status)
-	search_str="${str_name}"
 
 fi
 # ====== 変数の設定ここまで ======
@@ -71,7 +70,6 @@ mpc_var () {
 	elif [ -n "${str_name}" ] && [ "${search_or_save}" = "save" ] ; then
 
 		# ステータスとメッセージを出力
-		# プレイリストの保存時にはステータスを返さないため
 		mpc status
 
 		echo "saved playlist:${str_name}"
@@ -89,8 +87,11 @@ mpc_var () {
 # キュー内の曲の検索
 queued_song () {
 
+	# プレイリストの保存時には"str_name"に空文字を代入
+	test "${search_or_save}" = "save" && str_name=""
+
 	# キューされた曲をgrepで検索,idと区切り文字":"を付与
-	mpc playlist | grep -F -i -n "${search_str}" |
+	mpc playlist | grep -F -i -n "${str_name}" |
 
 	# ":"を">"に置換,標準入力をタグ付きで出力
 	awk '{
