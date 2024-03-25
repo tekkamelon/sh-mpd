@@ -23,25 +23,22 @@ export PATH="$PATH:../../bin"
 cat_post=$(cat)
 
 # "foo=bar"の"bar"
-post_check="${cat_post#*\=}"
+post_left="${cat_post%\=*}"
 
 # "foo=bar"の"foo"
-post_check1="${cat_post%\="${post_check}"}"
+post_right="${cat_post#"${post_left}"\=}"
 # ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
-# POSTの処理
+# POSTの処理し引数をmpcに渡す
 mpc_post () {
 
 	# POSTを変数展開で加工,文字列が1以上の数値であれば真,それ以外で偽
-	if [ "${post_check}" -gt 0 ] ; then
+	if [ "${post_right}" -gt 0 ] ; then
 
-		# POSTを変数に代入
-		line_number="${post_check}"
-
-		# 楽曲の一覧から"line_number"の番号の行を抽出,結果を挿入
-		mpc listall | sed -n "${line_number}"p | mpc add
+		# 楽曲の一覧から"post_right"の番号の行を抽出,結果を挿入
+		mpc listall | sed -n "${post_right}"p | mpc add
 
 		# キュー内の楽曲数を変数に代入
 		last_line=$(mpc playlist | wc -l)
@@ -49,7 +46,7 @@ mpc_post () {
 		echo "play ${last_line}"
 
 	# 偽の場合は"addresult"であれば真,それ以外で偽
-	elif [ "${post_check1}" = "addresult" ] ; then
+	elif [ "${post_left}" = "addresult" ] ; then
 
 		# クエリをデコードし"search_str"に代入
 		search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
@@ -60,7 +57,7 @@ mpc_post () {
 		echo "status"
 
 	# 偽の場合は"all"であれば真,それ以外で偽
-	elif [ "${post_check}" = "all" ] ; then
+	elif [ "${post_right}" = "all" ] ; then
 
 		# すべての楽曲をキューに追加
 		mpc add / &
@@ -89,7 +86,7 @@ directory_list () {
 	# クエリをデコードし"search_str"に代入
 	search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
-	# 曲の一覧を出力,grepで検索,idと区切り文字":"を付与
+	# 曲の一覧を出力,行番号と区切り文字":"の付与,検索
 	mpc listall | grep -F -i -n "${search_str}" |
 
 	# ":"を">"に置換,標準入力をタグ付きで出力
