@@ -26,7 +26,7 @@ cat_post=$(cat)
 post_left="${cat_post%\=*}"
 post_right="${cat_post#"${post_left}"\=}"
 
-# クエリを変数に代入
+# クエリを変数展開し代入
 query_check="${QUERY_STRING#*\=}"
 
 # "search"か"save"を抽出
@@ -41,7 +41,7 @@ if [ -n "${cat_post}" ] ; then
 	# POSTがあれば選択された楽曲を再生
 	mpc_result=$(mpc "${post_left}" "${post_right}")
 	
-	# プレイリストの保存後に楽曲が選択された場合の処理
+	# プレイリストの保存後に楽曲が選択された場合
 	str_name=""
 
 # 偽の場合は"search_or_save"が"save"であれば真
@@ -64,7 +64,7 @@ fi
 mpc_var () {
 
 	# プレイリスト名が入力されかつ重複がない場合に真
-	if [ -n "${str_name}" ] && [ "${search_or_save}" = "save" ] && [ "${mpc_result}" != "MPD error: Playlist already exists" ] ; then
+	if [ -n "${str_name}" ] && [ "${search_or_save}" = "save" ] && [ "${mpc_result%:*}" != "MPD error" ] ; then
 
 		# ステータスとメッセージを出力
 		mpc status
