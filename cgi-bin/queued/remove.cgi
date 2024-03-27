@@ -18,14 +18,17 @@ export PATH="$PATH:../../bin"
 
 # ". (ドット)"コマンドで設定ファイルの読み込み
 . ../settings/shmpd.conf
+
+# POSTを変数に代入
+cat_post=$(cat)
+
+# クエリを変数展開で加工,デコード,変数に代入
+search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
 # ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
 mpc_post () {
-
-	# POSTを変数に代入
-	cat_post=$(cat)
 
 	# 複数の項目の削除に対応
 	# POSTの"="を" "に置換,"&del"を削除
@@ -47,9 +50,6 @@ mpc_post () {
 
 # キュー内の曲の検索,チェックボックス付きで表示
 queued_song () {
-
-	# クエリを変数展開で加工,デコード,変数に代入
-	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
 
 	# キューされた曲をgrepで検索,idと区切り文字":"を付与
 	mpc playlist | grep -F -i -n "${search_str}" |

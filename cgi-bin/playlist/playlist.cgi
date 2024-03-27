@@ -18,18 +18,21 @@ export PATH="$PATH:../../bin"
 
 # ". (ドット)"コマンドで設定ファイルの読み込み
 . ../settings/shmpd.conf
+
+# POSTを変数に代入
+cat_post=$(cat)
+
+# POSTを変数展開で加工,プレイリスト名およびディレクトリ名をデコード
+playlist_name=$(echo "${cat_post#*\=}" | urldecode)
+
+# クエリを変数展開で加工,デコード,変数に代入
+search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
 # ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
 # POSTの処理,POSTが無い場合はステータスの表示
 mpc_post () {
-
-	# POSTを変数に代入
-	cat_post=$(cat)
-	
-	# POSTを変数展開で加工,プレイリスト名およびディレクトリ名をデコード
-	playlist_name=$(echo "${cat_post#*\=}" | urldecode)
 
 	# POSTの"name"が"playlist"であれば真,それ以外で偽
 	if [ "${cat_post%=*}" = "playlist" ] ; then
@@ -55,9 +58,6 @@ mpc_post () {
 
 # プレイリスト検索,表示
 list_playlist () {
-
-	# クエリを変数展開で加工,デコード,変数に代入
-	search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
 	
 	# プレイリスト一覧を出力
 	mpc lsplaylist |
