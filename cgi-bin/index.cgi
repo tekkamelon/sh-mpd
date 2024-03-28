@@ -18,29 +18,36 @@ export PATH="$PATH:../bin"
 
 # ". (ドット)"コマンドで設定ファイルの読み込み
 . settings/shmpd.conf
+
+# POSTを変数に代入
+cat_post=$(cat)
+
+# POSTを変数展開し代入
+post_check="${cat_post#*\=}"
+
+# "foo=bar"の"foo","bar"をそれぞれ抽出
+post_left="${post_check%\&*}"
+post_right="${post_check#*\&*\=}"
+
+# クエリを変数展開し代入
+query_check="${QUERY_STRING#*\=}"
 # ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
 # 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
 mpc_post () {
-
-	# POSTを変数に代入
-	cat_post=$(cat)
 	
 	# POSTの有無を確認,あれば真,なければ偽
-	if [ -n "${cat_post#*\&*\=}" ] ; then
-	
-		# 真の場合はPOSTを変数展開で加工,再度代入
-		cat_post="${cat_post#*\=}"
+	if [ -n "${post_right}" ] ; then
 
-		# POSTを変数展開で加工,最後の引数をシングルクォート付きで出力,デコード
-		echo "${cat_post%\&*}" "'${cat_post#*\&*\=}'" | urldecode
+		# 真の場合は最後の引数をシングルクォート付きで出力,デコード
+		echo "${post_left}" "'${post_right}'" | urldecode
 
 	else
 
 		# 偽の場合はクエリを変数展開で加工
-		echo "${QUERY_STRING#*\=}" |
+		echo "${query_check}" |
 
 		# "volume","seek","mute"時の文字列をデコード
 		sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"

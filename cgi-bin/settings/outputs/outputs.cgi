@@ -18,6 +18,13 @@ export PATH="$PATH:../../../bin"
 
 # ". (ドット)"コマンドで設定ファイルの読み込み
 . ../shmpd.conf
+
+# POSTを変数に代入
+cat_post=$(cat)
+
+# "foo=bar"の"foo","bar"をそれぞれ抽出
+post_left="${cat_post%\=*}"
+post_right="${cat_post#"${post_left}"\=}"
 # ====== 変数の設定ここまで ======
 
 
@@ -25,14 +32,10 @@ export PATH="$PATH:../../../bin"
 # POSTを加工しmpcに渡す
 mpc_post () {
 
-	# POSTを変数に代入
-	cat_post=$(cat)
-
 	# POSTの有無を確認,あれば真,無ければ偽
 	if [ -n "${cat_post}" ] ; then
 
-		# 真の場合はPOSTを変数展開で"="をスペースに置換
-		echo "${cat_post%%\=*}" "${cat_post#*\=}" 
+		echo "${post_left}" "${post_right}" 
 		
 	else
 
@@ -56,7 +59,7 @@ mpc_post () {
 # ステータスを表示
 mpc_status () {
 			
-	# mpcのエラー出力ごとsedに渡す
+	# mpcのエラー出力ごとパイプに流す
 	mpc status 2>&1 |
 
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与

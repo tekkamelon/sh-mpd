@@ -16,8 +16,11 @@ export POSIXLY_CORRECT=1
 # ". (ドット)"コマンドで設定ファイルの読み込み
 . ../shmpd.conf
 
+# クエリを変数展開し代入
+query_check="${QUERY_STRING#*\=}"
+
 # クエリを変数展開で加工,文字列があれば真,なければ偽
-if [ -n "${QUERY_STRING#*\=}" ] ; then
+if [ -n "${query_check}" ] ; then
 
 	# 真の場合は変数の一覧を出力,設定ファイルへリダイレクト
 	cat <<- EOF >| ../shmpd.conf &
@@ -25,11 +28,11 @@ if [ -n "${QUERY_STRING#*\=}" ] ; then
 	export MPD_PORT="${MPD_PORT}"
 	img_server_host="${img_server_host}"
 	img_server_port="${img_server_port}"
-	stylesheet="${QUERY_STRING#*\=}"
+	stylesheet="${query_check}"
 	EOF
 
-	# "stylesheet"にクエリを代入
-	stylesheet="${QUERY_STRING#*\=}"
+	# "stylesheet"に"query_check"を代入
+	stylesheet="${query_check}"
 
 	# メッセージを代入
 	export ECHO_MESSAGE="<p>changed css:${stylesheet}</p>"
@@ -40,14 +43,14 @@ else
 	export ECHO_MESSAGE=""
 
 fi
+
+# cssの一覧を変数として宣言
+css_list=$(ls ../../stylesheet)
 # ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
 css_list () {
-
-	# cssの一覧を変数として宣言
-	css_list=$(ls ../../stylesheet)
 
 	echo "${css_list}" |
 
