@@ -38,7 +38,7 @@ mpc_post () {
 	if [ "${cat_post%=*}" = "playlist" ] ; then
 
 		# 変数展開でPOSTの"="をスペースに置換しmpcに渡す
-		echo "${cat_post%=*} ${playlist_name}" | xargs mpc 2>&1 |
+		echo "${cat_post%=*} -f \"%file%\" ${playlist_name}" | xargs mpc 2>&1 |
 
 		# プレイリスト内を表示
 		# "playlist_content"にシェル変数"playlist_name"を渡す
@@ -46,8 +46,11 @@ mpc_post () {
 
 	else
 
-		# 変数展開でPOSTの"="をスペースに置換しmpcに渡す
-		echo "${cat_post%=*} ${playlist_name}" | xargs mpc 2>&1 |
+		# 変数展開でPOSTの"="をスペースに置換
+		echo "${cat_post%=*} \"${playlist_name}\"" |
+
+		# "%20"をスペースにデコード,ダブルクォート2つを"status"に置換,mpcに渡す
+		sed -e "s/\%20/ /g" -e "s/\"\"/status/" | xargs mpc 2>&1 |
 
 		# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 		mpc_status2html
