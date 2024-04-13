@@ -57,11 +57,14 @@ else
 	mpc_result=$(mpc status)
 
 fi
+
+# 再生中の楽曲
+current=$(mpc current)
 # ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
-mpc_var () {
+mpc_status () {
 
 	# プレイリスト名が入力されかつ重複がない場合に真
 	if [ -n "${str_name}" ] && [ "${search_or_save}" = "save" ] && [ "${mpc_result%:*}" != "MPD error" ] ; then
@@ -90,12 +93,28 @@ queued_song () {
 	# キューされた曲をgrepで検索,idと区切り文字":"を付与
 	mpc playlist | grep -F -i -n "${str_name}" |
 
-	# ":"を">"に置換,標準入力をタグ付きで出力
-	awk '{
+	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]を付与"
+	# シェル変数"current"をawk変数に代入,区切り文字を":"に指定
+	awk -F":" -v current="${current}" '{
+		
+		# "current"が第2フィールドと一致すれば真
+		if(current == $2){
 
-		sub(":" , ">")
+			marker = "[Now Playing]"
 
-		print "<p><button name=play value="$0"</button></p>"
+			# "ID:曲名"を"ID>曲名"に置換
+			sub(":" , ">")
+
+			print "<p><button name=play value=" $0 "</button><strong>" marker "</strong></p>"
+
+		}else{
+
+			# "ID:曲名"を"ID>曲名"に置換
+			sub(":" , ">")
+
+			print "<p><button name=play value=" $0 "</button></p>"
+
+		}
 
 	}'
 
@@ -164,7 +183,7 @@ cat << EOS
 		<form name="music" method="POST" >
 			
 			<!-- ステータスの表示 -->
-			<p>$(mpc_var)</p>
+			<p>$(mpc_status)</p>
 
 		</form>
 
