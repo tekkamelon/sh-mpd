@@ -3,8 +3,8 @@
 # 引数として-v mpc_current="${mpc_current}"が必須
 BEGIN{
 
-	# 区切り文字を":"に指定
-	FS = ":"
+	# 区切り文字を" : "に指定
+	FS = " : "
 }
 
 {
@@ -12,19 +12,17 @@ BEGIN{
 	# "current"が第2フィールドと一致すれば真
 	if(mpc_current == $2){
 
-		marker = "[Now Playing]"
-
-		# "ID:曲名"を"ID>曲名"に置換
-		sub(":" , ">")
-
-		print "<p><button name=play value=" $0 "</button><b>" marker "</b></p>"
+		marker = "<b>[Now Playing]</b>"
 
 	}else{
 
-		sub(":" , ">")
-
-		print "<p><button name=play value=" $0 "</button></p>"
+		marker = ""
 
 	}
+
+	# "ID : 曲名"を"ID>曲名"に置換
+	sub(" : " , ">")
+
+	print "<p><button name=play value=", $0, "</button>", marker, "</p>"
 
 }
