@@ -59,7 +59,7 @@ else
 fi
 
 # 再生中の楽曲
-current=$(mpc current)
+mpc_current="$(mpc current)"
 # ====== 変数の設定ここまで ======
 
 
@@ -85,7 +85,7 @@ mpc_status () {
 }
 
 # キュー内の曲の検索
-queued_song () {
+queued () {
 
 	# プレイリストの保存時には"str_name"に空文字を代入
 	test "${search_or_save}" = "save" && str_name=""
@@ -94,29 +94,8 @@ queued_song () {
 	mpc playlist | grep -F -i -n "${str_name}" |
 
 	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]を付与"
-	# シェル変数"current"をawk変数に代入,区切り文字を":"に指定
-	awk -F":" -v current="${current}" '{
-		
-		# "current"が第2フィールドと一致すれば真
-		if(current == $2){
-
-			marker = "[Now Playing]"
-
-			# "ID:曲名"を"ID>曲名"に置換
-			sub(":" , ">")
-
-			print "<p><button name=play value=" $0 "</button><strong>" marker "</strong></p>"
-
-		}else{
-
-			# "ID:曲名"を"ID>曲名"に置換
-			sub(":" , ">")
-
-			print "<p><button name=play value=" $0 "</button></p>"
-
-		}
-
-	}'
+	# "queued_song"にシェル変数"current"を渡す
+	queued_song -v mpc_current="${mpc_current}"
 
 }
 # ===== 関数の宣言ここまで ======
@@ -196,7 +175,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- キュー内の曲を表示 -->
-			$(queued_song)
+			$(queued)
 
 		</form>
 
