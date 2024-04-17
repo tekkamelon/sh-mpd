@@ -90,8 +90,8 @@ queued () {
 	# プレイリストの保存時には"str_name"に空文字を代入
 	test "${search_or_save}" = "save" && str_name=""
 
-	# キューされた曲をgrepで検索,idと区切り文字" : "を付与
-	mpc playlist | grep -F -i -n "${str_name}" | sed "s/:/ : /" |
+	# キューされた曲をgrepで検索,idと区切り文字":"を付与
+	mpc playlist | grep -F -i -n "${str_name}" |
 
 	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]を付与"
 	# "queued_song"にシェル変数"current"を渡す
