@@ -24,9 +24,6 @@ cat_post=$(cat)
 
 # クエリを変数展開で加工,デコード,変数に代入
 search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
-
-# 再生中の楽曲
-mpc_current="$(mpc current)"
 # ====== 変数の設定ここまで ======
 
 
@@ -52,14 +49,19 @@ mpc_post () {
 }
 
 # キュー内の曲の検索,チェックボックス付きで表示
-queued () {
+queued_song () {
 
-	# キューされた曲をgrepで検索,idと区切り文字" : "を付与
-	mpc playlist | grep -F -i -n "${search_str}" | sed "s/:/ : /" |
+	# キューされた曲をgrepで検索,idと区切り文字":"を付与
+	mpc playlist | grep -F -i -n "${search_str}" |
 
-	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]を付与"
-	# "queued_song"にシェル変数"current"を渡す
-	queued_song -v mpc_current="${mpc_current}"
+	# 区切り文字":"を">"に置換,標準入力をタグ付きで出力
+	awk '{
+
+		sub(":" , ">")
+
+		print "<p><input type=checkbox name=del value="$0"</p>"
+
+	}'
 
 }
 # ===== 関数の宣言ここまで ======
@@ -133,7 +135,7 @@ cat << EOS
 			<p><input type="submit" value="Remove select song"></p>
 
 			<!-- キュー内の曲を表示 -->
-			$(queued)
+			$(queued_song)
 
 			<!-- 削除ボタン -->
 			<p><input type="submit" value="Remove select song"></p>
