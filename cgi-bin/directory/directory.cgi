@@ -81,17 +81,15 @@ mpc_post () {
 # mpd管理下の全ての曲を表示
 directory_list () {
 
+	# 再生中の楽曲
+	mpc_current="$(mpc current -f "%file%")"
+
 	# 曲の一覧を出力,行番号と区切り文字":"の付与,検索
 	mpc listall | grep -F -i -n "${search_str}" |
 
-	# ":"を">"に置換,標準入力をタグ付きで出力
-	awk '{
-
-		sub(":" , ">")
-
-		print "<p><button name=add value="$0"</button></p>"
-
-	}'
+	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]を付与"
+	# "queued_song"にシェル変数"current"を渡す
+	queued_song -v mpc_current="${mpc_current}" -v script_name="directory"
 
 }
 # ===== 関数の宣言ここまで ======
