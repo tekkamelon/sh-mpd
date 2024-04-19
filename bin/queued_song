@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 
-# 引数として-v mpc_current="${mpc_current}"が必須
+# 引数として-v mpc_current="${mpc_current}",-v post_name="hoge"が必要
 BEGIN{
 
 	# 区切り文字を"行頭が数字の1回以上の繰り返しかつ:"に指定
@@ -9,47 +9,22 @@ BEGIN{
 }
 
 {
-		
-	# 引数で渡された変数が"queued"であれば真
-	if(script_name == "queued"){
 
-		# "current"が第2フィールドと一致すれば真
-		if(mpc_current == $2){
+	# "current"が第2フィールドと一致すれば真
+	if(mpc_current == $2){
 
-			marker = "<b>[Now Playing]</b>"
+		marker = "<b>[Now Playing]</b>"
 
-		}else{
+	}else{
 
-			marker = ""
-
-		}
-
-		# "ID:楽曲"を"ID>楽曲"に置換
-		sub(":" , ">")
-
-		# 標準入力をタグ化し出力
-		print "<p><button name=play value=", $0, "</button>", marker, "</p>"
-
-	# 引数で渡された変数が"directory"であれば真
-	}else if(script_name == "directory"){
-
-		# "current"が第2フィールドと一致すれば真
-		if(mpc_current == $2){
-
-			marker = "<b>[Now Playing]</b>"
-
-		}else{
-
-			marker = ""
-
-		}
-
-		# "ID:楽曲"を"ID>楽曲"に置換
-		sub(":" , ">")
-
-		# 標準入力をタグ化し出力
-		print "<p><button name=add value=", $0, "</button>", marker, "</p>"
+		marker = ""
 
 	}
+
+	# "ID:楽曲データ"を"ID>楽曲データ"に置換
+	sub(":" , ">")
+
+	# 標準入力をタグ化し出力
+	print "<p><button name=", post_name, "value=", $0, "</button>", marker, "</p>"
 
 }

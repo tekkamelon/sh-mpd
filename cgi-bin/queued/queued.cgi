@@ -93,9 +93,9 @@ queued () {
 	# キューされた曲をgrepで検索,idと区切り文字":"を付与
 	mpc playlist | grep -F -i -n "${str_name}" |
 
-	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]を付与"
-	# "queued_song"にシェル変数"current"を渡す
-	queued_song -v mpc_current="${mpc_current}" -v script_name="queued"
+	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]"を付与
+	# "queued_song"にシェル変数"current",post_nameに"play"を渡す
+	queued_song -v mpc_current="${mpc_current}" -v post_name="play"
 
 }
 # ===== 関数の宣言ここまで ======
