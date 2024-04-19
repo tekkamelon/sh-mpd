@@ -10,21 +10,46 @@ BEGIN{
 
 {
 		
-	# "current"が第2フィールドと一致すれば真
-	if(mpc_current == $2){
+	# 引数で渡された変数が"queued"であれば真
+	if(script_name == "queued"){
 
-		marker = "<b>[Now Playing]</b>"
+		# "current"が第2フィールドと一致すれば真
+		if(mpc_current == $2){
 
-	}else{
+			marker = "<b>[Now Playing]</b>"
 
-		marker = ""
+		}else{
+
+			marker = ""
+
+		}
+
+		# "ID:楽曲"を"ID>楽曲"に置換
+		sub(":" , ">")
+
+		# 標準入力をタグ化し出力
+		print "<p><button name=play value=", $0, "</button>", marker, "</p>"
+
+	# 引数で渡された変数が"directory"であれば真
+	}else if(script_name == "directory"){
+
+		# "current"が第2フィールドと一致すれば真
+		if(mpc_current == $2){
+
+			marker = "<b>[Now Playing]</b>"
+
+		}else{
+
+			marker = ""
+
+		}
+
+		# "ID:楽曲"を"ID>楽曲"に置換
+		sub(":" , ">")
+
+		# 標準入力をタグ化し出力
+		print "<p><button name=add value=", $0, "</button>", marker, "</p>"
 
 	}
-
-	# "ID:楽曲"を"ID>楽曲"に置換
-	sub(":" , ">")
-
-	# 標準入力をタグ化し出力
-	print "<p><button name=play value=", $0, "</button>", marker, "</p>"
 
 }
