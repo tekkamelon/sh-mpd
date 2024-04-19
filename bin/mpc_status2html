@@ -19,12 +19,12 @@
 		sub( "consume: on" , "consume:<strong> on</strong>" )
 
 		# 置換した結果に改行を付与し出力
-		print $0"<br>"
+		print $0, "<br>"
 
 	}else{
 
 		# 偽の場合は行末に改行を付与し出力
-		print $0"<br>"
+		print $0, "<br>"
 		
 	}
 

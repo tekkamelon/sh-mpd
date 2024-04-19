@@ -59,7 +59,7 @@ list_playlist () {
 
 	awk '{
 
-		print "<p><input type=checkbox name=rm value="$0">"$0"</p>"
+		print "<p><input type=checkbox name=rm value=", $0, ">", $0, "</p>"
 
 	}'
 

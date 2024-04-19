@@ -31,7 +31,7 @@ BEGIN{
 		gsub(" " , "%20" , $0)
 
 		# "value"にエンコード後,タグ内にエンコード前
-		print "<p><button name=add value="$0">"filename"</button></p>"
+		print "<p><button name=add value=", $0, ">", filename, "</button></p>"
 
 	}
 
