@@ -95,7 +95,7 @@ queued () {
 
 	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]を付与"
 	# "queued_song"にシェル変数"current"を渡す
-	queued_song -v mpc_current="${mpc_current}"
+	queued_song -v mpc_current="${mpc_current}" -v script_name="queued"
 
 }
 # ===== 関数の宣言ここまで ======
