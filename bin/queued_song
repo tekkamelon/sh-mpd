@@ -10,21 +10,48 @@ BEGIN{
 
 {
 
-	# "current"が第2フィールドと一致すれば真
-	if(mpc_current == $2){
+	# "current"が第2フィールドと一致かつpost_nameが"del"ではない場合に真
+	if(mpc_current == $2 && post_name != "del"){
 
 		marker = "<b>[Now Playing]</b>"
 
-	}else{
+		# "ID:楽曲データ"を"ID>楽曲データ"に置換
+		sub(":" , ">")
+
+		# 標準入力をタグ化し出力
+		print "<p><button name=", post_name, "value=", $0, "</button>", marker, "</p>"
+
+	# "current"が第2フィールドと一致かつpost_nameが"del"の場合に真
+	}else if(mpc_current == $2 && post_name == "del" ){
+
+		marker = "<b>[Now Playing]</b>"
+
+		# "ID:楽曲データ"を"ID>楽曲データ"に置換
+		sub(":" , ">")
+
+		print "<p><input type=checkbox name=", post_name, "value=", $0, marker, "</p>"
+
+	# "post_name"が"play"か"add"の場合に真
+	}else if(post_name == "play" || post_name == "add"){
 
 		marker = ""
 
+		# "ID:楽曲データ"を"ID>楽曲データ"に置換
+		sub(":" , ">")
+
+		# 標準入力をタグ化し出力
+		print "<p><button name=", post_name, "value=", $0, "</button>", marker, "</p>"
+
+	# "post_name"が"del"の場合に真
+	}else if(post_name == "del"){
+
+		marker = ""
+
+		# "ID:楽曲データ"を"ID>楽曲データ"に置換
+		sub(":" , ">")
+
+		print "<p><input type=checkbox name=", post_name, "value=", $0, marker, "</p>"
+
 	}
-
-	# "ID:楽曲データ"を"ID>楽曲データ"に置換
-	sub(":" , ">")
-
-	# 標準入力をタグ化し出力
-	print "<p><button name=", post_name, "value=", $0, "</button>", marker, "</p>"
 
 }
