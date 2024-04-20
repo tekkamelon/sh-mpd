@@ -49,46 +49,17 @@ mpc_post () {
 }
 
 # キュー内の曲の検索,チェックボックス付きで表示
-queued_song () {
+queued () {
 
+	# 再生中の楽曲
 	mpc_current="$(mpc current)"
 
 	# キューされた曲をgrepで検索,idと区切り文字":"を付与
 	mpc playlist | grep -F -i -n "${search_str}" |
 
-	# 区切り文字":"を">"に置換,標準入力をタグ付きで出力
-	awk  -v mpc_current="${mpc_current}" -v post_name="del" '
-
-	BEGIN{
-
-		# 区切り文字を"行頭が数字の1回以上の繰り返しかつ:"に指定
-		FS = "^[0-9]*:"
-
-	}
-
-	{
-
-		# "current"が第2フィールドと一致すれば真
-		if(mpc_current == $2){
-
-			marker = "<b>[Now Playing]</b>"
-
-		}else{
-
-			marker = ""
-
-		}
-
-		sub(":" , ">")
-
-		# "ID:楽曲データ"を"ID>楽曲データ"に置換
-		# 標準入力をタグ化し出力
-		print "<p><input type=checkbox name=", post_name, "value=", $0, marker, "</p>"
-
-		# print "<p><input type=checkbox name=del value="$0"</p>"
-
-	}
-	'
+	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]"を付与
+	# "queued_song"にシェル変数"current",post_nameに"del"を渡す
+	queued_song -v mpc_current="${mpc_current}" -v post_name="del" 
 
 }
 # ===== 関数の宣言ここまで ======
@@ -162,7 +133,7 @@ cat << EOS
 			<p><input type="submit" value="Remove select song"></p>
 
 			<!-- キュー内の曲を表示 -->
-			$(queued_song)
+			$(queued)
 
 			<!-- 削除ボタン -->
 			<p><input type="submit" value="Remove select song"></p>
