@@ -13,38 +13,38 @@ BEGIN{
 	# "current"が第2フィールドと一致かつpost_nameが"del"ではない場合に真
 	if(mpc_current == $2 && post_name != "del"){
 
-		marker = "<b>[Now Playing]</b>"
-
 		tag = "<p><button name="
 
 		button = "</button>"
+
+		marker = "<b>[Now Playing]</b>"
 
 	# "current"が第2フィールドと一致かつpost_nameが"del"の場合に真
 	}else if(mpc_current == $2 && post_name == "del" ){
 
-		marker = "<b>[Now Playing]</b>"
-
 		tag = "<p><input type=checkbox name="
 
 		button = ""
 
+		marker = "<b>[Now Playing]</b>"
+
 	# "post_name"が"play"か"add"の場合に真
 	}else if(post_name == "play" || post_name == "add"){
-
-		marker = ""
 
 		tag = "<p><button name="
 
 		button = "</button>"
 
+		marker = ""
+
 	# "post_name"が"del"の場合に真
 	}else if(post_name == "del"){
-
-		marker = ""
 
 		tag = "<p><input type=checkbox name="
 
 		button = ""
+
+		marker = ""
 
 	}
 
