@@ -6,8 +6,11 @@ BEGIN{
 	# クラス"content"を宣言
 	print "<div class=content>"
 
+	# 閉じるボタン
+	print "<button onclick=location.href=/cgi-bin/playlist/playlist.cgi>close</button>"
+
 	# プレイリストをキューに追加するボタン
-	print "<p><button id=playlist_button name=load value="playlist_name">"playlist_name"</button></p>"
+	print "<p><button id=playlist_button name=load value=", playlist_name, ">", playlist_name, "</button></p>"
 
 }
 
@@ -17,10 +20,10 @@ BEGIN{
 	if(/^http:\/\// || /^https:\/\//){
 
 		# ウェブラジオをキューに追加するボタン
-		print "<p><button name=add value="$0">"$0"</button>"
+		print "<p><button name=add value=", $0, ">", $0, "</button>"
 
 		# 新規タブで開くリンクを出力
-		print "<a href="$0" target=_blank rel=noopener noreferrer>⋯</a>"
+		print "<a href=", $0, "target=_blank rel=noopener noreferrer>⋯</a>"
 
 	}else{
 
@@ -42,3 +45,4 @@ END{
 	print "</div>"
 
 }
+
