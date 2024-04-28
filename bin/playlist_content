@@ -7,7 +7,7 @@ BEGIN{
 	print "<div class=content>"
 
 	# 閉じるボタン
-	print "<button onclick=location.href=/cgi-bin/playlist/playlist.cgi>close</button>"
+	print "<p><button id=close_button onclick=location.href=/cgi-bin/playlist/playlist.cgi>close</button></p>"
 
 	# プレイリストをキューに追加するボタン
 	print "<p><button id=playlist_button name=load value=", playlist_name, ">", playlist_name, "</button></p>"
