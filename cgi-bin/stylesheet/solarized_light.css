@@ -300,3 +300,12 @@ footer {
 	display: block;
   	margin: auto;
 
+}
+
+/* ボタンを右寄せ */
+#close_button {
+
+	display: block;
+  	margin: 0 0 0 auto;
+
+}
