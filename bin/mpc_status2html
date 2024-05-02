@@ -2,10 +2,15 @@
 
 {
 
-	# 行頭が"volume :"であれば真,それ以外で偽
-	if(/^volume: /){
+	# 1行目が"mpc_current"と一致すれば真
+	if(NR == 1 && mpc_current == $0){
+		
+		# 1行目に<a>タグでジャンプを付与
+		print "<a href=#current>", $0, "</a><br>"
 
-		# 真の場合の処理
+	# 偽の場合は行頭が"volume :"であれば真,それ以外で偽
+	}else if(/^volume: /){
+
 		# オフの場合は<b>タグを付与
 		sub( "repeat: off" , "repeat:<b> off</b>" )
 		sub( "random: off" , "random:<b> off</b>" )
@@ -23,7 +28,6 @@
 
 	}else{
 
-		# 偽の場合は行末に改行を付与し出力
 		print $0, "<br>"
 		
 	}
