@@ -24,6 +24,9 @@ cat_post=$(cat)
 
 # クエリを変数展開で加工,デコード,変数に代入
 search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
+
+# 再生中の楽曲
+mpc_current="$(mpc current)"
 # ====== 変数の設定ここまで ======
 
 
@@ -36,7 +39,7 @@ mpc_post () {
 
 	xargs mpc 2>&1 |
 
-	mpc_status2html
+	mpc_status2html -v mpc_current="${mpc_current}" 
 
 	# 曲の削除の結果の表示,"cat_post"があれば真
 	if [ -n "${cat_post}" ] ; then

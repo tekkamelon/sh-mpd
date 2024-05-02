@@ -80,7 +80,8 @@ mpc_status () {
 
 	fi |
 
-	mpc_status2html
+	# 出力をhtmlに加工
+	mpc_status2html -v mpc_current="${mpc_current}" 
 
 }
 
