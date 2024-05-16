@@ -4,6 +4,8 @@ webブラウザ上からmpdを操作できるCGIシェルスクリプト
 
 ## 開発の目標
 
+#### [こちらも参照](https://scrapbox.io/mpd/sh-MPD%E3%81%A8%E3%81%8B%E3%81%84%E3%81%86%E3%81%AE%E3%82%92%E4%BD%9C%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B)
+
 ### 高い移植性
 
 - シェル固有の拡張機能の使用を廃し,様々なPOSIX準拠環境での動作を可能にする
@@ -47,11 +49,8 @@ git clone https://github.com/tekkamelon/sh-mpd
 # cgi-bin/をwebサーバーで設定されたディレクトリにコピー
 sudo cp -r sh-mpd/cgi-bin /usr/lib/ # ※一例
 
-# 上記でコピーしたディレクトリに移動
-cd /usr/lib/cgi-bin
-
 #  各cgiファイルに実行権限を付与
-find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
+find /usr/lib/cgi-bin -type f -name '*.cgi' -exec chmod 755 \{\} \;
 ```
 
 ## カバーアートの表示
@@ -67,6 +66,7 @@ find . -type f -name '*.cgi' -exec chmod 755 \{\} \;
 cd # mpd.confの"music_directory"
 python3 -m http.server 8080 # ポート番号は例
 ```
+
 - "Server setting"で"cover art host","cover art host"を設定
 
 ## トラブルシューティング
