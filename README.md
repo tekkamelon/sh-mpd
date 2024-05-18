@@ -4,7 +4,7 @@ webブラウザ上からmpdを操作できるCGIシェルスクリプト
 
 ## 開発の目標
 
-#### [こちらも参照](https://scrapbox.io/mpd/sh-MPD%E3%81%A8%E3%81%8B%E3%81%84%E3%81%86%E3%81%AE%E3%82%92%E4%BD%9C%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B)
+#### [こちらも参照](https://scrapbox.io/mpd/sh-MPD)
 
 ### 高い移植性
 
