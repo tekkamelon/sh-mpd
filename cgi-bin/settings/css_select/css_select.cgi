@@ -43,21 +43,18 @@ else
 	export ECHO_MESSAGE=""
 
 fi
-
-# cssの一覧を変数として宣言
-css_list=$(ls ../../stylesheet)
 # ====== 変数の設定ここまで ======
 
 
 # ===== 関数の宣言 ======
 css_list () {
 
-	echo "${css_list}" |
+	find ../../stylesheet -name "*.css" |
 
-	awk '{
+	awk -F"/" '{
 
-		# 出力をボタン化
-		print "<p><button name=css value="$0">"$0"</button></p>"
+		# 最終フィールドにタグを付与し出力
+		print "<p><button name=css value="$NF">"$NF"</button></p>"
 
 	}'
 
