@@ -5,6 +5,9 @@
 # x 実行されたコマンドの出力
 # v 変数の表示
 
+# shellcheck disable=SC1091
+# shellcheck disable=SC2154
+
 # ====== 変数の設定 ======
 # ロケールの設定
 export LC_ALL=C
