@@ -23,7 +23,7 @@ export PATH="$PATH:../../bin"
 . ../settings/shmpd.conf
 
 # POSTを変数に代入
-cat_post=$(cat)
+cat_post=$(cat | tbug)
 
 # "foo=bar"の"foo","bar"をそれぞれ抽出
 post_left="${cat_post%\=*}"
@@ -39,39 +39,41 @@ search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 mpc_post () {
 
 	# POSTを変数展開で加工,文字列が1以上の数値であれば真,それ以外で偽
-	if [ "${post_right}" -gt 0 ] ; then
+	# if [ "${post_right}" -gt 0 ] ; then
 
-		# 楽曲の一覧から"post_right"の番号の行を抽出,結果を挿入
-		mpc listall | sed -n "${post_right}"p | mpc add
+	# 	# 楽曲の一覧から"post_right"の番号の行を抽出,結果を挿入
+	# 	mpc listall | sed -n "${post_right}"p | mpc add
 
-		# キュー内の楽曲数を変数に代入
-		last_line=$(mpc playlist | wc -l)
+	# 	# キュー内の楽曲数を変数に代入
+	# 	last_line=$(mpc playlist | wc -l)
 
-		echo "play ${last_line}"
+	# 	echo "play ${last_line}"
 
-	# 偽の場合は"addresult"であれば真,それ以外で偽
-	elif [ "${post_left}" = "addresult" ] ; then
+	# # 偽の場合は"addresult"であれば真,それ以外で偽
+	# elif [ "${post_left}" = "addresult" ] ; then
 
-		# 楽曲の一覧から"search_str"で検索,結果を挿入
-		mpc listall | grep -F -i "${search_str}" | mpc add &
+	# 	# 楽曲の一覧から"search_str"で検索,結果を挿入
+	# 	mpc listall | grep -F -i "${search_str}" | mpc add &
 
-		echo "status"
+	# 	echo "status"
 
-	# 偽の場合は"all"であれば真,それ以外で偽
-	elif [ "${post_right}" = "all" ] ; then
+	# # 偽の場合は"all"であれば真,それ以外で偽
+	# elif [ "${post_right}" = "all" ] ; then
 
-		# すべての楽曲をキューに追加
-		mpc add / &
+	# 	# すべての楽曲をキューに追加
+	# 	mpc add / &
 
-		echo "status"
+	# 	echo "status"
 
-	else
+	# else
 
-		# 偽の場合は"status"を出力
-		echo "status"
+	# 	# 偽の場合は"status"を出力
+	# 	echo "status"
 	
-	# エラー出力を捨てる
-	fi 2> /dev/null |
+	# # エラー出力を捨てる
+	# fi 2> /dev/null |
+
+	echo "${post_left} ${post_right}" | urldecode |
 
 	# 出力をmpcに渡す
 	xargs mpc 2>&1 |
@@ -82,17 +84,20 @@ mpc_post () {
 }
 
 # mpd管理下の全ての曲を表示
-directory_list () {
-
-	# 再生中の楽曲
-	mpc_current="$(mpc current -f "%file%")"
+album_list () {
 
 	# 曲の一覧を出力,行番号と区切り文字":"の付与,検索
-	mpc listall | grep -F -i -n "${search_str}" |
+	mpc listall | cut -d"/" -f1 | awk '!a[$0]++' | grep -F -i "${search_str}" |
 
-	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]"を付与
-	# "queued_song"にシェル変数"current",post_nameに"add"を渡す
-	queued_song -v mpc_current="${mpc_current}" -v post_name="add"
+	awk -F"," '{
+
+		print "<p><button name=add value="$0">"$0"</button>"
+
+		print "<a href=#top><button name=ls value="$0">⋯</button></a></p>"
+
+	}' |
+	
+	tbug
 
 }
 # ===== 関数の宣言ここまで ======
@@ -121,7 +126,7 @@ cat << EOS
 	<div id="top"></div>
 
 	<header>
-		<h1>Directory</h1>
+		<h1>Album</h1>
 
 	</header>
 
@@ -156,7 +161,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- mpc管理下のディレクトリを再帰的に表示 -->
-			$(directory_list)
+			$(album_list)
 			
 			<!-- 検索結果を挿入するボタン -->
 			<p><button name=addresult value=>add search result</button></p>
