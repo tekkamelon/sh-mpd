@@ -35,20 +35,6 @@ search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
 
 # ===== 関数の宣言 ======
-# クエリの有無に応じ処理を変更
-query_check (){
-
-	if [ -n "${search_str}" ] ; then
-
-		cat -
-	else
-
-		cat - | cut -d"," -f1
-	
-	fi
-
-}
-
 # POSTの処理し引数をmpcに渡す
 mpc_post () {
 
@@ -63,10 +49,22 @@ mpc_post () {
 }
 
 # mpd管理下の全ての曲を表示
-album_list () {
+directory_list () {
 
-	# 曲の一覧を出力,検索
-	mpc listall | cut -d"/" -f1 | awk '!a[$0]++' | grep -F -i "${search_str}" |
+	# クエリの有無があれば真
+	if [ -n "${search_str}" ] ; then
+
+		# 曲の一覧を出力
+		mpc listall 
+
+	else
+
+		# 曲の一覧を出力,区切り文字を/に指定,1フィールド目を出力
+		mpc listall | cut -d"/" -f1
+	
+	fi |
+
+	awk '!a[$0]++' | grep -F -i "${search_str}" |
 
 	awk -F"," '{
 
@@ -74,9 +72,7 @@ album_list () {
 
 		print "<a href=#top><button name=ls value="$0">⋯</button></a></p>"
 
-	}' |
-	
-	tbug
+	}'
 
 }
 # ===== 関数の宣言ここまで ======
@@ -140,7 +136,7 @@ cat << EOS
 		<form name="music" method="POST" >
 
 			<!-- mpc管理下のディレクトリを再帰的に表示 -->
-			$(album_list)
+			$(directory_list)
 			
 			<!-- 検索結果を挿入するボタン -->
 			<p><button name=addresult value=>add search result</button></p>
