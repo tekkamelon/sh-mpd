@@ -1,27 +1,42 @@
 #!/usr/bin/awk -f
 
+# 引数として"-v playlist_name="${playlist_name}"が必須
 BEGIN{
 
 	# クラス"content"を宣言
 	print "<div class=content>"
 
 	# 閉じるボタン
-	print "<p><button id=close_button onclick=location.href=/cgi-bin/album/album.cgi>close</button></p>"
+	print "<p><button id=close_button onclick=location.href=/cgi-bin/playlist/playlist.cgi>close</button></p>"
+
+	# プレイリストをキューに追加するボタン
+	print "<p><button id=playlist_button name=load value=", playlist_name, ">", playlist_name, "</button></p>"
 
 }
 
 {
 
-	# 入力を"filename"に代入
-	filename = $0
+	# ウェブラジオの判定,行頭が"http://"もしくは"https://"であれば真,それ以外で偽
+	if(/^http:\/\// || /^https:\/\//){
 
-	# スペースをエンコード
-	gsub(" " , "%20" , $0)
+		# ウェブラジオをキューに追加するボタン
+		print "<p><button name=add value=", $0, ">", $0, "</button>"
 
-	# "value"にエンコード後,タグ内にエンコード前
-	print "<p><button name=add value=", $0, ">", filename, "</button>"
+		# 新規タブで開くリンクを出力
+		print "<a href=", $0, "target=_blank rel=noopener noreferrer>⋯</a>"
 
-	print "<a href=#top><button name=ls value="$0">⋯</button></a></p>"
+	}else{
+
+		# 入力を"filename"に代入
+		filename = $0
+
+		# スペースをエンコード
+		gsub(" " , "%20" , $0)
+
+		# "value"にエンコード後,タグ内にエンコード前
+		print "<p><button name=add value=", $0, ">", filename, "</button></p>"
+
+	}
 
 }
 
