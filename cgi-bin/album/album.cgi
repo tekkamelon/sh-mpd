@@ -35,22 +35,43 @@ search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 
 
 # ===== 関数の宣言 ======
-# クエリの有無に応じ処理を変更
-query_check (){
-
-	if [ -n "${search_str}" ] ; then
-
-		cat -
-	else
-
-		cat - | cut -d"," -f1
-	
-	fi
-
-}
-
 # POSTの処理し引数をmpcに渡す
 mpc_post () {
+
+	# POSTを変数展開で加工,文字列が1以上の数値であれば真,それ以外で偽
+	# if [ "${post_right}" -gt 0 ] ; then
+
+	# 	# 楽曲の一覧から"post_right"の番号の行を抽出,結果を挿入
+	# 	mpc listall | sed -n "${post_right}"p | mpc add
+
+	# 	# キュー内の楽曲数を変数に代入
+	# 	last_line=$(mpc playlist | wc -l)
+
+	# 	echo "play ${last_line}"
+
+	# # 偽の場合は"addresult"であれば真,それ以外で偽
+	# elif [ "${post_left}" = "addresult" ] ; then
+
+	# 	# 楽曲の一覧から"search_str"で検索,結果を挿入
+	# 	mpc listall | grep -F -i "${search_str}" | mpc add &
+
+	# 	echo "status"
+
+	# # 偽の場合は"all"であれば真,それ以外で偽
+	# elif [ "${post_right}" = "all" ] ; then
+
+	# 	# すべての楽曲をキューに追加
+	# 	mpc add / &
+
+	# 	echo "status"
+
+	# else
+
+	# 	# 偽の場合は"status"を出力
+	# 	echo "status"
+	
+	# # エラー出力を捨てる
+	# fi 2> /dev/null |
 
 	echo "${post_left} ${post_right}" | urldecode |
 
@@ -65,7 +86,7 @@ mpc_post () {
 # mpd管理下の全ての曲を表示
 album_list () {
 
-	# 曲の一覧を出力,検索
+	# 曲の一覧を出力,行番号と区切り文字":"の付与,検索
 	mpc listall | cut -d"/" -f1 | awk '!a[$0]++' | grep -F -i "${search_str}" |
 
 	awk -F"," '{
