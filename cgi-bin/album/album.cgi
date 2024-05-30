@@ -23,7 +23,7 @@ export PATH="$PATH:../../bin"
 . ../settings/shmpd.conf
 
 # POSTを変数に代入
-cat_post=$(cat)
+cat_post=$(cat | tbug)
 
 # "foo=bar"の"foo","bar"をそれぞれ抽出
 post_left="${cat_post%\=*}"
@@ -38,27 +38,13 @@ search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
 # POSTの処理し引数をmpcに渡す
 mpc_post () {
 
-	# POSTがlsかaddであれば真
-	if [ "${post_left}" = "ls" ] || [ "${post_left}" = "add" ] ; then
+	echo "${post_left} ${post_right}" | urldecode |
 
-		echo "${post_left} ${post_right}" | urldecode |
-
-		# 出力をmpcに渡す
-		xargs mpc 2>&1 |
-		
-		directory_content
-
-	else
-
-		echo "status" |
-
-		# 出力をmpcに渡す
-		xargs mpc 2>&1 |
-		
-		# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-		mpc_status2html
-
-	fi
+	# 出力をmpcに渡す
+	xargs mpc 2>&1 |
+	
+	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
+	mpc_status2html
 
 }
 
@@ -115,8 +101,7 @@ cat << EOS
 	<div id="top"></div>
 
 	<header>
-
-		<h1>Directory</h1>
+		<h1>Album</h1>
 
 	</header>
 
