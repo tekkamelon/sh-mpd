@@ -3,6 +3,9 @@
 # 引数として"-v playlist_name="${playlist_name}"が必須
 BEGIN{
 
+	# 区切り文字を":"に設定
+	FS = ":"
+
 	# クラス"content"を宣言
 	print "<div class=content>"
 
@@ -16,24 +19,24 @@ BEGIN{
 
 {
 
-	# ウェブラジオの判定,行頭が"http://"もしくは"https://"であれば真,それ以外で偽
-	if(/^http:\/\// || /^https:\/\//){
+	# ウェブラジオの判定,1フィールド目が"http"か"https"であれば真,それ以外で偽
+	if($1 == "http" || $1 == "https"){
 
 		# ウェブラジオをキューに追加するボタン
 		print "<p><button name=add value=", $0, ">", $0, "</button>"
 
-		# 新規タブで開くリンクを出力
+		# 新規タブで開くラジオのサイトへのリンクを出力
 		print "<a href=", $0, "target=_blank rel=noopener noreferrer>⋯</a>"
 
 	}else{
 
-		# 入力を"filename"に代入
+		# エンコード前の文字列を代入
 		filename = $0
 
 		# スペースをエンコード
 		gsub(" " , "%20" , $0)
 
-		# "value"にエンコード後,タグ内にエンコード前
+		# "value"にエンコード後,タグ内にエンコード前の文字列
 		print "<p><button name=add value=", $0, ">", filename, "</button></p>"
 
 	}
