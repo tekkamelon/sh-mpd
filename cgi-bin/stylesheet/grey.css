@@ -137,6 +137,7 @@ summary {
 input {
 
 	margin-top: 20px;
+	margin-left: 5px;
     color: rgb(155, 160, 160);
 	background-color: rgb(60, 65, 65);
 	border: 1px solid rgb(60, 65, 65);
@@ -250,6 +251,15 @@ footer {
 .resize img {
 
 	 width: 360px;
+
+}
+
+/* カバーアートの位置調整 */
+.img {
+
+	position: relative;
+	left: 35px;
+	margin: 5px;
 
 }
 
