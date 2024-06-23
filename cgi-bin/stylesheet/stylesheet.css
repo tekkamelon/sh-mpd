@@ -119,7 +119,7 @@ select {
 	color: var(--main-bg-color);
 	background-color: black;
 	border: 1px solid teal;
-	border-radius: 6px;
+	/* border-radius: 6px; */
     text-align: center;
 
 }
@@ -140,10 +140,11 @@ summary {
 input {
 
 	margin-top: 20px;
+	margin-left: 5px;
 	color: var(--main-bg-color);
 	background-color: black;
 	border: 1px solid teal;
-	border-radius: 6px;
+	/* border-radius: 6px; */
 
 }
 
@@ -185,8 +186,9 @@ button {
 	color: white;
 	background-color: black;
 	border: 1px solid teal;
-	border-radius: 12px;
+	/* border-radius: 12px; */
 	text-align: center;
+	width: auto;
 
 }
 
@@ -197,11 +199,24 @@ button:hover {
 	color: var(--main-bg-color);
 	background-color: black;
 	border: 1px solid orange;
-	border-radius: 12px;
+	/* border-radius: 12px; */
 	text-align: center;
 
 }
 
+/* ボタンを等幅に設定 */
+.equal_width_button {
+
+	margin: 3px;
+	padding: 7px 14px;
+	color: white;
+	background-color: black;
+	border: 1px solid teal;
+	/* border-radius: 12px; */
+	text-align: center;
+	width: 100px;
+
+}
 /* index.cgi */
 .layout {
 
