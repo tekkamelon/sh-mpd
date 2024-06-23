@@ -192,6 +192,13 @@ button:hover {
 
 }
 
+/* ボタンを等幅に設定 */
+.equal_width_button {
+
+	width: 100px;
+
+}
+
 /* div class */
 .link {
 
