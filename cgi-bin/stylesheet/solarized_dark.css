@@ -33,7 +33,7 @@ a {
 /* ヘッダー */
 header {
 
-	width:70%;
+	width: 100%;
     color: var(--main-bg-color);
     text-align: center;
 
