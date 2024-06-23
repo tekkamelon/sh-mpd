@@ -33,7 +33,7 @@ a {
 /* ヘッダー */
 header {
 
-	width:70%;
+	width:100%;
     color: var(--main-bg-color);
     text-align:center
 
@@ -144,7 +144,7 @@ input {
 	color: var(--main-bg-color);
 	background-color: black;
 	border: 1px solid teal;
-	/* border-radius: 6px; */
+	/* width: 200px; */
 
 }
 
@@ -186,7 +186,6 @@ button {
 	color: white;
 	background-color: black;
 	border: 1px solid teal;
-	/* border-radius: 12px; */
 	text-align: center;
 	width: auto;
 
@@ -199,7 +198,6 @@ button:hover {
 	color: var(--main-bg-color);
 	background-color: black;
 	border: 1px solid orange;
-	/* border-radius: 12px; */
 	text-align: center;
 
 }
@@ -207,16 +205,10 @@ button:hover {
 /* ボタンを等幅に設定 */
 .equal_width_button {
 
-	margin: 3px;
-	padding: 7px 14px;
-	color: white;
-	background-color: black;
-	border: 1px solid teal;
-	/* border-radius: 12px; */
-	text-align: center;
 	width: 100px;
 
 }
+
 /* index.cgi */
 .layout {
 
@@ -229,20 +221,20 @@ button:hover {
 
 header,main,aside,footer {
 
-   padding:10px 0;
+   padding: 10px 0;
 
 }
 
 main {
 
-	width:75%;
+	width: 70%;
 
 }
 
 /* サイドバー */
 aside {
 
-	width:25%;
+	width: 30%;
     text-align:center
 
 }
@@ -257,6 +249,15 @@ footer {
 .resize img {
 
 	 width: 360px;
+
+}
+
+/* カバーアートの位置調整 */
+.img {
+
+	position: relative;
+	left: 35px;
+	margin: 5px;
 
 }
 

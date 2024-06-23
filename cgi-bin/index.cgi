@@ -112,7 +112,7 @@ cat << EOS
     <head>
 
         <meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta name="viewport" content="width=device-width,initial-scale=0.8">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
@@ -244,12 +244,6 @@ cat << EOS
 				<!-- 入力フォーム -->
 				<form name="format" method="POST" >
 
-					<span>
-
-						searchplay queued song :
-
-					</span>
-
 					<!-- ドロップダウンメニュー -->
 					<select name="args">
 
@@ -284,7 +278,7 @@ cat << EOS
 					<div class="resize">
 
 						<!-- カバーアートの表示,画像がない場合はタグを非表示 -->
-						<img src="$(coverart)" alt="coverart" onerror="this.style.display='none'">
+						<img class="img" img src="$(coverart)" alt="coverart" onerror="this.style.display='none'">
 
 					</div>
 
