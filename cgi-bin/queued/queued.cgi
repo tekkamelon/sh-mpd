@@ -171,10 +171,10 @@ cat << EOS
 		</form>
 
 		<!-- リンク -->
-		<button onclick="location.href='/cgi-bin/queued/remove.cgi'">Remove</button>
-		<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
-		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/remove.cgi'">Remove</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
 
 		<form name="music" method="POST" >
 
@@ -191,10 +191,10 @@ cat << EOS
 	<footer>
 
 		<!-- リンク -->
-		<button onclick="location.href='/cgi-bin/queued/remove.cgi'">Remove</button>
-		<button onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
-		<button onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/remove.cgi'">Remove</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
 
 	</footer>
 
