@@ -43,15 +43,18 @@ post_proc () {
 	# POSTを変数に代入
 	cat_post=$(cat)
 
-	# hostかportを変数展開で抽出
-	host_or_port="${cat_post#*\=}"
-	host_or_port="${host_or_port%%&*}"
+	# サーバーの種類及びホストかポートを抽出
+	post_key="${cat_post#*\=}"
+	post_key="${post_key%%&*}"
 
-	# "host_or_port"が"mpd_host"かつmpdと疎通確認できれば真,そうでなければ偽
-	if [ "${host_or_port}" = "mpd_host" ] && mpc -q --host="${cat_post#*\&*\=}" ; then
+	# ホスト名およびポート番号を抽出
+	post_args="${cat_post#*\&*\=}"
+
+	# "post_key"が"mpd_host"かつmpdと疎通確認できれば真,そうでなければ偽
+	if [ "${post_key}" = "mpd_host" ] && mpc -q --host="${post_args}" ; then
 
 		# 真の場合はPOSTを環境変数に代入
-		export MPD_HOST="${cat_post#*\&*\=}"
+		export MPD_HOST="${post_args}"
 
 		# 変数の一覧を出力,設定ファイルへリダイレクト
  		heredocs >| ../shmpd.conf
@@ -60,11 +63,11 @@ post_proc () {
 
 		mpc status | mpc_status2html
 
-	# "host_or_port"が"mpd_port"かつmpdと疎通確認できれば真,そうでなければ偽
-	elif [ "${host_or_port}" = "mpd_port" ] && mpc -q --port="${cat_post#*\&*\=}" ; then
+	# "post_key"が"mpd_port"かつmpdと疎通確認できれば真,そうでなければ偽
+	elif [ "${post_key}" = "mpd_port" ] && mpc -q --port="${post_args}" ; then
 
 		# 真の場合はPOSTを環境変数に代入
-		export MPD_PORT="${cat_post#*\&*\=}"
+		export MPD_PORT="${post_args}"
 
 		# 変数の一覧を出力,設定ファイルへリダイレクト
  		heredocs >| ../shmpd.conf
@@ -73,22 +76,22 @@ post_proc () {
 	
 		mpc status | mpc_status2html
 
-	# "host_or_port"が"img_server_host"であれば真,それ以外で偽
-	elif [ "${host_or_port}" = "img_server_host" ] ; then
+	# "post_key"が"img_server_host"であれば真,それ以外で偽
+	elif [ "${post_key}" = "img_server_host" ] ; then
 
 		# 真の場合はPOSTを環境変数に代入
-		img_server_host="${cat_post#*\&*\=}"
+		img_server_host="${post_args}"
 
 		# 変数の一覧を出力,設定ファイルへリダイレクト
  		heredocs >| ../shmpd.conf
 
 		echo "changed coverart server host:${img_server_host}<br>"
 
-	# "host_or_port"が"img_server_port"かつPOSTが1以上かつ65535以下であれば真,それ以外で偽
-	elif [ "${host_or_port}" = "img_server_port" ] && [ "${cat_post#*\&*\=}" -ge 1 ] && [ "${cat_post#*\&*\=}" -le 65535 ] ; then
+	# "post_key"が"img_server_port"かつPOSTが1以上かつ65535以下であれば真,それ以外で偽
+	elif [ "${post_key}" = "img_server_port" ] && [ "${post_args}" -ge 1 ] && [ "${post_args}" -le 65535 ] ; then
 
 		# 真の場合はPOSTを環境変数に代入
-		img_server_port="${cat_post#*\&*\=}"
+		img_server_port="${post_args}"
 
 		# 変数の一覧を出力,設定ファイルへリダイレクト
  		heredocs >| ../shmpd.conf
@@ -181,7 +184,7 @@ cat << EOS
 					<span>
 
 						<!-- ホスト名又はIPアドレスの入力欄 -->
-						<p><input type="text" placeholder="default:localhost" name="host_or_port"></p>
+						<p><input type="text" placeholder="default:localhost" name="post_key"></p>
 
 					</span>
 
