@@ -25,8 +25,8 @@ BEGIN{
 		# ウェブラジオをキューに追加するボタン
 		print "<p><button name=add value=", $0, ">", $0, "</button>"
 
-		# 新規タブで開くラジオのサイトへのリンクを出力
-		print "<a href=", $0, "target=_blank rel=noopener noreferrer>⋯</a>"
+		# iframe内でラジオのサイトへのリンクを出力
+		print "<iframe src=", $0, ">", "</iframe>"
 
 	}else{
 
