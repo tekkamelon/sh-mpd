@@ -320,3 +320,12 @@ footer {
   	margin: 0 0 0 auto;
 
 }
+
+/* iframeを中央寄せ */
+iframe {
+
+	display: block;
+  	margin: auto;
+
+}
+
