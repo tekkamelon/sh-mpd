@@ -26,7 +26,10 @@ BEGIN{
 		print "<p><button name=add value=", $0, ">", $0, "</button>"
 
 		# iframe内でラジオのサイトへのリンクを出力
-		print "<iframe src=", $0, ">", "</iframe>"
+		print "<iframe "
+		print "width=300"
+		print "height=200"
+		print "src=", $0, ">", "</iframe>"
 
 	}else{
 
