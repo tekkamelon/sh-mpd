@@ -38,6 +38,13 @@ query_check="${QUERY_STRING#*\=}"
 
 
 # ===== 関数の宣言 ======
+# URLからホスト名を取得
+cgi_host () {
+
+	echo "${HTTP_REFERER}" | cut -d"/" -f3
+
+}
+
 # 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
 mpc_post () {
 	
@@ -114,11 +121,9 @@ cat << EOS
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=0.8">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<!-- <link rel="icon" ref="/cgi-bin/image/favicon.ico"> -->
-		<!-- <link rel="icon" ref="/cgi-bin/image/favicon.ico"> -->
+		<link rel="icon" href="$(coverart)">
 		<link rel="apple-touch-icon" href="$(coverart)">
-		<link rel="apple-touch-icon" href="$(coverart)">
-        <title>sh-MPD</title>
+		<title>HOME - sh-MPD:$(cgi_host) -</title>
 
     </head>
 
