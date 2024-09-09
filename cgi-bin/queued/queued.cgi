@@ -67,6 +67,13 @@ mpc_current="$(mpc current)"
 
 
 # ===== 関数の宣言 ======
+# URLからホスト名を取得
+cgi_host () {
+
+	echo "${HTTP_REFERER}" | cut -d"/" -f3
+
+}
+
 mpc_status () {
 
 	# プレイリスト名が入力されかつ重複がない場合に真
@@ -120,7 +127,7 @@ cat << EOS
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-        <title>sh-MPD</title>
+		<title>Queued - sh-MPD:$(cgi_host) -</title>
 
     </head>
 

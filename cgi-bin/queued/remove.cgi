@@ -34,6 +34,13 @@ mpc_current="$(mpc current)"
 
 
 # ===== 関数の宣言 ======
+# URLからホスト名を取得
+cgi_host () {
+
+	echo "${HTTP_REFERER}" | cut -d"/" -f3
+
+}
+
 mpc_post () {
 
 	# 複数の項目の削除に対応
@@ -86,7 +93,7 @@ cat << EOS
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-        <title>sh-MPD</title>
+		<title>Remove queued - sh-MPD:$(cgi_host) -</title>
 
     </head>
 

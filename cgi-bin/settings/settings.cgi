@@ -21,6 +21,16 @@ export POSIXLY_CORRECT=1
 # ====== 変数の設定ここまで ======
 
 
+# ===== 関数の宣言 ======
+# URLからホスト名を取得
+cgi_host () {
+
+	echo "${HTTP_REFERER}" | cut -d"/" -f3
+
+}
+# ===== 関数の宣言ここまで ======
+
+
 # ====== HTML ======
 echo "Content-type: text/html"
 echo ""
@@ -36,7 +46,7 @@ cat << EOS
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-        <title>sh-MPD</title>
+		<title>Server setting - sh-MPD:$(cgi_host) -</title>
 
     </head>
 

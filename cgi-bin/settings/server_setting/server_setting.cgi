@@ -23,6 +23,13 @@ export PATH="$PATH:../../../bin"
 
 
 # ===== 関数の宣言 ======
+# URLからホスト名を取得
+cgi_host () {
+
+	echo "${HTTP_REFERER}" | cut -d"/" -f3
+
+}
+
 # ヒアドキュメントで設定ファイルの変数を出力
 heredocs () {
 
@@ -123,7 +130,7 @@ cat << EOS
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="image/favicon.svg">
-        <title>sh-MPD</title>
+		<title>Server setting - sh-MPD:$(cgi_host) -</title>
 
     </head>
 

@@ -32,6 +32,13 @@ post_right="${cat_post#"${post_left}"\=}"
 
 
 # ===== 関数の宣言 ======
+# URLからホスト名を取得
+cgi_host () {
+
+	echo "${HTTP_REFERER}" | cut -d"/" -f3
+
+}
+
 # POSTを加工しmpcに渡す
 mpc_post () {
 
@@ -87,13 +94,13 @@ cat << EOS
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-        <title>sh-MPD</title>
+		<title>Outputs - sh-MPD:$(cgi_host) -</title>
 
     </head>
 
 	<header>
 
-		<h1>settings</h1>
+		<h1>Outputs</h1>
 
 	</header>
 
