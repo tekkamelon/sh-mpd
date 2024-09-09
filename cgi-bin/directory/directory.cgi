@@ -1,14 +1,12 @@
 #!/bin/sh 
 
-set -eu
+# shellcheck disable=SC1091,SC2154
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
 # x 実行されたコマンドの出力
 # v 変数の表示
-
-# shellcheck disable=SC1091
-# shellcheck disable=SC2154
+set -eu
 
 # ====== 変数の設定 ======
 # ロケールの設定
@@ -185,3 +183,4 @@ cat << EOS
 </html>
 EOS
 # ====== HTMLここまで ======
+
