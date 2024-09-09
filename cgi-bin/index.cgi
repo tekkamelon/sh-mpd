@@ -114,8 +114,10 @@ cat << EOS
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=0.8">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
-		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
+		<!-- <link rel="icon" ref="/cgi-bin/image/favicon.ico"> -->
+		<!-- <link rel="icon" ref="/cgi-bin/image/favicon.ico"> -->
+		<link rel="apple-touch-icon" href="$(coverart)">
+		<link rel="apple-touch-icon" href="$(coverart)">
         <title>sh-MPD</title>
 
     </head>
