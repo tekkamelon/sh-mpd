@@ -31,13 +31,6 @@ search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
 
 
 # ===== 関数の宣言 ======
-# URLからホスト名を取得
-cgi_host () {
-
-	echo "${HTTP_REFERER}" | cut -d"/" -f3
-
-}
-
 # POSTを加工しmpcに渡す
 mpc_post () {
 

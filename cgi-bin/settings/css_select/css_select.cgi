@@ -16,6 +16,9 @@ export LANG=C
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
 
+# 独自コマンドへPATHを通す
+export PATH="$PATH:../../../bin"
+
 # ". (ドット)"コマンドで設定ファイルの読み込み
 . ../shmpd.conf
 
@@ -50,13 +53,6 @@ fi
 
 
 # ===== 関数の宣言 ======
-# URLからホスト名を取得
-cgi_host () {
-
-	echo "${HTTP_REFERER}" | cut -d"/" -f3
-
-}
-
 css_list () {
 
 	find ../../stylesheet -name "*.css" |

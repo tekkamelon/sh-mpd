@@ -23,13 +23,6 @@ export PATH="$PATH:../../../bin"
 
 
 # ===== 関数の宣言 ======
-# URLからホスト名を取得
-cgi_host () {
-
-	echo "${HTTP_REFERER}" | cut -d"/" -f3
-
-}
-
 # ヒアドキュメントで設定ファイルの変数を出力
 heredocs () {
 

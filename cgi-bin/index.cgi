@@ -38,13 +38,6 @@ query_check="${QUERY_STRING#*\=}"
 
 
 # ===== 関数の宣言 ======
-# URLからホスト名を取得
-cgi_host () {
-
-	echo "${HTTP_REFERER}" | cut -d"/" -f3
-
-}
-
 # 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
 mpc_post () {
 	
