@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -eu
+
+echo "${HTTP_REFERER}" | cut -d"/" -f3 
+
