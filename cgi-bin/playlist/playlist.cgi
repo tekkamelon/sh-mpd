@@ -30,6 +30,9 @@ playlist_name=$(echo "${cat_post#*\=}" | urldecode)
 
 # クエリを変数展開で加工,デコード,変数に代入
 search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
+
+# URLのホスト名を取得
+url_hostname=$(cgi_host)
 # ====== 変数の設定ここまで ======
 
 
@@ -56,7 +59,7 @@ mpc_post () {
 		sed -e "s/\%20/ /g" -e "s/\"\"/status/" | xargs mpc 2>&1 |
 
 		# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-		mpc_status2html
+		mpc_status2html -v url_hostname="${url_hostname}"
 
 	fi
 
@@ -101,7 +104,7 @@ cat << EOS
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-		<title>Playlist - sh-MPD:$(cgi_host) -</title>
+		<title>Playlist - sh-MPD:${url_hostname} -</title>
 
     </head>
 	

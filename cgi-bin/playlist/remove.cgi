@@ -27,6 +27,9 @@ cat_post=$(cat)
 
 # クエリを変数展開で加工,デコード,変数に代入
 search_str="$(echo "${QUERY_STRING#*\=}" | urldecode)"
+
+# URLのホスト名を取得
+url_hostname=$(cgi_host)
 # ====== 変数の設定ここまで ======
 
 
@@ -40,7 +43,7 @@ mpc_post () {
 
 	xargs -l mpc 2>&1 | 
 
-	mpc_status2html
+	mpc_status2html -v url_hostname="${url_hostname}"
 
 	# プレイリストの削除の結果を表示,"cat_post"があれば真
 	if [ -n "${cat_post}" ] ; then

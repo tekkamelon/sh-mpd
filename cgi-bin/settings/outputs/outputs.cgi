@@ -28,6 +28,9 @@ cat_post=$(cat)
 # "foo=bar"の"foo","bar"をそれぞれ抽出
 post_left="${cat_post%\=*}"
 post_right="${cat_post#"${post_left}"\=}"
+
+# URLのホスト名を取得
+url_hostname=$(cgi_host)
 # ====== 変数の設定ここまで ======
 
 
@@ -66,7 +69,7 @@ mpc_status () {
 	mpc status 2>&1 |
 
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-	mpc_status2html
+	mpc_status2html -v url_hostname="${url_hostname}"
 
 }
 # ===== 関数の宣言ここまで ======
@@ -87,7 +90,7 @@ cat << EOS
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-		<title>Outputs - sh-MPD:$(cgi_host) -</title>
+		<title>Outputs - sh-MPD:${url_hostname} -</title>
 
     </head>
 

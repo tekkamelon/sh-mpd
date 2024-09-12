@@ -31,6 +31,9 @@ post_right="${cat_post#"${post_left}"\=}"
 
 # クエリをデコードし"search_str"に代入
 search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
+
+# URLのホスト名を取得
+url_hostname=$(cgi_host)
 # ====== 変数の設定ここまで ======
 
 
@@ -77,7 +80,7 @@ mpc_post () {
 	xargs mpc 2>&1 |
 	
 	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
-	mpc_status2html
+	mpc_status2html -v url_hostname="${url_hostname}"
 
 }
 
@@ -113,7 +116,7 @@ cat << EOS
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-		<title>Directory - sh-MPD:$(cgi_host) -</title>
+		<title>Directory - sh-MPD:${url_hostname} -</title>
 
     </head>
 
