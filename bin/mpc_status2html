@@ -1,5 +1,6 @@
 #!/usr/bin/awk -f
 
+# 引数として"-v url_hostname="${url_hostname}"が必須
 BEGIN{
 
 	FS = ":"
@@ -32,10 +33,21 @@ BEGIN{
 		# 置換した結果に改行を付与し出力
 		print $0, "<br>"
 
+	# 偽の場合はMPDがエラーであれば真
+	}else if($1 == "MPD error"){
+
+		# エラーメッセージを出力
+		print $0, "<br>"
+
+		# サーバーの設定画面へのリンク
+		printf "<p><a href=http://"
+		printf url_hostname
+		print "/cgi-bin/settings/server_setting/server_setting.cgi>Please setting MPD server</a></p>"
+		
 	}else{
 
 		print $0, "<br>"
-		
+
 	}
 
 }
