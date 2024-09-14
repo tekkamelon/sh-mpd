@@ -10,15 +10,16 @@ BEGIN{
 
 {
 
+	# 現在再生中の曲かどうかを判定
 	# "mpc_current"が第2フィールドと一致かつpost_nameが"del"ではない場合に真
 	if(mpc_current == $2 && post_name != "del"){
 
-		tag = "<p><button name="
+		tag = "<p><button class=now_playing name="
 
 		button = "</button>"
 
 		# <sapn>タグで"mpc_status2html"で指定されたジャンプ先へと設定
-		marker = "<span id=current><b>[Now Playing]</span></b>"
+		marker = "<span id=current>"
 
 	# "mpc_current"が第2フィールドと一致かつpost_nameが"del"の場合に真
 	}else if(mpc_current == $2 && post_name == "del" ){
