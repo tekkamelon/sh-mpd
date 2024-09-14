@@ -155,6 +155,7 @@ cat << EOS
 		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
 		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
 		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Setting</button>
 
 		<form name="music" method="POST" >
 
@@ -177,6 +178,7 @@ cat << EOS
 		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
 		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
 		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
+		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Setting</button>
 
 	</footer>
 
