@@ -344,3 +344,18 @@ iframe {
 
 }
 
+/* queued.cgi */
+/* 現在再生中の曲 */
+.now_playing {
+
+	background-color: rgb(55, 55, 55);
+	color: rgb(180, 180, 180);
+
+}
+
+.now_playing:hover {
+
+	font-weight: bold;
+
+}
+

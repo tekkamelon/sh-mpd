@@ -335,3 +335,17 @@ iframe {
 
 }
 
+/* queued.cgi */
+/* 現在再生中の曲 */
+.now_playing {
+
+	color: #dc322f;
+
+}
+
+.now_playing:hover {
+
+	font-weight: bold;
+
+}
+
