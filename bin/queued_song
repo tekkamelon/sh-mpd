@@ -10,7 +10,7 @@ BEGIN{
 
 {
 
-	# 現在再生中の曲かどうかを判定
+	# "queued.cgi"で現在再生中の楽曲かどうかを判定
 	# "mpc_current"が第2フィールドと一致かつpost_nameが"del"ではない場合に真
 	if(mpc_current == $2 && post_name != "del"){
 
@@ -21,6 +21,7 @@ BEGIN{
 		# <sapn>タグで"mpc_status2html"で指定されたジャンプ先へと設定
 		marker = "<span id=current>"
 
+	# "/queued/remove.cgi"で現在再生中の楽曲かを判定
 	# "mpc_current"が第2フィールドと一致かつpost_nameが"del"の場合に真
 	}else if(mpc_current == $2 && post_name == "del" ){
 
