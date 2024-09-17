@@ -14,22 +14,22 @@ BEGIN{
 	# "mpc_current"が第2フィールドと一致かつpost_nameが"del"ではない場合に真
 	if(mpc_current == $2 && post_name != "del"){
 
-		tag = "<p><button class=now_playing name="
+		# <sapn>タグで"mpc_status2html"で指定されたジャンプ先へと設定
+		tag = "<p><span id=current><button class=now_playing name="
 
 		button = "</button>"
 
-		# <sapn>タグで"mpc_status2html"で指定されたジャンプ先へと設定
-		marker = "<span id=current>"
+		marker = "</span>"
 
 	# "/queued/remove.cgi"で現在再生中の楽曲かを判定
 	# "mpc_current"が第2フィールドと一致かつpost_nameが"del"の場合に真
 	}else if(mpc_current == $2 && post_name == "del" ){
 
-		tag = "<p><input type=checkbox name="
+		tag = "<p><span id=current><input type=checkbox name="
 
 		button = ""
 
-		marker = "<span id=current><b>[Now Playing]</span></b>"
+		marker = "<b>[Now Playing]</b></span>"
 
 	# "post_name"が"play"か"add"の場合に真
 	}else if(post_name == "play" || post_name == "add"){
@@ -58,3 +58,4 @@ BEGIN{
 	print tag, post_name, "value=", $0, button, marker, "</p>"
 
 }
+
