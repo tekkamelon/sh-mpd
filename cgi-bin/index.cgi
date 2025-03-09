@@ -75,7 +75,7 @@ coverart () {
 	current_song=$(mpc current -f "%file%")
 
 	# ディレクトリのみ抽出
-	song_path=$(dirname "${current_song}")
+	song_path="${current_song%/*}"
 
 	echo "http://${img_server_host}:${img_server_port}/${song_path}/Folder.jpg"
 	
