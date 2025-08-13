@@ -17,7 +17,7 @@ export LANG=C
 export POSIXLY_CORRECT=1
 
 # 独自コマンドへPATHを通す
-export PATH="$PATH:../bin"
+export PATH="$PATH:$(cd "$(dirname "$0")/../bin" && pwd)"
 
 # shmpd.confの有無を確認
 if [ -f settings/shmpd.conf ] ; then
@@ -292,7 +292,7 @@ cat << EOS
 					<div class="resize">
 
 						<!-- カバーアートの表示,画像がない場合はタグを非表示 -->
-						<img class="img" img src="$(coverart)" alt="coverart" onerror="this.style.display='none'">
+						<img class="img" src="$(coverart)" alt="coverart" onerror="this.style.display='none'">
 
 					</div>
 
@@ -310,7 +310,7 @@ cat << EOS
 				<!-- リンク -->
 				<h3>MENU</h3>
 				<button class="equal_width_button" onclick="location.href='queued/queued.cgi'">Queued</button>
-				<button class="equal_width_button" onclick="location.href='directory/directory.cgi'">Directoty</button>
+				<button class="equal_width_button" onclick="location.href='directory/directory.cgi'">Directory</button>
 				<button class="equal_width_button" onclick="location.href='playlist/playlist.cgi'">Playlist</button>
 				<button class="equal_width_button" onclick="location.href='settings/settings.cgi'">Settings</button>
 
