@@ -41,8 +41,8 @@ cat_post=$(cat)
 post_check="${cat_post#*\=}"
 
 # "foo=bar"の"foo","bar"をそれぞれ抽出
-post_left="${post_check%\&*}"
-post_right="${post_check#*\&*\=}"
+post_key="${post_check%\&*}"
+post_value="${post_check#*\&*\=}"
 
 # クエリを変数展開し代入
 query_check="${QUERY_STRING#*\=}"
@@ -55,27 +55,24 @@ url_hostname="$(cgi_host)"
 # ===== 関数の宣言 ======
 # 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
 mpc_post () {
-	
-	# POSTの有無を確認,あれば真,なければ偽
-	if [ -n "${post_right}" ] ; then
 
-		# 真の場合は最後の引数をシングルクォート付きで出力,デコード
-		echo "${post_left}" "'${post_right}'" | urldecode
+    # POST値があればデコードしてmpcに渡す
+    if [ -n "${post_value}" ]; then
 
-	else
+        echo "${post_key}" "'${post_value}'" | urldecode
 
-		# 偽の場合はクエリを変数展開で加工
-		echo "${query_check}" |
+    else
 
-		# "volume","seek","mute"時の文字列をデコード
+        # クエリ値を加工
+        echo "${query_check}" |
+
 		sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"
-	
-	fi |
+
+    fi |
 
 	# mpcのエラー出力ごと渡す
-	xargs mpc 2>&1 | 
+	xargs mpc 2>&1 |
 
-	# ": off"に<b>タグを,": on"に<strong>タグを,各行末に改行のタグを付与
 	mpc_status2html -v url_hostname="${url_hostname}"
 
 }
