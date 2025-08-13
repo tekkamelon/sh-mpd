@@ -47,7 +47,7 @@ post_right="${post_check#*\&*\=}"
 query_check="${QUERY_STRING#*\=}"
 
 # URLのホスト名を取得
-url_hostname=$(cgi_host)
+url_hostname="$(cgi_host)"
 # ====== 変数の設定ここまで ======
 
 
@@ -249,9 +249,9 @@ cat << EOS
 
 							</tr>
 
-						</div>
+						</table>
 
-					</table>
+					</div>
 
 				</form>
 
@@ -271,13 +271,13 @@ cat << EOS
 								
 						<option value="searchplay filename">filename</option>
 
-						<span>
-
-							<input type="text" placeholder="search word" name="search">
-
-						</span>
-
 					</select>
+
+					<span>
+
+						<input type="text" placeholder="search word" name="search">
+
+					</span>
 
 				</form>
 
