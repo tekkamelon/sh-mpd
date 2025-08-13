@@ -184,81 +184,79 @@ cat << EOS
 
 						</thead>
 
-							<!-- 1行目 -->
-							<tr>
+						<!-- 1行目 -->
+						<tr>
 
-								<td>
-									<button class="equal_width_button" name="button" value="status">status</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="volume_-100">mute</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="volume_-5">volume -5</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="volume_+5">volume +5</button>
-								</td>
+							<td>
+								<button class="equal_width_button" name="button" value="status">status</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="volume_-100">mute</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="volume_-5">volume -5</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="volume_+5">volume +5</button>
+							</td>
 
-							</tr>	
+						</tr>	
 
-							<!-- 2行目 -->
-							<tr>
+						<!-- 2行目 -->
+						<tr>
 
-								<td>
-									<button class="equal_width_button" name="button" value="prev">previous</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="toggle" >play/pause</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="stop">stop</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="next">next</button>
-								</td>
+							<td>
+								<button class="equal_width_button" name="button" value="prev">previous</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="toggle" >play/pause</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="stop">stop</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="next">next</button>
+							</td>
 
-							</tr>
-							 
-							<!-- 3行目 -->
-							<tr>
+						</tr>
+						 
+						<!-- 3行目 -->
+						<tr>
 
-								<td>
-									<button class="equal_width_button" name="button" value="repeat">repeat</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="random">random</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="single">single</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="shuffle">shuffle</button>
-								</td>
+							<td>
+								<button class="equal_width_button" name="button" value="repeat">repeat</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="random">random</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="single">single</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="shuffle">shuffle</button>
+							</td>
 
-							</tr>
+						</tr>
 
-							<!-- 4行目 -->
-							<tr>
+						<!-- 4行目 -->
+						<tr>
 
-								<td>
-									<button class="equal_width_button" name="button" value="clear">clear</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="update">update</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="seek_-5%">seek -5%</button>
-								</td>
-								<td>
-									<button class="equal_width_button" name="button" value="seek_+5%">seek +5%</button>
-								</td>
+							<td>
+								<button class="equal_width_button" name="button" value="clear">clear</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="update">update</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="seek_-5%">seek -5%</button>
+							</td>
+							<td>
+								<button class="equal_width_button" name="button" value="seek_+5%">seek +5%</button>
+							</td>
 
-							</tr>
+						</tr>
 
-						</table>
-
-					</div>
+					</table>
 
 				</form>
 
@@ -278,7 +276,6 @@ cat << EOS
 								
 						<option value="searchplay filename">filename</option>
 
-					</select>
 
 					<span>
 
