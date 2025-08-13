@@ -17,7 +17,8 @@ export LANG=C
 export POSIXLY_CORRECT=1
 
 # 独自コマンドへPATHを通す
-export PATH="$PATH:$(cd "$(dirname "$0")/../bin" && pwd)"
+tmp_path="$(cd "$(dirname "${0}")/../bin" && pwd)"
+export PATH="$PATH:${tmp_path}"
 
 # shmpd.confの有無を確認
 if [ -f settings/shmpd.conf ] ; then
