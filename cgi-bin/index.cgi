@@ -19,8 +19,19 @@ export POSIXLY_CORRECT=1
 # 独自コマンドへPATHを通す
 export PATH="$PATH:../bin"
 
-# ". (ドット)"コマンドで設定ファイルの読み込み
-. settings/shmpd.conf
+# shmpd.confの有無を確認
+if [ -f settings/shmpd.conf ] ; then
+
+	# 設定ファイルを読み込み
+	. settings/shmpd.conf
+
+else
+
+	# デフォルトの環境変数を代入
+	export MPD_HOST="127.0.0.1"
+	export MPD_PORT="6600"
+
+fi
 
 # POSTを変数に代入
 cat_post=$(cat)
