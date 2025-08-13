@@ -80,14 +80,23 @@ mpc_post () {
 # カバーアートの取得
 coverart () {
 
-	# 再生中の曲の相対パスを抽出
-	current_song=$(mpc current -f "%file%")
+	# 変数img_server_host,img_server_portの有無を確認
+    if [ -z "${img_server_host:-}" ] || [ -z "${img_server_port:-}" ]; then
 
-	# ディレクトリのみ抽出
-	song_path="${current_song%/*}"
+        echo ""
+        return
 
-	echo "http://${img_server_host}:${img_server_port}/${song_path}/Folder.jpg"
-	
+    fi
+
+	# 現在の曲を変数に代入
+    current_song="$(mpc current -f "%file%")"
+
+	# 曲のパスを変数に代入
+    song_path="${current_song%/*}"
+
+	# カバーアートのURLを出力
+    echo "http://${img_server_host}:${img_server_port}/${song_path}/Folder.jpg"
+
 }
 
 # 次の曲の表示
