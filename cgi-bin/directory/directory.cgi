@@ -1,6 +1,6 @@
-#!/bin/sh 
+#!/bin/sh
 
-# shellcheck disable=SC1091,SC2154
+# shellcheck disable=SC1091
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -17,17 +17,29 @@ export LANG=C
 export POSIXLY_CORRECT=1
 
 # 独自コマンドへPATHを通す
-export PATH="$PATH:../../bin"
+tmp_path="$(cd "$(dirname "${0}")/../bin" && pwd)"
+export PATH="$PATH:${tmp_path}"
 
-# ". (ドット)"コマンドで設定ファイルの読み込み
-. ../settings/shmpd.conf
+# shmpd.confの有無を確認
+if [ -f settings/shmpd.conf ] ; then
+
+	# 設定ファイルを読み込み
+	. settings/shmpd.conf
+
+else
+
+	# デフォルトの環境変数を代入
+	export MPD_HOST="127.0.0.1"
+	export MPD_PORT="6600"
+
+fi
 
 # POSTを変数に代入
 cat_post=$(cat)
 
 # "foo=bar"の"foo","bar"をそれぞれ抽出
-post_left="${cat_post%\=*}"
-post_right="${cat_post#"${post_left}"\=}"
+post_key="${cat_post%\=*}"
+post_value="${cat_post#"${post_key}"\=}"
 
 # クエリをデコードし"search_str"に代入
 search_str=$(echo "${QUERY_STRING#*\=}" | urldecode)
@@ -42,10 +54,10 @@ url_hostname=$(cgi_host)
 mpc_post () {
 
 	# POSTを変数展開で加工,文字列が1以上の数値であれば真,それ以外で偽
-	if [ "${post_right}" -gt 0 ] ; then
+	if [ "${post_value}" -gt 0 ] ; then
 
-		# 楽曲の一覧から"post_right"の番号の行を抽出,結果を挿入
-		mpc listall | sed -n "${post_right}"p | mpc add
+		# 楽曲の一覧から"post_value"の番号の行を抽出,結果を挿入
+		mpc listall | sed -n "${post_value}"p | mpc add
 
 		# キュー内の楽曲数を変数に代入
 		last_line=$(mpc playlist | wc -l)
@@ -53,7 +65,7 @@ mpc_post () {
 		echo "play ${last_line}"
 
 	# 偽の場合は"addresult"であれば真,それ以外で偽
-	elif [ "${post_left}" = "addresult" ] ; then
+	elif [ "${post_key}" = "addresult" ] ; then
 
 		# 楽曲の一覧から"search_str"で検索,結果を挿入
 		mpc listall | grep -F -i "${search_str}" | mpc add &
@@ -61,7 +73,7 @@ mpc_post () {
 		echo "status"
 
 	# 偽の場合は"all"であれば真,それ以外で偽
-	elif [ "${post_right}" = "all" ] ; then
+	elif [ "${post_value}" = "all" ] ; then
 
 		# すべての楽曲をキューに追加
 		mpc add / &
@@ -114,7 +126,7 @@ cat << EOS
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
+		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
 		<title>Directory - sh-MPD:${url_hostname} -</title>
 
