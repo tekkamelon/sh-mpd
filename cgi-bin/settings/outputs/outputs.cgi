@@ -15,10 +15,25 @@ export LANG=C
 export POSIXLY_CORRECT=1
 
 # 独自コマンドへPATHを通す
-export PATH="$PATH:../../../bin"
+tmp_path="$(cd "$(dirname "${0}")/../../../bin" && pwd)"
+export PATH="${PATH}:${tmp_path}"
 
-# ". (ドット)"コマンドで設定ファイルの読み込み
-. ../shmpd.conf
+# shmpd.confの有無を確認
+if [ -f ../shmpd.conf ] ; then
+
+	# 設定ファイルを読み込み
+	. ../shmpd.conf
+
+
+else
+
+	# デフォルトの環境変数を代入
+	export MPD_HOST="127.0.0.1"
+	export MPD_PORT="6600"
+
+	stylesheet="stylesheet.css"
+
+fi
 
 # POSTを変数に代入
 cat_post=$(cat)
@@ -86,7 +101,7 @@ cat << EOS
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
+		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
 		<title>Outputs - sh-MPD:${url_hostname} -</title>
 
