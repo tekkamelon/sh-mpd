@@ -15,17 +15,32 @@ export LANG=C
 export POSIXLY_CORRECT=1
 
 # 独自コマンドへPATHを通す
-export PATH="$PATH:../../bin"
+tmp_path="$(cd "$(dirname "${0}")/../../bin" && pwd)"
+export PATH="${PATH}:${tmp_path}"
 
-# ". (ドット)"コマンドで設定ファイルの読み込み
-. ../settings/shmpd.conf
+# shmpd.confの有無を確認
+if [ -f ../settings/shmpd.conf ] ; then
+
+	# 設定ファイルを読み込み
+	. ../settings/shmpd.conf
+
+
+else
+
+	# デフォルトの環境変数を代入
+	export MPD_HOST="127.0.0.1"
+	export MPD_PORT="6600"
+
+	stylesheet="stylesheet.css"
+
+fi
 
 # POSTを変数に代入
 cat_post=$(cat)
 
 # "foo=bar"の"foo","bar"をそれぞれ抽出
-post_left="${cat_post%\=*}"
-post_right="${cat_post#"${post_left}"\=}"
+post_key="${cat_post%\=*}"
+post_value="${cat_post#"${post_key}"\=}"
 
 # クエリを変数展開し代入
 query_check="${QUERY_STRING#*\=}"
@@ -40,7 +55,7 @@ str_name=$(echo "${query_check#"${search_or_save}"\&input_string\=}" | urldecode
 if [ -n "${cat_post}" ] ; then
 	
 	# POSTがあれば選択された楽曲を再生
-	mpc_result=$(mpc "${post_left}" "${post_right}")
+	mpc_result=$(mpc "${post_key}" "${post_value}")
 	
 	# プレイリストの保存後に楽曲が選択された場合
 	str_name=""
@@ -123,7 +138,7 @@ cat << EOS
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="icon" ref="/cgi-bin/image/favicon.ico">
+		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
 		<title>Queued - sh-MPD:$(cgi_host) -</title>
 
