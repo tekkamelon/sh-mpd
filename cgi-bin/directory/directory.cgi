@@ -17,20 +17,23 @@ export LANG=C
 export POSIXLY_CORRECT=1
 
 # 独自コマンドへPATHを通す
-tmp_path="$(cd "$(dirname "${0}")/../bin" && pwd)"
-export PATH="$PATH:${tmp_path}"
+tmp_path="$(cd "$(dirname "${0}")/../../bin" && pwd)"
+export PATH="${PATH}:${tmp_path}"
 
 # shmpd.confの有無を確認
-if [ -f settings/shmpd.conf ] ; then
+if [ -f ../settings/shmpd.conf ] ; then
 
 	# 設定ファイルを読み込み
-	. settings/shmpd.conf
+	. ../settings/shmpd.conf
+
 
 else
 
 	# デフォルトの環境変数を代入
 	export MPD_HOST="127.0.0.1"
 	export MPD_PORT="6600"
+
+	stylesheet="stylesheet.css"
 
 fi
 
