@@ -4,8 +4,6 @@
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
-# x 実行されたコマンドの出力
-# v 変数の表示
 set -eu
 
 # ====== 変数の設定 ======
@@ -18,7 +16,7 @@ export POSIXLY_CORRECT=1
 
 # 独自コマンドへPATHを通す
 tmp_path="$(cd "$(dirname "${0}")/../bin" && pwd)"
-export PATH="$PATH:${tmp_path}"
+export PATH="${PATH}:${tmp_path}"
 
 # shmpd.confの有無を確認
 if [ -f settings/shmpd.conf ] ; then
@@ -31,6 +29,8 @@ else
 	# デフォルトの環境変数を代入
 	export MPD_HOST="127.0.0.1"
 	export MPD_PORT="6600"
+
+	stylesheet="stylesheet.css"
 
 fi
 
