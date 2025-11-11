@@ -1,103 +1,65 @@
 @charset "UTF-8";
-/* light.css: ライトテーマのcss */
+/* light.css: ライトテーマのCSS - 効率化版 */
 
-/* 見出しの色 */
 :root {
-
-    --main-bg-color: rgb(50, 50, 50);
-    --letter-color: rgb(160, 160, 160);
-
+	--main-bg-color: rgb(50, 50, 50);
+	--letter-color: rgb(160, 160, 160);
+	--accent-color: rgb(40, 230, 230);
+	--li-color: black;
+	--bg-color: rgb(255, 255, 255);
 }
 
-/* アスキーアート */
 pre {
-
-	color: rgb(40, 230, 230);
-    text-align: center;
-
+	color: var(--accent-color);
+	text-align: center;
 }
 
-/* サブタイトル */
 span {
-
 	color: orange;
-
 }
 
-/* リンクの文字色 */
 a {
-
-    color: var(--main-bg-color);
-
+	color: var(--main-bg-color);
 }
 
-/* ヘッダー */
-header {
-
-	width: 100%;
-	color: rgb(40, 230, 230);
-    text-align: center;
-
-}
-
-/* 背景色 */
-body {
-
-    background-color: rgb(255, 255, 255);
-	color: rgb(40, 230, 230);
-    text-align: left;
-
-}
-
-/* 大見出し */
-h1 {
-
-	color: rgb(40, 230, 230);
-    font-size: 35px;
-    text-align: left;
-
-}
-
-/* 中見出し */
-h2 {
-
-	color: rgb(40, 230, 230);
-    text-align: left;
-
-}
-
-/* 小見出し */
-h3 {
-
-	color: rgb(40, 230, 230);
-    text-align: left;
-
-}
-
+header,
+h1,
+h2,
+h3,
 h4 {
-
-	color: rgb(40, 230, 230);
-    text-align: left;
-
+	color: var(--accent-color);
 }
 
-l1 {
-
-    color:black ;
-    text-align: left;
-
+header {
+	width: 100%;
+	text-align: center;
 }
 
-l2 {
+body {
+	background-color: var(--bg-color);
+	text-align: left;
+	color: var(--accent-color);
+}
 
-    color:black ;
-    text-align: left;
+h1 {
+	font-size: 35px;
+	text-align: left;
+}
 
+h2,
+h3,
+h4 {
+	text-align: left;
+}
+
+li {
+	color: var(--li-color);
+	text-align: left;
 }
 
 strong {
-
-	color:pink;
+	color: pink;
+}
 
 }
 
