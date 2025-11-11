@@ -87,53 +87,95 @@ echo ""
 
 cat << EOS
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
-    <head>
+	<head>
 
-        <meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-		<title>CSS select - sh-MPD:$(cgi_host) -</title>
+		<title>CSS Select - sh-MPD:$(cgi_host) -</title>
+		<style>
+			body {
+				display: grid;
+				grid-template-areas:
+					"header"
+					"main"
+					"sidebar";
+				gap: 1rem;
+				padding: 1rem;
+			}
 
-    </head>
+			@media (min-width: 768px) {
+				body {
+					grid-template-columns: 3fr 1fr;
+					grid-template-areas:
+						"header header"
+						"main   sidebar";
+				}
+			}
 
-	<header>
+			header { grid-area: header; text-align: center; }
+			main { grid-area: main; }
+			aside { grid-area: sidebar; }
 
-		<h1>settings</h1>
-	
-	</header>
+			section {
+				margin-bottom: 2rem;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+			}
 
-    <body>
+			aside nav ul {
+				list-style: none;
+				padding: 0;
+			}
 
-		<!-- ホスト名の設定 -->
-		<form name="setting" method="GET" >
+			aside nav li a {
+				display: block;
+				padding: 0.75rem;
+				margin-bottom: 0.5rem;
+				text-decoration: none;
+				text-align: center;
+				border: 1px solid;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
 
-			<!-- CSSの設定 -->
-			<h3>CSS setting</h3>
+	<body>
 
-			<!-- css変更時のメッセージを表示 -->
-			${ECHO_MESSAGE}
+		<header>
+			<h1>CSS Settings</h1>
+		</header>
 
-			$(css_list)
- 
-		</form>
-    </body>
+		<main>
+			<section>
+				<h2>Select CSS</h2>
+				<form name="setting" method="GET">
+					${ECHO_MESSAGE}
+					<pre>$(css_list)</pre>
+				</form>
+			</section>
+		</main>
 
-	<footer>	
+		<aside>
+			<nav>
+				<h2>Menu</h2>
+				<ul>
+					<li><a href="/cgi-bin/index.cgi">Home</a></li>
+					<li><a href="/cgi-bin/queued/queued.cgi">Queued</a></li>
+					<li><a href="/cgi-bin/directory/directory.cgi">Directory</a></li>
+					<li><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></li>
+					<li><a href="/cgi-bin/settings/settings.cgi">Settings</a></li>
+				</ul>
+			</nav>
+		</aside>
 
-		<!-- リンク -->
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directoty</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Settings</button>
-
-	</footer>	
+	</body>
 
 </html>
 EOS
 # ====== HTMLここまで ======
-

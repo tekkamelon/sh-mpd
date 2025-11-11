@@ -43,77 +43,120 @@ echo ""
 
 cat << EOS
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
-    <head>
+	<head>
 
-        <meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-		<title>Server setting - sh-MPD:$(cgi_host) -</title>
+		<title>Settings - sh-MPD:$(cgi_host) -</title>
+		<style>
+			body {
+				display: grid;
+				grid-template-areas:
+					"header"
+					"main"
+					"sidebar";
+				gap: 1rem;
+				padding: 1rem;
+			}
 
-    </head>
+			@media (min-width: 768px) {
+				body {
+					grid-template-columns: 3fr 1fr;
+					grid-template-areas:
+						"header header"
+						"main   sidebar";
+				}
+			}
 
-	<header>
+			header { grid-area: header; text-align: center; }
+			main { grid-area: main; }
+			aside { grid-area: sidebar; }
 
-		<h1>Settings</h1>
+			section {
+				margin-bottom: 2rem;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+			}
 
-	</header>
+			.settings-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 1rem;
+			}
 
-    <body>
-	 
-		<h3>Server setting</h3>
+			aside nav ul {
+				list-style: none;
+				padding: 0;
+			}
 
-		<!-- ホスト名,ポート番号の表示-->
-		<div class="box">
+			aside nav li a {
+				display: block;
+				padding: 0.75rem;
+				margin-bottom: 0.5rem;
+				text-decoration: none;
+				text-align: center;
+				border: 1px solid;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
 
-			<div>
+	<body>
 
-				<h4>MPD</h4>
-				<p>host:${MPD_HOST}</p>
-				<p>port:${MPD_PORT}</p>
+		<header>
+			<h1>Settings</h1>
+			<p><strong>Host:</strong> ${MPD_HOST} | <strong>Port:</strong> ${MPD_PORT}</p>
+		</header>
 
-			</div>
+		<main>
+			<section>
+				<h2>Server Settings</h2>
+				<div class="settings-grid">
+					<div>
+						<h4>MPD</h4>
+						<p><strong>Host:</strong> ${MPD_HOST}</p>
+						<p><strong>Port:</strong> ${MPD_PORT}</p>
+					</div>
+					<div>
+						<h4>Cover Art Server</h4>
+						<p><strong>Host:</strong> ${img_server_host}</p>
+						<p><strong>Port:</strong> ${img_server_port}</p>
+					</div>
+				</div>
+				<button onclick="location.href='/cgi-bin/settings/server_setting/server_setting.cgi'">Configure Servers</button>
+			</section>
 
-			<div>
+			<section>
+				<h2>Output Devices</h2>
+				<button onclick="location.href='/cgi-bin/settings/outputs/outputs.cgi'">Select Output Device</button>
+			</section>
 
-				<h4>coverart server</h4>
-				<p>host:${img_server_host}</p>
-				<p>port:${img_server_port}</p>
+			<section>
+				<h2>Appearance</h2>
+				<button onclick="location.href='/cgi-bin/settings/css_select/css_select.cgi'">Select CSS</button>
+			</section>
+		</main>
 
-			</div>
+		<aside>
+			<nav>
+				<h2>Menu</h2>
+				<ul>
+					<li><a href="/cgi-bin/index.cgi">Home</a></li>
+					<li><a href="/cgi-bin/queued/queued.cgi">Queued</a></li>
+					<li><a href="/cgi-bin/directory/directory.cgi">Directory</a></li>
+					<li><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></li>
+				</ul>
+			</nav>
+		</aside>
 
-		</div>
-
-		<p><button onclick="location.href='/cgi-bin/settings/server_setting/server_setting.cgi'">MPD & coverart server setting</button></p>
-
-		<!-- 出力先デバイスの設定 -->
-		<h3>ountput devices list</h3>
-		<p><button onclick="location.href='/cgi-bin/settings/outputs/outputs.cgi'">select output device</button></p>
-		
-		<!-- CSSの設定 -->
-		<h3>CSS setting</h3>
-		<p><button onclick="location.href='/cgi-bin/settings/css_select/css_select.cgi'">select css</button></p>
-			
-    </body>
-
-	<div class="link">
-
-		<footer>	
-
-			<!-- リンク -->
-			<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
-			<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directoty</button>
-			<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-			<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
-
-		</footer>	
-
-	</dev>
+	</body>
 
 </html>
 EOS
 # ====== HTMLここまで ======
-

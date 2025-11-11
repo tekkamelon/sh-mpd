@@ -128,102 +128,136 @@ echo ""
 
 cat << EOS
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
-    <head>
+	<head>
 
-        <meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="icon" href="image/favicon.svg">
-		<title>Server setting - sh-MPD:$(cgi_host) -</title>
+		<link rel="icon" href="/cgi-bin/image/favicon.svg">
+		<title>Server Settings - sh-MPD:$(cgi_host) -</title>
+		<style>
+			body {
+				display: grid;
+				grid-template-areas:
+					"header"
+					"main"
+					"sidebar";
+				gap: 1rem;
+				padding: 1rem;
+			}
 
-    </head>
+			@media (min-width: 768px) {
+				body {
+					grid-template-columns: 3fr 1fr;
+					grid-template-areas:
+						"header header"
+						"main   sidebar";
+				}
+			}
 
-	<header>
+			header { grid-area: header; text-align: center; }
+			main { grid-area: main; }
+			aside { grid-area: sidebar; }
 
-		<h1>Server setting</h1>
+			section {
+				margin-bottom: 2rem;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+			}
 
-	</header>
-
-    <body>
-
-		<!-- ホスト名,ポート番号の表示-->
-		<div class="box">
-
-			<div>
-
-				<h4>MPD</h4>
-				<p>host:${MPD_HOST}</p>
-				<p>port:${MPD_PORT}</p>
-
-			</div>
-
-			<div>
-
-				<h4>Coverart server</h4>
-				<p>host:${img_server_host}</p>
-				<p>port:${img_server_port}</p>
-
-			</div>
-
-		</div>
-
-		<form name="setting" method="POST" >
-
-			<span>
-
-				select setting items :
-
-			</span>
-
-			<!-- ドロップダウンメニュー -->
-			<select name="args">
-
-				<option value="mpd_host">MPD host</option>
-
-				<option value="mpd_port">MPD port</option>
-
-				<option value="img_server_host">coverart server host</option>
-
-				<option value="img_server_port">coverart server port</option>
-
-				</form>
-
-				<!-- 入力フォーム -->
-				<form method="POST">
-
-					<span>
-
-						<!-- ホスト名又はIPアドレスの入力欄 -->
-						<p><input type="text" placeholder="default:localhost" name="post_key"></p>
-
-					</span>
-
-				</form>
-
-			</select>
+			.settings-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 1rem;
+			}
 			
-		</form>
+			.form-grid {
+				display: grid;
+				grid-template-columns: auto 1fr;
+				gap: 0.5rem;
+				align-items: center;
+			}
 
-		<!-- 実行結果を表示 -->
-		<p>$(post_proc)</p>
-			
-    </body>
+			aside nav ul {
+				list-style: none;
+				padding: 0;
+			}
 
+			aside nav li a {
+				display: block;
+				padding: 0.75rem;
+				margin-bottom: 0.5rem;
+				text-decoration: none;
+				text-align: center;
+				border: 1px solid;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
 
-	<footer>	
+	<body>
 
-		<!-- リンク -->
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directoty</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Settings</button>
+		<header>
+			<h1>Server Settings</h1>
+		</header>
 
-	</footer>	
+		<main>
+			<section>
+				<h2>Current Settings</h2>
+				<div class="settings-grid">
+					<div>
+						<h4>MPD</h4>
+						<p><strong>Host:</strong> ${MPD_HOST}</p>
+						<p><strong>Port:</strong> ${MPD_PORT}</p>
+					</div>
+					<div>
+						<h4>Cover Art Server</h4>
+						<p><strong>Host:</strong> ${img_server_host}</p>
+						<p><strong>Port:</strong> ${img_server_port}</p>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2>Update Settings</h2>
+				<form name="setting" method="POST" class="form-grid">
+					<label for="args">Item:</label>
+					<select name="args" id="args">
+						<option value="mpd_host">MPD Host</option>
+						<option value="mpd_port">MPD Port</option>
+						<option value="img_server_host">Cover Art Server Host</option>
+						<option value="img_server_port">Cover Art Server Port</option>
+					</select>
+					<label for="post_key">Value:</label>
+					<input type="text" placeholder="Enter new value" name="post_key" id="post_key">
+					<button type="submit">Update</button>
+				</form>
+			</section>
+
+			<section>
+				<h2>Result</h2>
+				<pre>$(post_proc)</pre>
+			</section>
+		</main>
+
+		<aside>
+			<nav>
+				<h2>Menu</h2>
+				<ul>
+					<li><a href="/cgi-bin/index.cgi">Home</a></li>
+					<li><a href="/cgi-bin/queued/queued.cgi">Queued</a></li>
+					<li><a href="/cgi-bin/directory/directory.cgi">Directory</a></li>
+					<li><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></li>
+					<li><a href="/cgi-bin/settings/settings.cgi">Settings</a></li>
+				</ul>
+			</nav>
+		</aside>
+
+	</body>
 
 </html>
 EOS
 # ====== HTMLここまで ======
-

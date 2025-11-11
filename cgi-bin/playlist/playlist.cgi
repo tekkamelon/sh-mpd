@@ -108,88 +108,120 @@ echo ""
 
 cat << EOS
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
-    <head>
+	<head>
 
-        <meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
 		<title>Playlist - sh-MPD:${url_hostname} -</title>
+		<style>
+			body {
+				display: grid;
+				grid-template-areas:
+					"header"
+					"main"
+					"sidebar";
+				gap: 1rem;
+				padding: 1rem;
+			}
 
-    </head>
-	
-	<!-- "jump to top"のジャンプ先 -->
-	<div id="top"></div>
+			@media (min-width: 768px) {
+				body {
+					grid-template-columns: 3fr 1fr;
+					grid-template-areas:
+						"header header"
+						"main   sidebar";
+				}
+			}
 
-	<header>
-	
-		<h1>Playlist</h1>
-		
-	</header>
+			header { grid-area: header; text-align: center; }
+			main { grid-area: main; }
+			aside { grid-area: sidebar; }
 
-    <body>
-	
-		<h4>${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
+			section {
+				margin-bottom: 2rem;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+			}
 
-		<!-- 入力欄の設定 -->
-		<form name="FORM" method="GET" >
+			.search-form {
+				display: flex;
+				gap: 0.5rem;
+			}
 
-			<!-- 検索ワードの入力欄 -->
-			<p><input type="text" placeholder="search word" name="search_word"></p>
+			.search-form input[type="text"] {
+				flex-grow: 1;
+			}
 
-		</form>
-	
-		<!-- 最下部へのジャンプ -->
-		<p><a href="#bottom">jump to bottom</a></p>
+			aside nav ul {
+				list-style: none;
+				padding: 0;
+			}
 
-		<!-- mpd.confで設定されたプレイリスト一覧を表示 -->
-		<form name="music" method="POST" >
+			aside nav li a {
+				display: block;
+				padding: 0.75rem;
+				margin-bottom: 0.5rem;
+				text-decoration: none;
+				text-align: center;
+				border: 1px solid;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
 
-			<!-- ステータスを表示 -->
-			<p>$(mpc_post)</p>
+	<body>
 
-			<!-- # 全ての曲を追加する -->
-			<p><button name=add value=/>add all songs</button></p>
-			
-		</form>
+		<header>
+			<h1>Playlist</h1>
+			<p><strong>Host:</strong> ${MPD_HOST} | <strong>Port:</strong> ${MPD_PORT}</p>
+		</header>
 
-		<!-- リンク -->
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/remove.cgi'">Remove</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Setting</button>
+		<main>
+			<section>
+				<h2>Search</h2>
+				<form name="FORM" method="GET" class="search-form">
+					<input type="text" placeholder="Enter search term..." name="search_word">
+					<button type="submit">Search</button>
+				</form>
+			</section>
 
-		<form name="music" method="POST" >
+			<section>
+				<h2>Status</h2>
+				<form name="music" method="POST">
+					<pre>$(mpc_post)</pre>
+					<button name="add" value="/">Add All Songs</button>
+				</form>
+			</section>
 
-			<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
-			$(list_playlist)
+			<section>
+				<h2>Playlists</h2>
+				<form name="music_list" method="POST">
+					<pre>$(list_playlist)</pre>
+				</form>
+			</section>
+		</main>
 
-		</form>
+		<aside>
+			<nav>
+				<h2>Menu</h2>
+				<ul>
+					<li><a href="/cgi-bin/index.cgi">Home</a></li>
+					<li><a href="/cgi-bin/queued/queued.cgi">Queued</a></li>
+					<li><a href="/cgi-bin/directory/directory.cgi">Directory</a></li>
+					<li><a href="/cgi-bin/settings/settings.cgi">Settings</a></li>
+					<li><a href="/cgi-bin/playlist/remove.cgi">Remove</a></li>
+				</ul>
+			</nav>
+		</aside>
 
 	</body>
-
-	<!-- "jump to bottom"のジャンプ先 -->
-	<div id="bottom"></div>
-
-	<footer>
-	
-		<!-- リンク -->
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/remove.cgi'">Remove</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Setting</button>
-		
-	</footer>
-
-	<!-- 最上部へのジャンプ -->
-	<p><a href="#top">jump to top</a></p>
 
 </html>
 EOS
 # ====== HTMLここまで ======
-

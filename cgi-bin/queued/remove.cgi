@@ -97,96 +97,119 @@ echo ""
 
 cat << EOS
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
-    <head>
+	<head>
 
-        <meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-		<title>Remove queued - sh-MPD:$(cgi_host) -</title>
+		<title>Remove Queued Song - sh-MPD:$(cgi_host) -</title>
+		<style>
+			body {
+				display: grid;
+				grid-template-areas:
+					"header"
+					"main"
+					"sidebar";
+				gap: 1rem;
+				padding: 1rem;
+			}
 
-    </head>
+			@media (min-width: 768px) {
+				body {
+					grid-template-columns: 3fr 1fr;
+					grid-template-areas:
+						"header header"
+						"main   sidebar";
+				}
+			}
 
-	<!-- "jump to top"のジャンプ先 -->
-	<div id="top"></div>
+			header { grid-area: header; text-align: center; }
+			main { grid-area: main; }
+			aside { grid-area: sidebar; }
 
-	<header>
+			section {
+				margin-bottom: 2rem;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+			}
 
-		<h1>Remove queued song</h1>
+			.search-form {
+				display: flex;
+				gap: 0.5rem;
+			}
 
-	</header>
+			.search-form input[type="text"] {
+				flex-grow: 1;
+			}
 
-    <body>
+			aside nav ul {
+				list-style: none;
+				padding: 0;
+			}
 
-		<h4>host:${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
+			aside nav li a {
+				display: block;
+				padding: 0.75rem;
+				margin-bottom: 0.5rem;
+				text-decoration: none;
+				text-align: center;
+				border: 1px solid;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
 
-		<!-- playlistの処理 -->
-		<form name="FORM" method="GET" >
+	<body>
 
-			</select>
+		<header>
+			<h1>Remove Queued Song</h1>
+			<p><strong>Host:</strong> ${MPD_HOST} | <strong>Port:</strong> ${MPD_PORT}</p>
+		</header>
 
-			<!-- 検索ワードの入力欄 -->
-			<span>
+		<main>
+			<section>
+				<h2>Search</h2>
+				<form name="FORM" method="GET" class="search-form">
+					<input type="text" placeholder="Enter search term..." name="input_string">
+					<button type="submit">Search</button>
+				</form>
+			</section>
 
-				<p><input type="text" placeholder="search word" name="input_string"></p>
+			<section>
+				<h2>Status</h2>
+				<pre>$(mpc_post)</pre>
+			</section>
 
-			</span>
+			<section>
+				<h2>Queue</h2>
+				<form name="music" method="POST">
+					<input type="submit" value="Remove Selected Song">
+					<pre>$(queued)</pre>
+					<input type="submit" value="Remove Selected Song">
+				</form>
+			</section>
+		</main>
 
-		</form>
-
-		<!-- 最下部へのジャンプ -->
-		<p><a href="#bottom">jump to bottom</a></p>
-
-		<form name="music" method="POST" >
-			
-			<!-- ステータスの表示 -->
-			<p>$(mpc_post)</p>
-
-		</form>
-
-		<!-- リンク -->
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Setting</button>
-
-		<form name="music" method="POST" >
-
-			<!-- 削除ボタン -->
-			<p><input type="submit" value="Remove select song"></p>
-
-			<!-- キュー内の曲を表示 -->
-			$(queued)
-
-			<!-- 削除ボタン -->
-			<p><input type="submit" value="Remove select song"></p>
-
-		</form>
+		<aside>
+			<nav>
+				<h2>Menu</h2>
+				<ul>
+					<li><a href="/cgi-bin/index.cgi">Home</a></li>
+					<li><a href="/cgi-bin/queued/queued.cgi">Queued</a></li>
+					<li><a href="/cgi-bin/directory/directory.cgi">Directory</a></li>
+					<li><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></li>
+					<li><a href="/cgi-bin/settings/settings.cgi">Settings</a></li>
+				</ul>
+			</nav>
+		</aside>
 
 	</body>
-
-	<!-- "jump to bottom"のジャンプ先 -->
-	<div id="bottom"></div>
-
-	<footer>
-
-		<!-- リンク -->
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Setting</button>
-
-	</footer>
-
-	<!-- 最上部へのジャンプ -->
-	<p><a href="#top">jump to top</a></p>
 
 </html>
 EOS
 # ====== HTMLここまで ======
-

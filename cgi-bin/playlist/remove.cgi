@@ -92,91 +92,119 @@ echo ""
 
 cat << EOS
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
-    <head>
+	<head>
 
-        <meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-		<title>Remove playlist - sh-MPD:$(cgi_host) -</title>
+		<title>Remove Playlist - sh-MPD:${url_hostname} -</title>
+		<style>
+			body {
+				display: grid;
+				grid-template-areas:
+					"header"
+					"main"
+					"sidebar";
+				gap: 1rem;
+				padding: 1rem;
+			}
 
-    </head>
-	
-	<!-- "jump to top"のジャンプ先 -->
-	<div id="top"></div>
+			@media (min-width: 768px) {
+				body {
+					grid-template-columns: 3fr 1fr;
+					grid-template-areas:
+						"header header"
+						"main   sidebar";
+				}
+			}
 
-	<header>
-	
-		<h1>Remove playlist</h1>
-		
-	</header>
+			header { grid-area: header; text-align: center; }
+			main { grid-area: main; }
+			aside { grid-area: sidebar; }
 
-    <body>
+			section {
+				margin-bottom: 2rem;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+			}
 
-		<h4>${MPD_HOST}<br>port:${MPD_PORT}<br></h4>
+			.search-form {
+				display: flex;
+				gap: 0.5rem;
+			}
 
-		<!-- 入力欄の設定 -->
-		<form name="FORM" method="GET" >
+			.search-form input[type="text"] {
+				flex-grow: 1;
+			}
 
-			<!-- 検索ワードの入力欄 -->
-			<p><input type="text" placeholder="search word" name="search_word"></p>
+			aside nav ul {
+				list-style: none;
+				padding: 0;
+			}
 
-		</form>
-	
-		<!-- 最下部へのジャンプ -->
-		<p><a href="#bottom">jump to bottom</a></p>
+			aside nav li a {
+				display: block;
+				padding: 0.75rem;
+				margin-bottom: 0.5rem;
+				text-decoration: none;
+				text-align: center;
+				border: 1px solid;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
 
-		<!-- mpd.confで設定されたプレイリスト一覧を表示 -->
-		<form name="music" method="POST" >
+	<body>
 
-			<!-- ステータスを表示 -->
-			<p>$(mpc_post)</p>
+		<header>
+			<h1>Remove Playlist</h1>
+			<p><strong>Host:</strong> ${MPD_HOST} | <strong>Port:</strong> ${MPD_PORT}</p>
+		</header>
 
-		</form>
+		<main>
+			<section>
+				<h2>Search</h2>
+				<form name="FORM" method="GET" class="search-form">
+					<input type="text" placeholder="Enter search term..." name="search_word">
+					<button type="submit">Search</button>
+				</form>
+			</section>
 
-		<!-- リンク -->
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Setting</button>
+			<section>
+				<h2>Status</h2>
+				<pre>$(mpc_post)</pre>
+			</section>
 
-		<form name="music" method="POST" >
+			<section>
+				<h2>Playlists</h2>
+				<form name="music" method="POST">
+					<input type="submit" value="Remove Selected Playlist">
+					<pre>$(list_playlist)</pre>
+					<input type="submit" value="Remove Selected Playlist">
+				</form>
+			</section>
+		</main>
 
-			<!-- 削除ボタン -->
-			<p><input type="submit" value="Remove select playlist"></p>
-
-			<!-- mpc管理下のプレイリスト,ディレクトリを表示 -->
-			$(list_playlist)
-
-			<!-- 削除ボタン -->
-			<p><input type="submit" value="Remove select playlist"></p>
-
-		</form>
+		<aside>
+			<nav>
+				<h2>Menu</h2>
+				<ul>
+					<li><a href="/cgi-bin/index.cgi">Home</a></li>
+					<li><a href="/cgi-bin/queued/queued.cgi">Queued</a></li>
+					<li><a href="/cgi-bin/directory/directory.cgi">Directory</a></li>
+					<li><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></li>
+					<li><a href="/cgi-bin/settings/settings.cgi">Settings</a></li>
+				</ul>
+			</nav>
+		</aside>
 
 	</body>
-
-	<!-- "jump to bottom"のジャンプ先 -->
-	<div id="bottom"></div>
-
-	<footer>
-	
-		<!-- リンク -->
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/playlist/playlist.cgi'">Playlist</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/queued/queued.cgi'">Queued</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/index.cgi'">HOME</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/directory/directory.cgi'">Directory</button>
-		<button class="equal_width_button" onclick="location.href='/cgi-bin/settings/settings.cgi'">Setting</button>
-		
-	</footer>
-
-	<!-- 最上部へのジャンプ -->
-	<p><a href="#top">jump to top</a></p>
 
 </html>
 EOS
 # ====== HTMLここまで ======
-
