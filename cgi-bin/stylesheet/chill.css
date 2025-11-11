@@ -1,102 +1,61 @@
 @charset "UTF-8";
-/* chill.css: チルアウトスタイルのcss */
+/* chill.css: チルアウトスタイルのCSS - 効率化版 */
 
-/* 見出しの色 */
 :root {
-
-    --main-bg-color: rgb(75, 175, 175);
-    --letter-color: rgb(0, 255, 0);
-
+	--main-bg-color: rgb(75, 175, 175);
+	--letter-color: rgb(0, 255, 0);
+	--text-color: rgb(220, 170, 80);
+	--bg-color: rgb(90, 50, 115);
 }
 
-/* アスキーアート */
 pre {
-
-	color: rgb(220, 170, 80);
-    text-align: center;
-
+	color: var(--text-color);
+	text-align: center;
 }
 
-/* サブタイトル */
-span {
-
-    color: var(--main-bg-color);
-
-}
-
-/* リンクの文字色 */
-a {
-
-    color: var(--main-bg-color);
-
-}
-
-/* ヘッダー */
-header {
-
-	width: 100%;
-    color: var(--main-bg-color);
-    text-align: center;
-
-}
-
-/* 背景色 */
-body {
-
-    background-color: rgb(90, 50, 115);
-    text-align: left;
-
-}
-
-/* 大見出し */
-h1 {
-
-    color: var(--main-bg-color);
-    font-size: 35px;
-    text-align: left;
-
-}
-
-/* 中見出し */
-h2 {
-
-    color: var(--main-bg-color);
-    text-align: left;
-
-}
-
-/* 小見出し */
+span,
+a,
+header,
+h1,
+h2,
 h3 {
+	color: var(--main-bg-color);
+}
 
-    color: var(--main-bg-color);
-    text-align: left;
+header {
+	width: 100%;
+	text-align: center;
+}
 
+body {
+	background-color: var(--bg-color);
+	text-align: left;
+	color: var(--letter-color);
+}
+
+h1 {
+	font-size: 35px;
+	text-align: left;
+}
+
+h2,
+h3 {
+	text-align: left;
 }
 
 h4 {
-
-    color: teal;
-    text-align: left;
-
+	color: teal;
+	text-align: left;
 }
 
-l1 {
-
-    color:rgb(220, 170, 80) ;
-    text-align: left;
-
-}
-
-l2 {
-
-    color:rgb(220, 170, 80) ;
-    text-align: left;
-
+li {
+	color: var(--text-color);
+	text-align: left;
 }
 
 strong {
-
-	color:red;
+	color: red;
+}
 
 }
 
