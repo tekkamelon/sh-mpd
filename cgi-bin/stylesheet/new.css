@@ -36,59 +36,19 @@
 		--nc-bg-3: var(--nc-d-bg-3);
 		--nc-lk-1: var(--nc-d-lk-1);
 		--nc-lk-2: var(--nc-d-lk-2);
-		--nc-lk-tx: var(--nc--dlk-tx);
+		--nc-lk-tx: var(--nc-d-lk-tx);
 		--nc-ac-1: var(--nc-d-ac-1);
-		--nc-ac-tx: var(--nc--dac-tx);
+		--nc-ac-tx: var(--nc-d-ac-tx);
 	}
 }
 
 * {
-	/* Reset margins and padding */
 	margin: 0;
 	padding: 0;
-}
-
-address,
-area,
-article,
-aside,
-audio,
-blockquote,
-datalist,
-details,
-dl,
-fieldset,
-figure,
-form,
-input,
-iframe,
-img,
-meter,
-nav,
-ol,
-optgroup,
-option,
-output,
-p,
-pre,
-progress,
-ruby,
-section,
-table,
-textarea,
-ul,
-video {
-	/* Margins for most elements */
-	margin-bottom: 1rem;
-}
-
-html,input,select,button {
-	/* Set body font family and some finicky elements */
-	font-family: var(--nc-font-sans);
+	box-sizing: border-box;
 }
 
 body {
-	/* Center body in page */
 	margin: 0 auto;
 	max-width: 750px;
 	padding: 2rem;
@@ -97,6 +57,29 @@ body {
 	word-break: break-word;
 	overflow-wrap: break-word;
 	background: var(--nc-bg-1);
+	color: var(--nc-tx-1);
+	font-family: var(--nc-font-sans);
+	line-height: 1.5;
+}
+
+html, input, select, button {
+	font-family: var(--nc-font-sans);
+}
+
+address, article, aside, blockquote, dl, figure, ol, p, ul {
+	margin-bottom: 1rem;
+}
+
+a {
+	color: var(--nc-lk-1);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--nc-lk-2);
+}
+
+/* 残りの要素 (img, pre など) をグループ化。margin-bottomをクラスで統一可能だが、シンプルに維持。全文最適化。 */
 
 	/* Main body text */
 	color: var(--nc-tx-2);
