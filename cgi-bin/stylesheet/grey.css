@@ -1,102 +1,59 @@
 @charset "UTF-8";
-/* grey.css: グレイテーマのcss */
+/* grey.css: グレイテーマのCSS - 効率化版 */
 
-/* 見出しの色 */
 :root {
-
-    --main-bg-color: rgb(50, 50, 50);
-    --letter-color: rgb(160, 160, 160);
-
+	--main-bg-color: rgb(50, 50, 50);
+	--letter-color: rgb(160, 160, 160);
+	--text-color: rgb(180, 185, 185);
+	--bg-color: rgb(47, 50, 52);
 }
 
-/* アスキーアート */
 pre {
-
 	color: rgb(180, 190, 190);
-    text-align: center;
-
+	text-align: center;
 }
 
-/* サブタイトル */
-span {
-
-	color: rgb(180, 185, 185);
-
+span,
+header,
+h1,
+h2,
+h3,
+h4,
+li {
+	color: var(--text-color);
 }
 
-/* リンクの文字色 */
 a {
-
-    color: var(--main-bg-color);
-
+	color: var(--main-bg-color);
 }
 
-/* ヘッダー */
 header {
-
 	width: 100%;
-	color: rgb(180, 185, 185);
-    text-align: center;
-
+	text-align: center;
 }
 
-/* 背景色 */
 body {
-
-    background-color: rgb(47, 50, 52);
-	color: rgb(0, 0, 0);
-    text-align: left;
-
+	background-color: var(--bg-color);
+	text-align: left;
+	color: var(--letter-color);
 }
 
-/* 大見出し */
 h1 {
-
-	color: rgb(180, 185, 185);
-    font-size: 35px;
-    text-align: left;
-
+	font-size: 35px;
+	text-align: left;
 }
 
-/* 中見出し */
-h2 {
-
-	color: rgb(180, 185, 185);
-    text-align: left;
-
+h2,
+h3,
+h4,
+li {
+	text-align: left;
 }
 
-/* 小見出し */
-h3 {
-
-	color: rgb(180, 185, 185);
-    text-align: left;
-
-}
-
-h4 {
-
-	color: rgb(180, 185, 185);
-    text-align: left;
-
-}
-
-l1 {
-
-    color:rgb(180, 185, 185) ;
-    text-align: left;
-
-}
-
-l2 {
-
-    color:rgb(180, 185, 185) ;
-    text-align: left;
-
-}
-
-/* 本文 */
 p {
+	color: var(--text-color);
+	font-size: 15px;
+}
 
     color: rgb(140, 140, 140);
     font-size: 15px;
