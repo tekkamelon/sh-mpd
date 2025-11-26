@@ -155,67 +155,67 @@ cat << EOS
 				<form name="control_form" method="GET">
 					<div class="control-grid">
 											<button name="button" value="status">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
+												<img src="/cgi-bin/icons/status.svg" class="icon" alt="Status">
 												Status
 											</button>
 											<button name="button" value="volume_-100">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+												<img src="/cgi-bin/icons/mute.svg" class="icon" alt="Mute">
 												Mute
 											</button>
 											<button name="button" value="volume_-5">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5zM19 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+												<img src="/cgi-bin/icons/vol-down.svg" class="icon" alt="Vol -">
 												Vol -
 											</button>
 											<button name="button" value="volume_+5">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a7 7 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+												<img src="/cgi-bin/icons/vol-up.svg" class="icon" alt="Vol +">
 												Vol +
 											</button>
 											<button name="button" value="prev">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 20H9V4m0 0l-7 7 7 7M9 4h10"/></svg>
+												<img src="/cgi-bin/icons/prev.svg" class="icon" alt="Previous">
 												Prev
 											</button>
 											<button name="button" value="toggle">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v14l12-7z"/></svg>
+												<img src="/cgi-bin/icons/toggle.svg" class="icon" alt="Play/Pause">
 												Play/Pause
 											</button>
 											<button name="button" value="stop">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18L18 6M6 6l12 12"/></svg>
+												<img src="/cgi-bin/icons/stop.svg" class="icon" alt="Stop">
 												Stop
 											</button>
 											<button name="button" value="next">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4v16l12-7z"/></svg>
+												<img src="/cgi-bin/icons/next.svg" class="icon" alt="Next">
 												Next
 											</button>
 											<button name="button" value="repeat">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a5 5 0 00-10 0M9 6a5 5 0 0110 0"/></svg>
+												<img src="/cgi-bin/icons/repeat.svg" class="icon" alt="Repeat">
 												Repeat
 											</button>
 											<button name="button" value="random">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l4 4-4 4M2 16l4 4 4-4M2 8l4-4 4 4M18 16a4 4 0 00-8 0"/></svg>
+												<img src="/cgi-bin/icons/random.svg" class="icon" alt="Random">
 												Random
 											</button>
 											<button name="button" value="single">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10a1 1 0 01-1 1H4a1 1 0 01-1-1v-3a1 1 0 011-1h16a1 1 0 011 1z"/></svg>
+												<img src="/cgi-bin/icons/single.svg" class="icon" alt="Single">
 												Single
 											</button>
 											<button name="button" value="shuffle">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l4 4-4 4M2 16l4 4 4-4M2 8l4-4 4 4"/></svg>
+												<img src="/cgi-bin/icons/shuffle.svg" class="icon" alt="Shuffle">
 												Shuffle
 											</button>
 											<button name="button" value="clear">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0h10"/></svg>
+												<img src="/cgi-bin/icons/clear.svg" class="icon" alt="Clear">
 												Clear
 											</button>
 											<button name="button" value="update">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+												<img src="/cgi-bin/icons/update.svg" class="icon" alt="Update DB">
 												Update DB
 											</button>
 											<button name="button" value="seek_-5%">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.272 1.512a5.5 5.5 0 011.456 7.512l-8.512 5.01a5.5 5.5 0 11-1.456-7.512l8.512-5.01z"/></svg>
+												<img src="/cgi-bin/icons/seek-back.svg" class="icon" alt="Seek -">
 												Seek -
 											</button>
 											<button name="button" value="seek_+5%">
-												<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.728 22.488a5.5 5.5 0 01-1.456-7.512l8.512-5.01a5.5 5.5 0 111.456 7.512l-8.512 5.01z"/></svg>
+												<img src="/cgi-bin/icons/seek-forward.svg" class="icon" alt="Seek +">
 												Seek +
 											</button>
 					</div>
@@ -247,7 +247,7 @@ cat << EOS
 				<h2>Next in Queue</h2>
 				<form name="next_form" method="GET">
 								<button name="button" value="next">
-									<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4v16l12-7z"/></svg>
+									<img src="/cgi-bin/icons/next.svg" class="icon" alt="Next">
 									$(next_song)
 								</button>
 				</form>
@@ -259,19 +259,19 @@ cat << EOS
 				<h2>Menu</h2>
 				<ul>
 									<li><a href="queued/queued.cgi">
-										<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+										<img src="/cgi-bin/icons/queued.svg" class="icon" alt="Queued">
 										Queued
 									</a></li>
 									<li><a href="directory/directory.cgi">
-										<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+										<img src="/cgi-bin/icons/directory.svg" class="icon" alt="Directory">
 										Directory
 									</a></li>
 									<li><a href="playlist/playlist.cgi">
-										<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h.01M15 19v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/></svg>
+										<img src="/cgi-bin/icons/playlist.svg" class="icon" alt="Playlist">
 										Playlist
 									</a></li>
 									<li><a href="settings/settings.cgi">
-										<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06 .06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06 .06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06 .06a1.65 1.65 0 0 0 1.82 .33H9a1.65 1.65 0 0 0 1 -1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 1 1 1.51 1.65 1.65 0 0 1 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06 .06a1.65 1.65 0 0 1-.33 1.82V9a1.65 1.65 0 0 1 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 1-1.51 1z"/></svg>
+										<img src="/cgi-bin/icons/settings.svg" class="icon" alt="Settings">
 										Settings
 									</a></li>
 				</ul>
