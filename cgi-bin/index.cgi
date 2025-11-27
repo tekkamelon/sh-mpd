@@ -285,7 +285,7 @@ cat << EOS
 			<footer>
 				<h3>Links</h3>
 				<p><a href="https://github.com/tekkamelon/sh-mpd">GitHub Repository</a></p>
-				<p>Reference: <a href="https://github.com/ShellShoccar-jpn/misc-tools">urldecode</a>, <a href="https://github.com/andybrewer/mvp/">mvp.css</a>, <a href="https://github.com/xz/new.css">new.css</a></p>
+				<p>Reference: <a href="https://github.com/ShellShoccar-jpn/misc-tools">urldecode</a></p>
 			</footer>
 		</aside>
 
