@@ -155,51 +155,51 @@ cat << EOS
 				<form name="control_form" method="GET">
 					<div class="control-grid">
 											<button name="button" value="status">
-												<img src="/cgi-bin/icons/status.svg" class="icon" alt="Status">
+																				<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 6.25a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5a.75.75 0 01.75-.75zm.75 8.25a.75.75 0 01-1.5 0v-3.5a.75.75 0 011.5 0v3.5z M12 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0z M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
 												Status
 											</button>
 											<button name="button" value="volume_-100">
-												<img src="/cgi-bin/icons/mute.svg" class="icon" alt="Mute">
+																				<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L18.75 8.25M6.75 17.25L8.25 18.75M12 12l1.5 1.5m0 0L15 15m-3 3l3-3M9 9l2 2m0 0l2 2m-2-2l-2 2m2-2l2-2M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
 												Mute
 											</button>
 											<button name="button" value="volume_-5">
-												<img src="/cgi-bin/icons/vol-down.svg" class="icon" alt="Vol -">
+																				<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6.25V12m0 0v6.25M4.25 12H15.75m0 0H21M8.75 9.75l1.5 1.5L8.75 15m1.5-1.5l-1.5-1.5"/></svg>
 												Vol -
 											</button>
 											<button name="button" value="volume_+5">
-												<img src="/cgi-bin/icons/vol-up.svg" class="icon" alt="Vol +">
+																				<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6.25V12m0 0v6.25M4.25 12H15.75m0 0H21M12.75 9.75l1.5 1.5L12.75 15m1.5-1.5l-1.5-1.5"/></svg>
 												Vol +
 											</button>
 											<button name="button" value="prev">
-												<img src="/cgi-bin/icons/prev.svg" class="icon" alt="Previous">
+												<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.27 3l6.913 5.43a2 2 0 010 2.14L6.27 21M18 3l-6.913 5.43a2 2 0 000 2.14L18 21"/></svg>
 												Prev
 											</button>
 											<button name="button" value="toggle">
-												<img src="/cgi-bin/icons/toggle.svg" class="icon" alt="Play/Pause">
+																				<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-4.5 0v-10.5a2.25 2.25 0 014.5 0zm-6 9a2.25 2.25 0 01-4.5 0v-9.75a2.25 2.25 0 014.5 0v9.75z"/></svg>
 												Play/Pause
 											</button>
 											<button name="button" value="stop">
-												<img src="/cgi-bin/icons/stop.svg" class="icon" alt="Stop">
+												<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z M9 9.75a1.25 1.25 0 11-2.5 0v4.5a1.25 1.25 0 112.5 0v-4.5z M13.25 9.75a1.25 1.25 0 11-2.5 0v4.5a1.25 1.25 0 112.5 0v-4.5z"/></svg>
 												Stop
 											</button>
 											<button name="button" value="next">
-												<img src="/cgi-bin/icons/next.svg" class="icon" alt="Next">
+												<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.27 3l6.913 5.43a2 2 0 010 2.14L4.27 21M18 3l-6.913 5.43a2 2 0 000 2.14L18 21"/></svg>
 												Next
 											</button>
 											<button name="button" value="repeat">
-												<img src="/cgi-bin/icons/repeat.svg" class="icon" alt="Repeat">
+												<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 8.25h15m-16.5 7.5h15a2.25 2.25 0 002.25-2.25v-6a2.25 2.25 0 00-2.25-2.25H9.75A2.25 2.25 0 007.5 6v.75M5.25 8.25L3 6m0 0l2.25-2.25M3 6l2.25 2.25M13.5 15.75V21A2.25 2.25 0 0111.25 23.25h-3A2.25 2.25 0 016 20.25V15.75"/></svg>
 												Repeat
 											</button>
 											<button name="button" value="random">
-												<img src="/cgi-bin/icons/random.svg" class="icon" alt="Random">
+												<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.115 5.19a7.125 7.125 0 01-3.7 3.315 1.125 1.125 0 01-1.491-.928c-.007-.103-.005-.216.009-.324a7.125 7.125 0 0116.95-3.292 1.125 1.125 0 01-.59.942l-.04.024a7.125 7.125 0 01-3.83 2.7L6.115 5.19z M20.885 18.81a7.125 7.125 0 00-3.7-3.315 1.125 1.125 0 00-1.491.928c.007.103.005.216-.009.324a7.125 7.125 0 00-16.95 3.292 1.125 1.125 0 00.59-.942l.04-.024a7.125 7.125 0 013.83-2.7L20.885 18.81z"/></svg>
 												Random
 											</button>
 											<button name="button" value="single">
-												<img src="/cgi-bin/icons/single.svg" class="icon" alt="Single">
+												<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z M4.501 20.118a7.5 7.5 0 0114.214-3.975m0 0a7.5 7.5 0 01-14.214 3.975M4.501 20.118l2.433-2.433m9.371 9.371l2.433-2.433M11.025 11.025a3 3 0 11-6 0 3 3 0 016 0z M12.975 12.975a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
 												Single
 											</button>
 											<button name="button" value="shuffle">
-												<img src="/cgi-bin/icons/shuffle.svg" class="icon" alt="Shuffle">
+												<svg class="icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.115 5.19a7.125 7.125 0 01-3.7 3.315 1.125 1.125 0 01-1.491-.928c-.007-.103-.005-.216.009-.324a7.125 7.125 0 0116.95-3.292 1.125 1.125 0 01-.59.942l-.04.024a7.125 7.125 0 01-3.83 2.7L6.115 5.19z M20.885 18.81a7.125 7.125 0 00-3.7-3.315 1.125 1.125 0 00-1.491.928c.007.103.005.216-.009.324a7.125 7.125 0 00-16.95 3.292 1.125 1.125 0 00.59-.942l.04-.024a7.125 7.125 0 013.83-2.7L20.885 18.81z"/></svg>
 												Shuffle
 											</button>
 											<button name="button" value="clear">
@@ -279,7 +279,7 @@ cat << EOS
 
 			<section>
 				<h3>MPD Statistics</h3>
-				<pre>$(mpc stats | sed "s/$/\n/g")</pre>
+				<pre>$(mpc stats | sed "s/$//g")</pre>
 			</section>
 
 			<footer>
