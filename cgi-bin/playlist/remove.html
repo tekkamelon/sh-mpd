@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+	<head>
+
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/modern.css">
+		<link rel="icon" href="/cgi-bin/image/favicon.ico">
+		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
+		<title>Remove Playlist - sh-MPD -</title>
+		<style>
+			body {
+				display: grid;
+				grid-template-areas:
+					"header"
+					"main"
+					"sidebar";
+				gap: 1rem;
+				padding: 1rem;
+			}
+
+			@media (min-width: 768px) {
+				body {
+					grid-template-columns: 3fr 1fr;
+					grid-template-areas:
+						"header header"
+						"main   sidebar";
+				}
+			}
+
+			header { grid-area: header; text-align: center; }
+			main { grid-area: main; }
+			aside { grid-area: sidebar; }
+
+			section {
+				margin-bottom: 2rem;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+			}
+
+			.search-form {
+				display: flex;
+				gap: 0.5rem;
+			}
+
+			.search-form input[type="text"] {
+				flex-grow: 1;
+			}
+
+			aside nav ul {
+				list-style: none;
+				padding: 0;
+			}
+
+			aside nav li a {
+				display: block;
+				padding: 0.75rem;
+				margin-bottom: 0.5rem;
+				text-decoration: none;
+				text-align: center;
+				border: 1px solid;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<header>
+			<h1>Remove Playlist</h1>
+			<p><strong>Host:</strong> localhost | <strong>Port:</strong> 6600</p>
+		</header>
+
+		<main>
+			<section>
+				<h2>Search</h2>
+				<form name="FORM" method="GET" class="search-form" action="/cgi-bin/playlist/remove_process.cgi">
+					<input type="text" placeholder="Enter search term..." name="search_word">
+					<button type="submit">Search</button>
+				</form>
+			</section>
+
+			<section>
+				<h2>Status</h2>
+				<form method="POST" action="/cgi-bin/playlist/remove_process.cgi">
+					<button type="submit" name="action" value="status">Refresh Status</button>
+				</form>
+				<pre>ページをリロードしてステータスを確認してください。</pre>
+			</section>
+
+			<section>
+				<h2>Playlists</h2>
+				<form name="music" method="POST" action="/cgi-bin/playlist/remove_process.cgi">
+					<input type="submit" value="Remove Selected Playlist">
+					<pre>ページをリロードしてプレイリスト一覧を確認してください。</pre>
+					<input type="submit" value="Remove Selected Playlist">
+				</form>
+			</section>
+		</main>
+
+		<aside>
+			<nav>
+				<h2>Menu</h2>
+				<ul>
+					<li><a href="/cgi-bin/index.html">Home</a></li>
+					<li><a href="/cgi-bin/queued/queued.html">Queued</a></li>
+					<li><a href="/cgi-bin/directory/directory.html">Directory</a></li>
+					<li><a href="/cgi-bin/playlist/playlist.html">Playlist</a></li>
+					<li><a href="/cgi-bin/settings/settings.html">Settings</a></li>
+				</ul>
+			</nav>
+		</aside>
+
+	</body>
+
+</html>

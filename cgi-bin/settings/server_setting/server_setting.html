@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+	<head>
+
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/modern.css">
+		<link rel="icon" href="/cgi-bin/image/favicon.svg">
+		<title>Server Settings - sh-MPD -</title>
+		<style>
+			body {
+				display: grid;
+				grid-template-areas:
+					"header"
+					"main"
+					"sidebar";
+				gap: 1rem;
+				padding: 1rem;
+			}
+
+			@media (min-width: 768px) {
+				body {
+					grid-template-columns: 3fr 1fr;
+					grid-template-areas:
+						"header header"
+						"main   sidebar";
+				}
+			}
+
+			header { grid-area: header; text-align: center; }
+			main { grid-area: main; }
+			aside { grid-area: sidebar; }
+
+			section {
+				margin-bottom: 2rem;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+			}
+
+			.settings-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 1rem;
+			}
+
+			.form-grid {
+				display: grid;
+				grid-template-columns: auto 1fr;
+				gap: 0.5rem;
+				align-items: center;
+			}
+
+			aside nav ul {
+				list-style: none;
+				padding: 0;
+			}
+
+			aside nav li a {
+				display: block;
+				padding: 0.75rem;
+				margin-bottom: 0.5rem;
+				text-decoration: none;
+				text-align: center;
+				border: 1px solid;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<header>
+			<h1>Server Settings</h1>
+		</header>
+
+		<main>
+			<section>
+				<h2>Current Settings</h2>
+				<div class="settings-grid">
+					<div>
+						<h4>MPD</h4>
+						<p><strong>Host:</strong> localhost</p>
+						<p><strong>Port:</strong> 6600</p>
+					</div>
+					<div>
+						<h4>Cover Art Server</h4>
+						<p><strong>Host:</strong> -</p>
+						<p><strong>Port:</strong> -</p>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2>Update Settings</h2>
+				<form name="setting" method="POST" class="form-grid" action="/cgi-bin/settings/server_setting/server_setting_process.cgi">
+					<label for="args">Item:</label>
+					<select name="args" id="args">
+						<option value="mpd_host">MPD Host</option>
+						<option value="mpd_port">MPD Port</option>
+						<option value="img_server_host">Cover Art Server Host</option>
+						<option value="img_server_port">Cover Art Server Port</option>
+					</select>
+					<label for="post_key">Value:</label>
+					<input type="text" placeholder="Enter new value" name="post_key" id="post_key">
+					<button type="submit">Update</button>
+				</form>
+			</section>
+
+			<section>
+				<h2>Result</h2>
+				<pre>設定変更後、ページをリロードして確認してください。</pre>
+			</section>
+		</main>
+
+		<aside>
+			<nav>
+				<h2>Menu</h2>
+				<ul>
+					<li><a href="/cgi-bin/index.html">Home</a></li>
+					<li><a href="/cgi-bin/queued/queued.html">Queued</a></li>
+					<li><a href="/cgi-bin/directory/directory.html">Directory</a></li>
+					<li><a href="/cgi-bin/playlist/playlist.html">Playlist</a></li>
+					<li><a href="/cgi-bin/settings/settings.html">Settings</a></li>
+				</ul>
+			</nav>
+		</aside>
+
+	</body>
+
+</html>
