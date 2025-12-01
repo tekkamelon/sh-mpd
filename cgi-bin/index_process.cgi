@@ -11,6 +11,7 @@ export POSIXLY_CORRECT=1
 tmp_path="$(cd "$(dirname "${0}")/../bin" && pwd)"
 export PATH="${PATH}:${tmp_path}"
 
+set -vx
 if [ -f settings/shmpd.conf ] ; then
 	. settings/shmpd.conf
 else
@@ -19,6 +20,7 @@ else
 	stylesheet="stylesheet.css"
 fi
 
+set +vx
 cat_post=$(cat)
 
 post_check="${cat_post#*\=}"
@@ -28,10 +30,10 @@ query_check="${QUERY_STRING#*\=}"
 
 mpc_post () {
 	if [ -n "${post_value}" ]; then
-		echo "${post_key}" "'${post_value}'" | urldecode
+		echo "${post_key}" "'${post_value}'" | urldecode | xargs mpc >/dev/null 2>&1 || true
 	else
-		echo "${query_check}" | sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"
-	fi | xargs mpc >/dev/null 2>&1
+		echo "${query_check}" | sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g" | xargs mpc >/dev/null 2>&1 || true
+	fi
 }
 
 mpc_post
