@@ -166,6 +166,46 @@
 			</footer>
 		</aside>
 
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const statusUrl = '/cgi-bin/status.cgi';
+
+				function updateStatusPre(pre) {
+					fetch(statusUrl)
+						.then(response => response.text())
+						.then(text => {
+							pre.textContent = text.trim();
+						})
+						.catch(error => {
+							console.error('Status update error:', error);
+							pre.textContent = 'Error updating status';
+						});
+				}
+
+				function autoUpdate() {
+					document.querySelectorAll('pre').forEach(pre => {
+						if (pre.textContent.includes('ページをリロード') || pre.textContent.includes('確認してください')) {
+							updateStatusPre(pre);
+						}
+					});
+				}
+
+				autoUpdate(); // 初回
+				setInterval(autoUpdate, 5000); // 5秒ごと
+
+				document.querySelectorAll('button[value="status"]').forEach(button => {
+					button.addEventListener('click', function(e) {
+						e.preventDefault();
+						const form = this.closest('form');
+						const section = form.closest('section');
+						const pre = section.querySelector('pre');
+						if (pre) {
+							updateStatusPre(pre);
+						}
+					});
+				});
+			});
+		</script>
 	</body>
 
 </html>
