@@ -39,5 +39,5 @@ mpc_post () {
 mpc_post
 
 echo "Status: 302 Found"
-echo "Location: /cgi-bin/index.html"
+echo "Location: /cgi-bin/index.cgi"
 echo ""
