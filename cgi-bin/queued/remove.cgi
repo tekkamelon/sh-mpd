@@ -173,7 +173,7 @@ cat << EOS
 
 		<main>
 			<div style="text-align: center; margin-bottom: 1rem;">
-				<button onclick="window.scrollTo(0, document.body.scrollHeight);" style="padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">最下部へ移動</button>
+				<button onclick="window.scrollTo(0, document.body.scrollHeight);">Go to Bottom</button>
 			</div>
 			<section>
 				<h2>Search</h2>
@@ -196,8 +196,8 @@ cat << EOS
 					<input type="submit" value="Remove Selected Song">
 				</form>
 			</section>
-			<div style="text-align: center; margin-top: 1rem;">
-				<button onclick="window.scrollTo(0, 0);" style="padding: 0.5rem 1rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">最上部へ移動</button>
+			<div>
+				<button onclick="window.scrollTo(0, 0);">Go to Top</button>
 			</div>
 		</main>
 
