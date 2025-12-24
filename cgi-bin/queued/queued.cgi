@@ -233,7 +233,6 @@ cat << EOS
 			<div>
 				<button onclick="window.scrollTo(0, 0);">Go to Top</button>
 			</div>
-			</div>
 		</main>
 
 		<aside>
