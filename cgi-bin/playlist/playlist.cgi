@@ -204,9 +204,15 @@ cat << EOS
 
 			<section>
 				<h2>Playlists</h2>
+				<div style="text-align: center; margin-bottom: 1rem;">
+					<button onclick="window.scrollTo(0, document.body.scrollHeight);">Go to Bottom</button>
+				</div>
 				<form name="music_list" method="POST">
 					<pre>$(list_playlist)</pre>
 				</form>
+				<div style="text-align: center; margin-bottom: 1rem;">
+					<button onclick="window.scrollTo(0, 0);">Go to Top</button>
+				</div>
 			</section>
 			<div>
 				<button onclick="window.scrollTo(0, 0);">Go to Top</button>
