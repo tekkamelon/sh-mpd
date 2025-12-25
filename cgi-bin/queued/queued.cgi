@@ -204,9 +204,6 @@ cat << EOS
 		</header>
 
 		<main>
-			<div style="text-align: center; margin-bottom: 1rem;">
-				<button onclick="window.scrollTo(0, document.body.scrollHeight);">Go to Bottom</button>
-			</div>
 			<section>
 				<h2>Playlist Operations</h2>
 				<form name="FORM" method="GET" class="form-grid">
@@ -226,13 +223,16 @@ cat << EOS
 
 			<section>
 				<h2>Queue</h2>
+				<div style="text-align: center; margin-bottom: 1rem;">
+					<button onclick="window.scrollTo(0, document.body.scrollHeight);">Go to Bottom</button>
+				</div>
 				<form name="music" method="POST">
 					<pre>$(queued)</pre>
 				</form>
+				<div style="text-align: center; margin-bottom: 1rem;">
+					<button onclick="window.scrollTo(0, 0);">Go to Top</button>
+				</div>
 			</section>
-			<div>
-				<button onclick="window.scrollTo(0, 0);">Go to Top</button>
-			</div>
 		</main>
 
 		<aside>
