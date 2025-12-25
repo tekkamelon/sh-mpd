@@ -185,15 +185,18 @@ cat << EOS
 
 			<section>
 				<h2>Playlists</h2>
+				<div style="text-align: center; margin-bottom: 1rem;">
+					<button onclick="window.scrollTo(0, document.body.scrollHeight);">Go to Bottom</button>
+				</div>
 				<form name="music" method="POST">
 					<input type="submit" value="Remove Selected Playlist">
 					<pre>$(list_playlist)</pre>
 					<input type="submit" value="Remove Selected Playlist">
 				</form>
+				<div style="text-align: center; margin-bottom: 1rem;">
+					<button onclick="window.scrollTo(0, 0);">Go to Top</button>
+				</div>
 			</section>
-			<div>
-				<button onclick="window.scrollTo(0, 0);">Go to Top</button>
-			</div>
 		</main>
 
 		<aside>
