@@ -167,9 +167,6 @@ cat << EOS
 		</header>
 
 		<main>
-			<div style="text-align: center; margin-bottom: 1rem;">
-				<button onclick="window.scrollTo(0, document.body.scrollHeight);">Go to Bottom</button>
-			</div>
 			<section>
 				<h2>Search</h2>
 				<form name="FORM" method="GET" class="search-form">
