@@ -236,7 +236,7 @@ aside nav li a:hover {
 }
 
 pre {
-	background: rgba(7, 54, 66, 0.5);
+	background: rgba(--bg-primary);
 	padding: 1rem;
 	border-radius: 12px;
 	white-space: pre-wrap;
