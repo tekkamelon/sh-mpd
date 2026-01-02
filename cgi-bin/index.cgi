@@ -30,7 +30,7 @@ else
 	export MPD_HOST="127.0.0.1"
 	export MPD_PORT="6600"
 
-	stylesheet="stylesheet.css"
+	stylesheet="modern.css"
 
 fi
 
@@ -154,70 +154,70 @@ cat << EOS
 				<h2>Control Panel</h2>
 				<form name="control_form" method="GET">
 					<div class="control-grid">
-											<button name="button" value="status">
-												<img src="/cgi-bin/icons/status.svg" class="icon" alt="Status">
-												Status
-											</button>
-											<button name="button" value="volume_-100">
-												<img src="/cgi-bin/icons/mute.svg" class="icon" alt="Mute">
-												Mute
-											</button>
-											<button name="button" value="volume_-5">
-												<img src="/cgi-bin/icons/vol-down.svg" class="icon" alt="Vol -">
-												Vol -
-											</button>
-											<button name="button" value="volume_+5">
-												<img src="/cgi-bin/icons/vol-up.svg" class="icon" alt="Vol +">
-												Vol +
-											</button>
-											<button name="button" value="prev">
-												<img src="/cgi-bin/icons/prev.svg" class="icon" alt="Previous">
-												Prev
-											</button>
-											<button name="button" value="toggle">
-												<img src="/cgi-bin/icons/toggle.svg" class="icon" alt="Play/Pause">
-												Play/Pause
-											</button>
-											<button name="button" value="stop">
-												<img src="/cgi-bin/icons/stop.svg" class="icon" alt="Stop">
-												Stop
-											</button>
-											<button name="button" value="next">
-												<img src="/cgi-bin/icons/next.svg" class="icon" alt="Next">
-												Next
-											</button>
-											<button name="button" value="repeat">
-												<img src="/cgi-bin/icons/repeat.svg" class="icon" alt="Repeat">
-												Repeat
-											</button>
-											<button name="button" value="random">
-												<img src="/cgi-bin/icons/random.svg" class="icon" alt="Random">
-												Random
-											</button>
-											<button name="button" value="single">
-												<img src="/cgi-bin/icons/single.svg" class="icon" alt="Single">
-												Single
-											</button>
-											<button name="button" value="shuffle">
-												<img src="/cgi-bin/icons/shuffle.svg" class="icon" alt="Shuffle">
-												Shuffle
-											</button>
-											<button name="button" value="clear">
-												<img src="/cgi-bin/icons/clear.svg" class="icon" alt="Clear">
-												Clear
-											</button>
-											<button name="button" value="update">
-												<img src="/cgi-bin/icons/update.svg" class="icon" alt="Update DB">
-												Update DB
-											</button>
-											<button name="button" value="seek_-5%">
-												<img src="/cgi-bin/icons/seek-back.svg" class="icon" alt="Seek -">
-												Seek -
-											</button>
-											<button name="button" value="seek_+5%">
-												<img src="/cgi-bin/icons/seek-forward.svg" class="icon" alt="Seek +">
-												Seek +
-											</button>
+						<button name="button" value="status">
+							<img src="/cgi-bin/icons/status.svg" class="icon" alt="Status">
+							Status
+						</button>
+						<button name="button" value="volume_-100">
+							<img src="/cgi-bin/icons/mute.svg" class="icon" alt="Mute">
+							Mute
+						</button>
+						<button name="button" value="volume_-5">
+							<img src="/cgi-bin/icons/vol-down.svg" class="icon" alt="Vol -">
+							Vol -
+						</button>
+						<button name="button" value="volume_+5">
+							<img src="/cgi-bin/icons/vol-up.svg" class="icon" alt="Vol +">
+							Vol +
+						</button>
+						<button name="button" value="prev">
+							<img src="/cgi-bin/icons/prev.svg" class="icon" alt="Previous">
+							Prev
+						</button>
+						<button name="button" value="toggle">
+							<img src="/cgi-bin/icons/toggle.svg" class="icon" alt="Play/Pause">
+							Play/Pause
+						</button>
+						<button name="button" value="stop">
+							<img src="/cgi-bin/icons/stop.svg" class="icon" alt="Stop">
+							Stop
+						</button>
+						<button name="button" value="next">
+							<img src="/cgi-bin/icons/next.svg" class="icon" alt="Next">
+							Next
+						</button>
+						<button name="button" value="repeat">
+							<img src="/cgi-bin/icons/repeat.svg" class="icon" alt="Repeat">
+							Repeat
+						</button>
+						<button name="button" value="random">
+							<img src="/cgi-bin/icons/random.svg" class="icon" alt="Random">
+							Random
+						</button>
+						<button name="button" value="single">
+							<img src="/cgi-bin/icons/single.svg" class="icon" alt="Single">
+							Single
+						</button>
+						<button name="button" value="shuffle">
+							<img src="/cgi-bin/icons/shuffle.svg" class="icon" alt="Shuffle">
+							Shuffle
+						</button>
+						<button name="button" value="clear">
+							<img src="/cgi-bin/icons/clear.svg" class="icon" alt="Clear">
+							Clear
+						</button>
+						<button name="button" value="update">
+							<img src="/cgi-bin/icons/update.svg" class="icon" alt="Update DB">
+							Update DB
+						</button>
+						<button name="button" value="seek_-5%">
+							<img src="/cgi-bin/icons/seek-back.svg" class="icon" alt="Seek -">
+							Seek -
+						</button>
+						<button name="button" value="seek_+5%">
+							<img src="/cgi-bin/icons/seek-forward.svg" class="icon" alt="Seek +">
+							Seek +
+						</button>
 					</div>
 				</form>
 			</section>
