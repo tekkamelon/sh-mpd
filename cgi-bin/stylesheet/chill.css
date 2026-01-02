@@ -273,4 +273,12 @@ button:active {
     transform: translateY(0);
 }
 
+b {
+    color: var(--text-primary);
+}
+
+strong {
+    color: var(--text-secondary);
+}
+
 

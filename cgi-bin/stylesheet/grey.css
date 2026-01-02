@@ -286,3 +286,10 @@ button:active {
 
 
 
+b {
+    color: var(--text-primary);
+}
+
+strong {
+    color: var(--text-secondary);
+}
