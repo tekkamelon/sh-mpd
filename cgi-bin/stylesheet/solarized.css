@@ -11,6 +11,8 @@
 	--accent-hover: linear-gradient(135deg, #268bd2 0%, #2aa198 100%);
 	--shadow: 0 8px 32px rgba(0, 43, 54, 0.37);
 	--shadow-hover: 0 12px 40px rgba(0, 43, 54, 0.5);
+	--text-b: rgb(181, 137, 0);
+	--text-strong: rgb(42, 161, 152);
 }
 
 /* Light theme for users who prefer light mode */
@@ -285,9 +287,9 @@ button:active {
 	transform: translateY(0);
 }
 b {
-    color: var(--text-primary);
+    color: var(--text-b);
 }
 
 strong {
-    color: var(--text-secondary);
+    color: var(--text-strong);
 }

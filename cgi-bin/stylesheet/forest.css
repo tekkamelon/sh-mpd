@@ -10,6 +10,8 @@
 	--accent-hover: linear-gradient(135deg, rgb(60, 90, 20) 0%, rgb(0, 128, 128) 100%);
 	--shadow: 0 8px 32px rgba(30, 65, 45, 0.5);
 	--shadow-hover: 0 12px 40px rgba(30, 65, 45, 0.7);
+	--text-b: rgb(144, 238, 144);
+	--text-strong: rgb(50, 205, 50);
 }
 
 @media (prefers-color-scheme: light) {
@@ -289,9 +291,9 @@ button:active {
 
 
 b {
-    color: var(--text-primary);
+    color: var(--text-b);
 }
 
 strong {
-    color: var(--text-secondary);
+    color: var(--text-strong);
 }

@@ -10,6 +10,8 @@
 	--accent-hover: linear-gradient(135deg, #008080 0%, rgb(0, 255, 10) 100%);
 	--shadow: 0 8px 32px rgba(10, 10, 10, 0.37);
 	--shadow-hover: 0 12px 40px rgba(10, 10, 10, 0.5);
+	--text-b: rgb(255, 165, 0);
+	--text-strong: rgb(0, 255, 0);
 }
 
 * {
@@ -277,9 +279,9 @@ button:active {
 
 
 b {
-    color: var(--text-primary);
+    color: var(--text-b);
 }
 
 strong {
-    color: var(--text-secondary);
+    color: var(--text-strong);
 }
