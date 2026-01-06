@@ -287,3 +287,14 @@ b {
 strong {
     color: var(--text-strong);
 }
+
+.now_playing {
+    color: var(--text-strong) !important;
+    border: 2px solid var(--text-strong) !important;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5) !important;
+}
+
+.now_playing::before {
+    content: "▶";
+    margin-right: 0.5em;
+}

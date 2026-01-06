@@ -294,3 +294,14 @@ b {
 strong {
     color: var(--text-strong);
 }
+
+.now_playing {
+    color: white !important;
+    border: 2px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 0 20px rgba(70, 70, 70, 0.8) !important;
+}
+
+.now_playing::before {
+    content: "▶";
+    margin-right: 0.5em;
+}
