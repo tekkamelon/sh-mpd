@@ -1,13 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 :root {
-	--bg-primary: linear-gradient(135deg, rgb(10, 10, 10) 0%, rgb(20, 20, 20) 50%, rgb(10, 10, 10) 100%);
+	--bg-primary: rgb(10, 10, 10);
 	--card-bg: rgba(15, 15, 15, 0.8);
 	--card-border: rgba(0, 128, 128, 0.15);
 	--text-primary: white;
 	--text-secondary: rgb(220, 220, 220);
-	--accent: linear-gradient(135deg, rgb(0, 255, 10) 0%, #008080 100%);
-	--accent-hover: linear-gradient(135deg, #008080 0%, rgb(0, 255, 10) 100%);
+	--accent: rgb(0, 255, 10);
+	--accent-hover: #008080;
 	--shadow: 0 8px 32px rgba(10, 10, 10, 0.37);
 	--shadow-hover: 0 12px 40px rgba(10, 10, 10, 0.5);
 	--text-b: rgb(255, 165, 0);
@@ -19,7 +19,7 @@
 }
 
 body {
-	font-family: 'Inter', sans-serif;
+	font-family: 'VT323', monospace;
 	background: var(--bg-primary);
 	margin: 0;
 	padding: 1rem;
@@ -32,6 +32,9 @@ body {
 	gap: 1.5rem;
 	min-height: 100vh;
 	color: var(--text-primary);
+	font-size: 1.2rem;
+	line-height: 1.4;
+	letter-spacing: 0.05em;
 }
 
 @media (min-width: 768px) {
@@ -64,6 +67,7 @@ header h1 {
 	font-size: clamp(2rem, 5vw, 3.5rem);
 	font-weight: 700;
 	margin: 0;
+	text-shadow: 0 0 10px var(--text-strong), 0 0 20px var(--text-strong);
 }
 
 header p {
@@ -126,6 +130,7 @@ section {
 	transition: all 0.3s ease;
 	position: relative;
 	overflow: hidden;
+	text-shadow: 0 0 5px rgb(0, 255, 10);
 }
 
 .control-grid button:hover {
@@ -227,12 +232,14 @@ pre {
 	padding: 1rem;
 	border-radius: 12px;
 	white-space: pre-wrap;
-	font-family: 'Courier New', monospace;
-	font-size: 0.9rem;
+	font-family: 'VT323', monospace;
+	font-size: 1.2rem;
+	line-height: 1.4;
 	overflow-x: auto;
 	backdrop-filter: blur(10px);
 	color: rgb(0, 255, 10);
 	text-align: center;
+	text-shadow: 0 0 5px rgb(0, 255, 10);
 }
 
 @media (max-width: 768px) {
@@ -240,6 +247,16 @@ pre {
 		flex-direction: column;
 		align-items: stretch;
 	}
+}
+
+/* レトロターミナル効果 */
+.blink {
+	animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0; }
 }
 
 
