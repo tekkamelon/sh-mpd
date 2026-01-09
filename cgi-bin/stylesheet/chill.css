@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap');
 
 :root {
-	--bg-primary: linear-gradient(135deg, rgb(90, 50, 115) 0%, rgb(70, 40, 95) 50%, rgb(90, 50, 115) 100%);
+	--bg-primary: linear-gradient(to bottom, orange, purple);
 	--card-bg: rgba(90, 50, 115, 0.2);
 	--card-border: rgba(75, 175, 175, 0.15);
-	--text-primary: rgb(220, 170, 80);
+	--text-primary: rgb(220, 220, 80);
 	--text-secondary: rgb(0, 255, 0);
 	--accent: linear-gradient(135deg, rgb(75, 175, 175) 0%, rgb(0, 255, 0) 100%);
 	--accent-hover: linear-gradient(135deg, rgb(0, 255, 0) 0%, rgb(75, 175, 175) 100%);
