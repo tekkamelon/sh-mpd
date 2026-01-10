@@ -155,67 +155,67 @@ cat << EOS
 				<form name="control_form" method="GET">
 					<div class="control-grid">
 						<button name="button" value="status">
-							<img src="/cgi-bin/icons/status.svg" class="icon" alt="Status">
+							<span class="icon">📊</span>
 							Status
 						</button>
 						<button name="button" value="volume_-100">
-							<img src="/cgi-bin/icons/mute.svg" class="icon" alt="Mute">
+							<span class="icon">🔇</span>
 							Mute
 						</button>
 						<button name="button" value="volume_-5">
-							<img src="/cgi-bin/icons/vol-down.svg" class="icon" alt="Vol -">
+							<span class="icon">🔉</span>
 							Vol -
 						</button>
 						<button name="button" value="volume_+5">
-							<img src="/cgi-bin/icons/vol-up.svg" class="icon" alt="Vol +">
+							<span class="icon">🔊</span>
 							Vol +
 						</button>
 						<button name="button" value="prev">
-							<img src="/cgi-bin/icons/prev.svg" class="icon" alt="Previous">
+							<span class="icon">⏮️</span>
 							Prev
 						</button>
 						<button name="button" value="toggle">
-							<img src="/cgi-bin/icons/toggle.svg" class="icon" alt="Play/Pause">
+							<span class="icon">⏯️</span>
 							Play/Pause
 						</button>
 						<button name="button" value="stop">
-							<img src="/cgi-bin/icons/stop.svg" class="icon" alt="Stop">
+							<span class="icon">⏹️</span>
 							Stop
 						</button>
 						<button name="button" value="next">
-							<img src="/cgi-bin/icons/next.svg" class="icon" alt="Next">
+							<span class="icon">⏭️</span>
 							Next
 						</button>
 						<button name="button" value="repeat">
-							<img src="/cgi-bin/icons/repeat.svg" class="icon" alt="Repeat">
+							<span class="icon">🔁</span>
 							Repeat
 						</button>
 						<button name="button" value="random">
-							<img src="/cgi-bin/icons/random.svg" class="icon" alt="Random">
+							<span class="icon">🎲</span>
 							Random
 						</button>
 						<button name="button" value="single">
-							<img src="/cgi-bin/icons/single.svg" class="icon" alt="Single">
+							<span class="icon">1️⃣</span>
 							Single
 						</button>
 						<button name="button" value="shuffle">
-							<img src="/cgi-bin/icons/shuffle.svg" class="icon" alt="Shuffle">
+							<span class="icon">🔀</span>
 							Shuffle
 						</button>
 						<button name="button" value="clear">
-							<img src="/cgi-bin/icons/clear.svg" class="icon" alt="Clear">
+							<span class="icon">🗑️</span>
 							Clear
 						</button>
 						<button name="button" value="update">
-							<img src="/cgi-bin/icons/update.svg" class="icon" alt="Update DB">
+							<span class="icon">🔄</span>
 							Update DB
 						</button>
 						<button name="button" value="seek_-5%">
-							<img src="/cgi-bin/icons/seek-back.svg" class="icon" alt="Seek -">
+							<span class="icon">⏪</span>
 							Seek -
 						</button>
 						<button name="button" value="seek_+5%">
-							<img src="/cgi-bin/icons/seek-forward.svg" class="icon" alt="Seek +">
+							<span class="icon">⏩</span>
 							Seek +
 						</button>
 					</div>
@@ -247,7 +247,7 @@ cat << EOS
 				<h2>Next in Queue</h2>
 				<form name="next_form" method="GET">
 								<button name="button" value="next">
-									<img src="/cgi-bin/icons/next.svg" class="icon" alt="Next">
+									<span class="icon">⏭️</span>
 									$(next_song)
 								</button>
 				</form>
@@ -259,19 +259,19 @@ cat << EOS
 				<h2>Menu</h2>
 				<ul>
 									<li><a href="queued/queued.cgi">
-										<img src="/cgi-bin/icons/queued.svg" class="icon" alt="Queued">
+										<span class="icon">📋</span>
 										Queued
 									</a></li>
 									<li><a href="directory/directory.cgi">
-										<img src="/cgi-bin/icons/directory.svg" class="icon" alt="Directory">
+										<span class="icon">📁</span>
 										Directory
 									</a></li>
 									<li><a href="playlist/playlist.cgi">
-										<img src="/cgi-bin/icons/playlist.svg" class="icon" alt="Playlist">
+										<span class="icon">📝</span>
 										Playlist
 									</a></li>
 									<li><a href="settings/settings.cgi">
-										<img src="/cgi-bin/icons/settings.svg" class="icon" alt="Settings">
+										<span class="icon">⚙️</span>
 										Settings
 									</a></li>
 				</ul>

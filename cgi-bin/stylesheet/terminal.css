@@ -222,9 +222,9 @@ aside nav li a:hover {
 }
 
 .icon {
-	width: 1.2em;
-	height: 1.2em;
-	flex-shrink: 0;
+  font-size: 1.2em;
+  flex-shrink: 0;
+  font-variant-emoji: text;
 }
 
 pre {
