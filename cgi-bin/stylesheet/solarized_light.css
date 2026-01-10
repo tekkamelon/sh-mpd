@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Emoji&display=swap');
 
 :root {
 	--bg-primary: linear-gradient(135deg, #ffffd7 0%, #fdf6e3 50%, #eee8d5 100%);
@@ -216,9 +217,9 @@ aside nav li a:hover {
 }
 
 .icon {
-  font-size: 1.2em;
-  flex-shrink: 0;
-  font-variant-emoji: text;
+   font-size: 1.2em;
+   flex-shrink: 0;
+   font-family: 'Noto Emoji', sans-serif;
 }
 
 pre {

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Emoji&display=swap');
 
 :root {
 	--bg-primary: linear-gradient(to bottom, orange, purple);
@@ -217,9 +218,9 @@ aside nav li a:hover {
 }
 
 .icon {
-  font-size: 1.2em;
-  flex-shrink: 0;
-  font-variant-emoji: text;
+   font-size: 1.2em;
+   flex-shrink: 0;
+   font-family: 'Noto Emoji', sans-serif;
 }
 
 pre {
@@ -245,53 +246,51 @@ pre {
 
 
 button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 1rem;
-    color: var(--text-primary);
-    font-family: inherit;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5em;
+	background: var(--card-bg);
+	backdrop-filter: blur(10px);
+	border: 1px solid var(--card-border);
+	border-radius: 16px;
+	padding: 1rem;
+	color: var(--text-primary);
+	font-family: inherit;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	overflow: hidden;
 }
 
 button:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
-    border-color: transparent;
-    background: var(--accent);
-    color: white;
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-hover);
+	border-color: transparent;
+	background: var(--accent);
+	color: white;
 }
 
 button:active {
-    transform: translateY(0);
+	transform: translateY(0);
 }
 
 b {
-    color: var(--text-b);
+	color: var(--text-b);
 }
 
 strong {
-    color: var(--text-strong);
+	color: var(--text-strong);
 }
 
 .now_playing {
-    color: var(--text-strong) !important;
-    border: 2px solid var(--text-strong) !important;
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.5) !important;
+	color: var(--text-strong) !important;
+	border: 2px solid var(--text-strong) !important;
+	box-shadow: 0 0 20px rgba(255, 0, 255, 0.5) !important;
 }
 
 .now_playing::before {
-    content: "▶";
-    margin-right: 0.5em;
+	content: "▶";
+	margin-right: 0.5em;
 }
-
-
