@@ -155,67 +155,67 @@ cat << EOS
 				<form name="control_form" method="GET">
 					<div class="control-grid">
 						<button name="button" value="status">
-							<span class="icon">📊</span>
+							<span class="icon">📊&#xfe0e;</span>
 							Status
 						</button>
 						<button name="button" value="volume_-100">
-							<span class="icon">🔇</span>
+							<span class="icon">🔇&#xfe0e;</span>
 							Mute
 						</button>
 						<button name="button" value="volume_-5">
-							<span class="icon">🔉</span>
+							<span class="icon">🔉&#xfe0e;</span>
 							Vol -
 						</button>
 						<button name="button" value="volume_+5">
-							<span class="icon">🔊</span>
+							<span class="icon">🔊&#xfe0e;</span>
 							Vol +
 						</button>
 						<button name="button" value="prev">
-							<span class="icon">⏮️</span>
+							<span class="icon">⏮️&#xfe0e;</span>
 							Prev
 						</button>
 						<button name="button" value="toggle">
-							<span class="icon">⏯️</span>
+							<span class="icon">⏯️&#xfe0e;</span>
 							Play/Pause
 						</button>
 						<button name="button" value="stop">
-							<span class="icon">⏹️</span>
+							<span class="icon">⏹️&#xfe0e;</span>
 							Stop
 						</button>
 						<button name="button" value="next">
-							<span class="icon">⏭️</span>
+							<span class="icon">⏭️&#xfe0e;</span>
 							Next
 						</button>
 						<button name="button" value="repeat">
-							<span class="icon">🔁</span>
+							<span class="icon">🔁&#xfe0e;</span>
 							Repeat
 						</button>
 						<button name="button" value="random">
-							<span class="icon">🎲</span>
+							<span class="icon">🎲&#xfe0e;</span>
 							Random
 						</button>
 						<button name="button" value="single">
-							<span class="icon">1️⃣</span>
+							<span class="icon">&#xfe0e;1️⃣</span>
 							Single
 						</button>
 						<button name="button" value="shuffle">
-							<span class="icon">🔀</span>
+							<span class="icon">🔀&#xfe0e;</span>
 							Shuffle
 						</button>
 						<button name="button" value="clear">
-							<span class="icon">🗑️</span>
+							<span class="icon">🗑️&#xfe0e;</span>
 							Clear
 						</button>
 						<button name="button" value="update">
-							<span class="icon">🔄</span>
+							<span class="icon">🔄&#xfe0e;</span>
 							Update DB
 						</button>
 						<button name="button" value="seek_-5%">
-							<span class="icon">⏪</span>
+							<span class="icon">⏪&#xfe0e;</span>
 							Seek -
 						</button>
 						<button name="button" value="seek_+5%">
-							<span class="icon">⏩</span>
+							<span class="icon">⏩&#xfe0e;</span>
 							Seek +
 						</button>
 					</div>
@@ -247,7 +247,7 @@ cat << EOS
 				<h2>Next in Queue</h2>
 				<form name="next_form" method="GET">
 								<button name="button" value="next">
-									<span class="icon">⏭️</span>
+									<span class="icon">⏭️&#xfe0e;</span>
 									$(next_song)
 								</button>
 				</form>
@@ -259,19 +259,19 @@ cat << EOS
 				<h2>Menu</h2>
 				<ul>
 									<li><a href="queued/queued.cgi">
-										<span class="icon">📋</span>
+										<span class="icon">📋&#xfe0e;</span>
 										Queued
 									</a></li>
 									<li><a href="directory/directory.cgi">
-										<span class="icon">📁</span>
+										<span class="icon">📁&#xfe0e;</span>
 										Directory
 									</a></li>
 									<li><a href="playlist/playlist.cgi">
-										<span class="icon">📝</span>
+										<span class="icon">📝&#xfe0e;</span>
 										Playlist
 									</a></li>
 									<li><a href="settings/settings.cgi">
-										<span class="icon">⚙️</span>
+										<span class="icon">⚙️&#xfe0e;</span>
 										Settings
 									</a></li>
 				</ul>
