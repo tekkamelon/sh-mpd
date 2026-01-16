@@ -4,13 +4,15 @@ webブラウザ上からmpdを操作できるCGIシェルスクリプト
 
 ## 開発の目標
 
-#### [こちらも参照](https://scrapbox.io/mpd/sh-MPD)
-
 ### 高い移植性
 
 - シェル固有の拡張機能の使用を廃し,様々なPOSIX準拠環境での動作を可能にする
 
 - 可能な限りPOSIX準拠のコマンドを使用
+
+#### 開発の動機など
+
+- https://scrapbox.io/mpd/sh-MPD
 
 ### 低リソース
 
@@ -43,6 +45,12 @@ sudo apt install mpc mpd
 # arch系
 sudo pacman -S mpc mpd
 
+# fedora系
+sudo dnf install mpc mpd
+
+# centos系
+sudo yum install mpc mpd
+
 # githubよりclone
 git clone https://github.com/tekkamelon/sh-mpd
 
@@ -52,6 +60,10 @@ sudo cp -r sh-mpd/cgi-bin /usr/lib/ # ※一例
 #  各cgiファイルに実行権限を付与
 find /usr/lib/cgi-bin -type f -name '*.cgi' -exec chmod 755 \{\} \;
 ```
+
+## 貢献
+
+バグ報告や機能リクエスト,プルリクエストを歓迎いたします.GitHubのIssueまたはPull Requestよりお寄せください
 
 ## カバーアートの表示
 
@@ -67,7 +79,7 @@ cd # mpd.confの"music_directory"
 python3 -m http.server 8080 # ポート番号は例
 ```
 
-- "Server setting"で"cover art host","cover art host"を設定
+- "Server setting"で"cover art host"を設定（例: http://localhost:8080/）
 
 ## トラブルシューティング
 
@@ -88,16 +100,28 @@ cd /"YOUR_DIRECTORY"/cgi-bin/
 sudo chown www-data:www-data settings/
 ```
 
-## 各種引用先
+### css,ホスト名の変更が出来ない場合(nginx)
+
+```sh
+# nginxの実行ユーザーを確認
+grep user /etc/nginx/nginx.conf
+
+# 実行結果(例)
+user nginx;
+
+# ホスティングしているディレクトリに移動
+cd /"YOUR_DIRECTORY"/cgi-bin/
+
+# 実行ユーザーに合わせてディレクトリの所有ユーザー,グループを変更
+sudo chown nginx:nginx settings/
+```
+
+## 引用元
 
 - urldecode
 
-	- https://github.com/ShellShoccar-jpn/misc-tools
+	- https://github.com/ShellShoccar-jpn/misc-tools/blob/master/urldecode
 
-- mvp.css
+## ライセンス
 
-	- https://github.com/andybrewer/mvp/mvp.css
-
-- new.css
-
-	- https://github.com/xz/new.css
+このプロジェクトはMITライセンスの下で公開されています。詳細はLICENSEファイルを参照してください。
