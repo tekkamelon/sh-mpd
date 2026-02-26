@@ -56,8 +56,8 @@ url_hostname="$(cgi_host)"
 # MPDへの疎通確認
 check_mpd_connection () {
 
-	# mpc statsを実行してエラーが出るかどうかでMPDへの疎通を確認
-	if ! mpc stats >/dev/null 2>&1; then
+	# mpc statusで疎通確認,失敗したらエラーHTMLを出力して終了
+	if ! mpc status -q ; then
 
 		echo "Content-type: text/html"
 		echo ""
