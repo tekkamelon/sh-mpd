@@ -47,6 +47,8 @@ url_hostname=$(cgi_host)
 
 
 # ===== 関数の宣言 ======
+check_mpd_connection
+
 # POSTを加工しmpcに渡す
 mpc_post () {
 

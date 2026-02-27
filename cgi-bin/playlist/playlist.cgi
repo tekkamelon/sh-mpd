@@ -50,6 +50,8 @@ url_hostname=$(cgi_host)
 
 
 # ===== 関数の宣言 ======
+check_mpd_connection
+
 # POSTの処理,POSTが無い場合はステータスの表示
 mpc_post () {
 

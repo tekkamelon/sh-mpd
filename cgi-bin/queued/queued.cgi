@@ -80,6 +80,8 @@ mpc_current="$(mpc current)"
 
 
 # ===== 関数の宣言 ======
+check_mpd_connection
+
 # URLからホスト名を取得
 cgi_host () {
 
