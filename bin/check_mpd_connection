@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -eu
+
+if ! mpc status -q ; then
+
+	echo "Content-type: text/html"
+	echo ""
+
+	cat <<- ERROR
+	<!DOCTYPE html>
+	<html lang="ja">
+
+		<head>
+
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
+			<title>Connection Error - sh-MPD</title>
+
+		</head>
+
+		<body>
+
+			<header>
+				<h1>Connection Error</h1>
+				<p>MPDへの接続に失敗しました。</p>
+				<p><strong>Host:</strong> ${MPD_HOST} | <strong>Port:</strong> ${MPD_PORT}</p>
+			</header>
+
+			<main>
+				<section>
+					<p>MPDが起動していないか、正しく設定されていない可能性があります。</p>
+					<p>設定画面からMPDの接続情報を確認・変更してください。</p>
+					<p><a href="/cgi-bin/settings/settings.cgi">[ 設定画面へ ]</a></p>
+				</section>
+			</main>
+
+		</body>
+
+	</html>
+	ERROR
+
+	exit 1
+
+fi
