@@ -52,58 +52,6 @@ url_hostname="$(cgi_host)"
 # ====== 変数の設定ここまで ======
 
 
-# ===== 関数の宣言 ======
-# MPDへの疎通確認
-check_mpd_connection () {
-
-	# mpc statusで疎通確認,失敗したらエラーHTMLを出力して終了
-	if ! mpc status -q ; then
-
-		echo "Content-type: text/html"
-		echo ""
-
-		cat <<- ERROR
-		<!DOCTYPE html>
-		<html lang="ja">
-
-			<head>
-
-				<meta charset="UTF-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-				<title>Connection Error - sh-MPD</title>
-
-			</head>
-
-			<body>
-
-				<header>
-					<h1>Connection Error</h1>
-					<p>MPDへの接続に失敗しました。</p>
-					<p><strong>Host:</strong> ${MPD_HOST} | <strong>Port:</strong> ${MPD_PORT}</p>
-				</header>
-
-				<main>
-					<section>
-						<p>MPDが起動していないか、正しく設定されていない可能性があります。</p>
-						<p>設定画面からMPDの接続情報を確認・変更してください。</p>
-						<p><a href="/cgi-bin/settings/settings.cgi">[ 設定画面へ ]</a></p>
-					</section>
-				</main>
-
-			</body>
-
-		</html>
-		ERROR
-
-		# エラー終了
-		exit 1
-
-	fi
-
-}
-
-# 変数展開で加工したPOSTの文字列の有無を判定,あればクエリを加工しmpcへ渡す
 mpc_post () {
 
     # POST値があればデコードしてmpcに渡す
