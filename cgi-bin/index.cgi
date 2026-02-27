@@ -52,6 +52,7 @@ url_hostname="$(cgi_host)"
 # ====== 変数の設定ここまで ======
 
 
+# ===== 関数の宣言 ======
 mpc_post () {
 
     # POST値があればデコードしてmpcに渡す
@@ -122,7 +123,7 @@ next_song () {
 
 # ====== HTML ======
 # MPDへの疎通確認
-check_mpd_connection
+check_mpd_connection "settings/shmpd.conf"
 
 echo "Content-type: text/html"
 echo ""

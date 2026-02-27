@@ -35,6 +35,9 @@ else
 
 fi
 
+# mpcコマンドを使用する前に疎通確認
+check_mpd_connection "../settings/shmpd.conf"
+
 # POSTを変数に代入
 cat_post=$(cat)
 
@@ -79,9 +82,8 @@ mpc_current="$(mpc current)"
 # ====== 変数の設定ここまで ======
 
 
-# ===== 関数の宣言 ======
-check_mpd_connection
 
+# ===== 関数の宣言 ======
 # URLからホスト名を取得
 cgi_host () {
 
