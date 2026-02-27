@@ -1,6 +1,20 @@
 #!/bin/sh
 
+# shellcheck disable=SC1090,SC2154
 set -eu
+
+# ====== 変数の設定 ======
+# ロケールの設定
+export LC_ALL=C
+export LANG=C
+
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
+
+# 引数が渡された場合は設定ファイルを読み込み
+if [ -n "${1:-}" ] && [ -f "${1}" ] ; then
+	. "${1}"
+fi
 
 if ! mpc status -q ; then
 
