@@ -24,7 +24,6 @@ if [ -f ../shmpd.conf ] ; then
 	# 設定ファイルを読み込み
 	. ../shmpd.conf
 
-
 else
 
 	# デフォルトの環境変数を代入
@@ -48,6 +47,8 @@ url_hostname=$(cgi_host)
 
 
 # ===== 関数の宣言 ======
+check_mpd_connection
+
 # POSTを加工しmpcに渡す
 mpc_post () {
 
@@ -190,4 +191,4 @@ cat << EOS
 
 </html>
 EOS
-# ====== HTMLここまで ======
+

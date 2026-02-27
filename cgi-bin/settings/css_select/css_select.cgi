@@ -64,6 +64,7 @@ else
 fi
 # ====== 変数の設定ここまで ======
 
+check_mpd_connection
 
 # ===== 関数の宣言 ======
 css_list () {
