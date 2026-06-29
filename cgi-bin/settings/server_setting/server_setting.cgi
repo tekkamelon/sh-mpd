@@ -135,67 +135,10 @@ cat << EOS
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/layout.css">
+		<link rel="stylesheet" href="/cgi-bin/stylesheet/form.css">
 		<link rel="icon" href="/cgi-bin/image/favicon.svg">
 		<title>Server Settings - sh-MPD:$(cgi_host) -</title>
-		<style>
-			body {
-				display: grid;
-				grid-template-areas:
-					"header"
-					"main"
-					"sidebar";
-				gap: 1rem;
-				padding: 1rem;
-			}
-
-			@media (min-width: 768px) {
-				body {
-					grid-template-columns: 3fr 1fr;
-					grid-template-areas:
-						"header header"
-						"main   sidebar";
-				}
-			}
-
-			header { grid-area: header; text-align: center; }
-			main { grid-area: main; }
-			aside { grid-area: sidebar; }
-
-			section {
-				margin-bottom: 2rem;
-				padding: 1rem;
-				border: 1px solid #ccc;
-				border-radius: 8px;
-			}
-
-			.settings-grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-				gap: 1rem;
-			}
-			
-			.form-grid {
-				display: grid;
-				grid-template-columns: auto 1fr;
-				gap: 0.5rem;
-				align-items: center;
-			}
-
-			aside nav ul {
-				list-style: none;
-				padding: 0;
-			}
-
-			aside nav li a {
-				display: block;
-				padding: 0.75rem;
-				margin-bottom: 0.5rem;
-				text-decoration: none;
-				text-align: center;
-				border: 1px solid;
-				border-radius: 4px;
-			}
-		</style>
 	</head>
 
 	<body>
