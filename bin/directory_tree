@@ -87,7 +87,18 @@ BEGIN {
 
 		}
 
-		print "<summary>" parts[i] "</summary>"
+		# 当該階層までのフルパスを組み立て
+		dir_path = parts[1]
+		j = 2
+		while (j <= i) {
+
+			dir_path = dir_path "/" parts[j]
+			j = j + 1
+
+		}
+
+		# ディレクトリ名と一括追加ボタン
+		print "<summary><span class=\"dir-label\">" parts[i] "</span> <button type=\"submit\" class=\"add-dir\" name=\"addir\" value=\"" dir_path "\" title=\"Add all songs in this directory\" aria-label=\"Add all songs in this directory\">➕</button></summary>"
 		prev_parts[i] = parts[i]
 		i = i + 1
 

@@ -54,8 +54,17 @@ url_hostname=$(cgi_host)
 # POSTの処理し引数をmpcに渡す
 mpc_post () {
 
+	# ディレクトリ一括追加
+	if [ "${post_key}" = "addir" ] ; then
+
+		# パスをデコードし当該ディレクトリ配下をキューへ追加
+		dir_path=$(printf '%s\n' "${post_value}" | urldecode)
+		mpc add "${dir_path}" &
+
+		echo "status"
+
 	# POSTを変数展開で加工,文字列が1以上の数値であれば真,それ以外で偽
-	if [ "${post_value}" -gt 0 ] ; then
+	elif [ "${post_value}" -gt 0 ] 2>/dev/null ; then
 
 		# 楽曲の一覧から"post_value"の番号の行を抽出,結果を挿入
 		mpc listall | sed -n "${post_value}"p | mpc add

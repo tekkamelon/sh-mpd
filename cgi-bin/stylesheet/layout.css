@@ -57,8 +57,18 @@ aside nav li a {
 	list-style-position: outside;
 }
 
-.directory-list details.dir-tree > summary:hover {
+.directory-list details.dir-tree > summary .dir-label:hover {
 	text-decoration: underline;
+}
+
+.directory-list details.dir-tree > summary .add-dir {
+	margin-left: 0.4rem;
+	font-weight: normal;
+	font-size: 1em;
+	line-height: 1;
+	padding: 0.15rem 0.35rem;
+	vertical-align: middle;
+	cursor: pointer;
 }
 
 .directory-list details.dir-tree p {
