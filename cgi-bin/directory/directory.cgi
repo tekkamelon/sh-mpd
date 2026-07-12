@@ -96,18 +96,27 @@ mpc_post () {
 
 }
 
-# mpd管理下の全ての曲を表示
+# mpd管理下の全ての曲をファイラ風ツリーで表示
 directory_list () {
 
 	# 再生中の楽曲
 	mpc_current="$(mpc current -f "%file%")"
 
-	# 曲の一覧を出力,行番号と区切り文字":"の付与,検索
-	mpc listall | grep -F -i -n "${search_str}" |
+	# 検索時は一致する階層を展開
+	if [ -n "${search_str}" ] ; then
 
-	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]"を付与
-	# "queued_song"にシェル変数"current",post_nameに"add"を渡す
-	queued_song -v mpc_current="${mpc_current}" -v post_name="add"
+		open_all=1
+
+	else
+
+		open_all=0
+
+	fi
+
+	# 曲の一覧を出力,行番号と区切り文字":"の付与,検索
+	# directory_tree で details/summary のツリーHTMLへ変換
+	mpc listall | grep -F -i -n "${search_str}" |
+	directory_tree -v mpc_current="${mpc_current}" -v post_name="add" -v open_all="${open_all}"
 
 }
 # ===== 関数の宣言ここまで ======
@@ -134,7 +143,7 @@ cat << EOS
 		<title>Directory - sh-MPD:${url_hostname} -</title>
 	</head>
 
-	<body>
+	<body id="top">
 
 		<header>
 			<h1>Directory</h1>
@@ -142,8 +151,8 @@ cat << EOS
 		</header>
 
 		<main>
-			<div style="text-align: center; margin-bottom: 1rem;">
-				<button onclick="window.scrollTo(0, document.body.scrollHeight);">Go to Bottom</button>
+			<div class="scroll-nav">
+				<a href="#bottom">Go to Bottom</a>
 			</div>
 			<section>
 				<h2>Search</h2>
@@ -168,14 +177,14 @@ cat << EOS
 
 			<section>
 				<h2>Files</h2>
-				<div style="text-align: center; margin-bottom: 1rem;">
-					<button onclick="window.scrollTo(0, document.body.scrollHeight);">Go to Bottom</button>
+				<div class="scroll-nav">
+					<a href="#bottom">Go to Bottom</a>
 				</div>
-				<form name="music_list" method="POST">
-					<pre>$(directory_list)</pre>
+				<form name="music_list" method="POST" class="directory-list">
+					$(directory_list)
 				</form>
-				<div style="text-align: center; margin-bottom: 1rem;">
-					<button onclick="window.scrollTo(0, 0);">Go to Top</button>
+				<div class="scroll-nav" id="bottom">
+					<a href="#top">Go to Top</a>
 				</div>
 			</section>
 		</main>

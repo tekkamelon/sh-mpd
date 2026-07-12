@@ -1,0 +1,143 @@
+#!/usr/bin/awk -f
+
+# mpd listall の "行番号:パス" を details/summary のツリーHTMLへ変換
+# 引数: -v mpc_current="${mpc_current}" -v post_name="add" [-v open_all=1]
+#
+# 入力例:
+#   1:ASMR/foo/01.mp3
+#   2:ASMR/foo/02.mp3
+#   3:chill_out/bar.m4a
+
+BEGIN {
+
+	# 区切り文字を"行頭が数字の1回以上の繰り返しかつ:"に指定
+	FS = "^[0-9]*:"
+
+	# 直前のディレクトリ階層数
+	prev_depth = 0
+
+}
+
+{
+
+	# 行番号の抽出(先頭の数字部分)
+	line_no = $0
+	sub(/:.*$/, "", line_no)
+
+	# パス本体($2 は FS 除去後の残り)
+	path = $2
+
+	# 空行は無視
+	if (path == "") {
+
+		next
+
+	}
+
+	# パスを "/" で分割
+	n = split(path, parts, "/")
+
+	# ファイル名とディレクトリ深度
+	file_name = parts[n]
+	depth = n - 1
+
+	# 共通の親ディレクトリ深度を算出
+	common = 0
+	max_cmp = depth
+	if (prev_depth < max_cmp) {
+
+		max_cmp = prev_depth
+
+	}
+
+	i = 1
+	while (i <= max_cmp) {
+
+		if (parts[i] != prev_parts[i]) {
+
+			break
+
+		}
+
+		common = i
+		i = i + 1
+
+	}
+
+	# 分岐以降の details を閉じる
+	i = prev_depth
+	while (i > common) {
+
+		print "</details>"
+		i = i - 1
+
+	}
+
+	# 未出力のディレクトリを details で開く
+	i = common + 1
+	while (i <= depth) {
+
+		if (open_all == 1) {
+
+			print "<details class=\"dir-tree\" open>"
+
+		} else {
+
+			print "<details class=\"dir-tree\">"
+
+		}
+
+		print "<summary>" parts[i] "</summary>"
+		prev_parts[i] = parts[i]
+		i = i + 1
+
+	}
+
+	# 深い階層から戻った場合に備え,深さ以降のキャッシュを消す
+	i = depth + 1
+	while (i <= prev_depth) {
+
+		prev_parts[i] = ""
+		i = i + 1
+
+	}
+
+	prev_depth = depth
+
+	# 再生中楽曲の判定とボタン出力
+	if (mpc_current == path && post_name != "del") {
+
+		print "<p><span id=\"current\"><button class=\"now_playing\" name=\"" post_name "\" value=\"" line_no "\">" file_name "</button></span></p>"
+
+	} else if (mpc_current == path && post_name == "del") {
+
+		print "<p><span id=\"current\"><input type=\"checkbox\" name=\"" post_name "\" value=\"" line_no "\">" file_name " <b>[Now Playing]</b></span></p>"
+
+	} else if (post_name == "play" || post_name == "add") {
+
+		print "<p><button name=\"" post_name "\" value=\"" line_no "\">" file_name "</button></p>"
+
+	} else if (post_name == "del") {
+
+		print "<p><input type=\"checkbox\" name=\"" post_name "\" value=\"" line_no "\">" file_name "</p>"
+
+	} else {
+
+		print "<p>" file_name "</p>"
+
+	}
+
+}
+
+END {
+
+	# 残っている details をすべて閉じる
+	i = prev_depth
+	while (i > 0) {
+
+		print "</details>"
+		i = i - 1
+
+	}
+
+}

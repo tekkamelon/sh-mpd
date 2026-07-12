@@ -42,3 +42,38 @@ aside nav li a {
 	border: 1px solid;
 	border-radius: 4px;
 }
+
+/* ディレクトリツリー (details/summary) */
+.directory-list details.dir-tree {
+	margin: 0.15rem 0 0.15rem 0.75rem;
+	padding-left: 0.5rem;
+	border-left: 1px solid #ccc;
+}
+
+.directory-list details.dir-tree > summary {
+	cursor: pointer;
+	font-weight: bold;
+	padding: 0.25rem 0.15rem;
+	list-style-position: outside;
+}
+
+.directory-list details.dir-tree > summary:hover {
+	text-decoration: underline;
+}
+
+.directory-list details.dir-tree p {
+	margin: 0.15rem 0 0.15rem 0.5rem;
+}
+
+.scroll-nav {
+	text-align: center;
+	margin-bottom: 1rem;
+}
+
+.scroll-nav a {
+	display: inline-block;
+	padding: 0.4rem 0.8rem;
+	border: 1px solid;
+	border-radius: 4px;
+	text-decoration: none;
+}
