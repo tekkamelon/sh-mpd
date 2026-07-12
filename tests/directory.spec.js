@@ -33,7 +33,8 @@ test.describe('Directory filer UI', () => {
     // 初期状態は閉じている
     await expect(root).not.toHaveAttribute('open', '');
 
-    await root.locator('> summary').click();
+    // ディレクトリ名をクリック (Add ボタン以外)
+    await root.locator('> summary .dir-label').click();
     await expect(root).toHaveAttribute('open', '');
 
     // 子階層またはファイルボタンが現れる
@@ -44,9 +45,40 @@ test.describe('Directory filer UI', () => {
     expect(hasChildDir || hasFile).toBeTruthy();
 
     if (hasChildDir) {
-      await childDetails.first().locator('> summary').click();
+      await childDetails.first().locator('> summary .dir-label').click();
       await expect(childDetails.first()).toHaveAttribute('open', '');
     }
+  });
+
+  test('each directory summary has add-all button with path value', async ({ page }) => {
+    const addDirButtons = page.locator('form.directory-list button.add-dir[name="addir"]');
+    await expect(addDirButtons.first()).toBeVisible();
+    await expect(await addDirButtons.count()).toBeGreaterThan(0);
+
+    const value = await addDirButtons.first().getAttribute('value');
+    expect(value).toBeTruthy();
+    // 行番号ではなくディレクトリパス
+    expect(value).not.toMatch(/^\d+$/);
+  });
+
+  test('addir button submits and reloads directory page', async ({ page }) => {
+    // 曲数が少ないディレクトリを検索して一括追加
+    await page.goto(`${DIRECTORY_URL}?search_word=${encodeURIComponent('汐海ワカ')}`);
+
+    const addDir = page.locator(
+      'form.directory-list button.add-dir[name="addir"][value*="汐海ワカ"]'
+    ).first();
+    await expect(addDir).toBeVisible();
+    const dirPath = await addDir.getAttribute('value');
+    expect(dirPath).toContain('汐海ワカ');
+
+    await Promise.all([
+      page.waitForNavigation(),
+      addDir.click(),
+    ]);
+
+    await expect(page).toHaveURL(/directory\.cgi/);
+    await expect(page.locator('h1')).toHaveText('Directory');
   });
 
   test('file buttons have add name and numeric value', async ({ page }) => {
