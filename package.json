@@ -1,0 +1,24 @@
+{
+  "name": "sh-mpd",
+  "version": "1.0.0",
+  "description": "webブラウザ上からmpdを操作できるCGIシェルスクリプト",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tekkamelon/sh-mpd.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tekkamelon/sh-mpd/issues"
+  },
+  "homepage": "https://github.com/tekkamelon/sh-mpd#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}
