@@ -128,6 +128,66 @@ directory_list () {
 	directory_tree -v mpc_current="${mpc_current}" -v post_name="add" -v open_all="${open_all}"
 
 }
+
+# キュー追加結果のフラッシュメッセージを生成
+flash_message() {
+
+	# POSTが空の場合は何も出力しない
+	if [ -z "${cat_post}" ] ; then
+
+		return
+
+	fi
+
+	fm_msg=""
+
+	# ディレクトリ追加
+	if [ "${post_key}" = "addir" ] ; then
+
+		fm_dir_path=$(printf '%s\n' "${post_value}" | urldecode)
+		fm_msg="Added directory: ${fm_dir_path}"
+
+	# 単一曲または全曲追加
+	elif [ "${post_key}" = "add" ] ; then
+
+		# 数値の場合は単一曲
+		if [ "${post_value}" -gt 0 ] 2>/dev/null ; then
+
+			fm_song=$(mpc listall | sed -n "${post_value}"p)
+			fm_msg="Added: ${fm_song}"
+
+		# "all"の場合
+		elif [ "${post_value}" = "all" ] ; then
+
+			fm_msg="Added all songs"
+
+		fi
+
+	# 検索結果追加
+	elif [ "${post_key}" = "addresult" ] ; then
+
+		if [ -n "${search_str}" ] ; then
+
+			fm_count=$(mpc listall | grep -F -i -c "${search_str}")
+			fm_msg="Added ${fm_count} search result(s)"
+
+		else
+
+			fm_msg="Added search results"
+
+		fi
+
+	fi
+
+	# メッセージがある場合はHTMLエスケープして出力
+	if [ -n "${fm_msg}" ] ; then
+
+		# HTMLエスケープ
+		fm_escaped=$(printf '%s' "${fm_msg}" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g')
+		printf '<p class="flash-message">%s</p>\n' "${fm_escaped}"
+
+	fi
+}
 # ===== 関数の宣言ここまで ======
 
 
@@ -181,6 +241,7 @@ cat << EOS
 
 			<section>
 				<h2>Status</h2>
+				$(flash_message)
 				<pre>$(mpc_post)</pre>
 			</section>
 
