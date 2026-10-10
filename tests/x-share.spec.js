@@ -27,8 +27,8 @@ function queueTags(tag) {
   return mpc(['playlist', '-f', `%${tag}%`]).split('\n');
 }
 
-// 条件に合う曲をキューから探しファイル名を返す(見つからない場合はnull)
-function findQueuedFile(predicate) {
+// 現在のキューより条件に合う曲を探す(見つからない場合はnull)
+function scanQueue(predicate) {
   const files = queueTags('file');
   const artists = queueTags('artist');
   const titles = queueTags('title');
@@ -47,6 +47,27 @@ function findQueuedFile(predicate) {
   }
 
   return null;
+}
+
+// 条件に合う曲をキューから探しファイル名を返す(見つからない場合はnull)
+// キューに無い場合はライブラリ全体をキューへ追加して再走査する
+// (このテストは対象のMPDのキューを操作する)
+function findQueuedFile(predicate) {
+  let file = scanQueue(predicate);
+
+  if (file === null) {
+    mpc(['add', '/']);
+    file = scanQueue(predicate);
+  }
+
+  return file;
+}
+
+// キューの空を埋める(再生を伴うテストの前提)
+function ensureQueue() {
+  if (mpc(['playlist']).trim() === '') {
+    mpc(['add', '/']);
+  }
 }
 
 // 実装と同じ規則でタグより本文を算出する(独立検算用)
@@ -103,6 +124,7 @@ test.describe('X share link (Now Playing)', () => {
   });
 
   test('playing: link points to web intent with strictly encoded text', async ({ page }) => {
+    ensureQueue();
     mpc(['play']);
     await page.goto(INDEX_URL);
 
@@ -130,6 +152,7 @@ test.describe('X share link (Now Playing)', () => {
   });
 
   test('share link opens in a separate tab without JS', async ({ page }) => {
+    ensureQueue();
     mpc(['play']);
     await page.goto(INDEX_URL);
 
@@ -139,6 +162,7 @@ test.describe('X share link (Now Playing)', () => {
   });
 
   test('hashtags parameter is HTML escaped in the source', async ({ page }) => {
+    ensureQueue();
     mpc(['play']);
     await page.goto(INDEX_URL);
 
