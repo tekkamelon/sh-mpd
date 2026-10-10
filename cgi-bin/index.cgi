@@ -145,11 +145,33 @@ x_share_url () {
 
 	fi
 
-	# テンプレートより本文を生成
-	share_text="$(mpc current -f "${x_share_template}")"
+	# 各タグを取得
+	share_artist="$(mpc current -f "%artist%")"
+	share_title="$(mpc current -f "%title%")"
+	share_album="$(mpc current -f "%album%")"
 
-	# タグが無い場合はラジオ等と判断,ストリーム名,URIの順で代替
-	if [ -z "$(mpc current -f "%artist%%title%%album%")" ] ; then
+	# タグが揃っている曲はテンプレートより本文を生成
+	if [ -n "${share_artist}" ] && [ -n "${share_title}" ] && [ -n "${share_album}" ] ; then
+
+		share_text="$(mpc current -f "${x_share_template}")"
+
+	# アルバム名が無い曲はアーティスト名とタイトルのみ
+	elif [ -n "${share_artist}" ] && [ -n "${share_title}" ] ; then
+
+		share_text="Now Playing: ${share_artist} - ${share_title}"
+
+	# タイトルが無い曲はアーティスト名のみ
+	elif [ -n "${share_artist}" ] ; then
+
+		share_text="Now Playing: ${share_artist}"
+
+	# アーティスト名が無い曲(ラジオ等)はタイトルのみ
+	elif [ -n "${share_title}" ] ; then
+
+		share_text="Now Playing: ${share_title}"
+
+	# タグが全く無い場合はストリーム名,URIの順で代替
+	else
 
 		share_stream="$(mpc current -f "%name%")"
 
