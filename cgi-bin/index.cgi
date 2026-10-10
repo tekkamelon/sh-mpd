@@ -135,20 +135,29 @@ x_share_url () {
 
 	fi
 
-	# 再生中でない場合(URIが空)は空を出力
-	share_uri="$(mpc current -f "%file%")"
+	# 区切り文字の定義(Unit Separator)
+	sep="$(printf '\037')"
 
+	# 各タグを一度で取得(file, artist, title, album, nameの順)
+	share_info="$(mpc current -f "%file%${sep}%artist%${sep}%title%${sep}%album%${sep}%name%")"
+
+	# 取得結果を各タグに分割(欠落時は空文字)
+	share_uri="${share_info%%"${sep}"*}"
+	share_rest="${share_info#*"${sep}"}"
+	share_artist="${share_rest%%"${sep}"*}"
+	share_rest="${share_rest#*"${sep}"}"
+	share_title="${share_rest%%"${sep}"*}"
+	share_rest="${share_rest#*"${sep}"}"
+	share_album="${share_rest%%"${sep}"*}"
+	share_stream="${share_rest#*"${sep}"}"
+
+	# 再生中でない場合(URIが空)は空を出力
 	if [ -z "${share_uri}" ] ; then
 
 		echo ""
 		return
 
 	fi
-
-	# 各タグを取得
-	share_artist="$(mpc current -f "%artist%")"
-	share_title="$(mpc current -f "%title%")"
-	share_album="$(mpc current -f "%album%")"
 
 	# タグが揃っている曲はテンプレートより本文を生成
 	if [ -n "${share_artist}" ] && [ -n "${share_title}" ] && [ -n "${share_album}" ] ; then
@@ -172,8 +181,6 @@ x_share_url () {
 
 	# タグが全く無い場合はストリーム名,URIの順で代替
 	else
-
-		share_stream="$(mpc current -f "%name%")"
 
 		if [ -z "${share_stream}" ] ; then
 
