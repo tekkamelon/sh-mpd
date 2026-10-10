@@ -34,6 +34,11 @@ else
 
 fi
 
+# X共有設定のデフォルト値(変数が未定義の場合のみ代入,空文字は設定値として扱う)
+x_share_enabled="${x_share_enabled-yes}"
+x_share_hashtags="${x_share_hashtags-NowPlaying}"
+x_share_template="${x_share_template:-Now Playing: %artist% - %title% (%album%)}"
+
 # POSTを変数に代入
 cat_post=$(cat)
 
@@ -118,6 +123,57 @@ next_song () {
 	fi
 
 }
+
+# X(旧Twitter)の共有用Intent URLの生成
+x_share_url () {
+
+	# 共有機能が無効の場合は空を出力
+	if [ "${x_share_enabled}" != "yes" ] ; then
+
+		echo ""
+		return
+
+	fi
+
+	# 再生中でない場合(URIが空)は空を出力
+	share_uri="$(mpc current -f "%file%")"
+
+	if [ -z "${share_uri}" ] ; then
+
+		echo ""
+		return
+
+	fi
+
+	# テンプレートより本文を生成
+	share_text="$(mpc current -f "${x_share_template}")"
+
+	# タグが無い場合はラジオ等と判断,ストリーム名,URIの順で代替
+	if [ -z "$(mpc current -f "%artist%%title%%album%")" ] ; then
+
+		share_stream="$(mpc current -f "%name%")"
+
+		if [ -z "${share_stream}" ] ; then
+
+			share_stream="${share_uri}"
+
+		fi
+
+		share_text="Now Playing: ${share_stream}"
+
+	fi
+
+	# 本文をURLエンコードしてIntent URLを出力
+	printf 'https://twitter.com/intent/tweet?text=%s' "$(printf '%s' "${share_text}" | urlencode)"
+
+	# ハッシュタグの付与
+	if [ -n "${x_share_hashtags}" ] ; then
+
+		printf '&hashtags=%s' "$(printf '%s' "${x_share_hashtags}" | urlencode)"
+
+	fi
+
+}
 # ===== 関数の宣言ここまで ======
 
 
@@ -127,6 +183,22 @@ check_mpd_connection "settings/shmpd.conf"
 
 echo "Content-type: text/html"
 echo ""
+
+# X共有リンクの生成(停止中,無効時は空)
+share_intent_url="$(x_share_url)"
+
+if [ -n "${share_intent_url}" ] ; then
+
+	# HTML属性用に"&"をエスケープ
+	share_intent_url_html="$(printf '%s' "${share_intent_url}" | sed -e 's/&/\&amp;/g')"
+
+	share_link="<p><a href=\"${share_intent_url_html}\" target=\"_blank\" rel=\"noopener noreferrer\"><span class=\"icon\">&#x1f4e4;&#xfe0e;</span> Share on X</a></p>"
+
+else
+
+	share_link=""
+
+fi
 
 cat << EOS
 <!DOCTYPE html>
@@ -242,6 +314,7 @@ cat << EOS
 			<section>
 				<h2>Now Playing</h2>
 				<pre>$(mpc_post)</pre>
+${share_link}
 				<img class="cover-art" src="$(coverart)" alt="Cover Art" onerror="this.style.display='none'">
 			</section>
 
