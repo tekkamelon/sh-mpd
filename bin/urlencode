@@ -1,0 +1,90 @@
+#!/bin/sh
+
+# URLエンコード(RFC 3986準拠)
+# 使用例: printf '%s' "${share_text}" | urlencode
+#         urlencode <file> ...
+
+# e 返り値が0以外で停止
+# u 未定義の変数参照で停止
+set -eu
+
+# ====== 変数の設定 ======
+# ロケールの設定
+export LC_ALL=C
+export LANG=C
+
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
+# ====== 変数の設定ここまで ======
+
+
+# ===== 関数の宣言 ======
+# 使用方法の表示
+print_usage () {
+
+	cat <<- USAGE 1>&2
+	使用例: printf '%s' "テキスト" | urlencode
+	        urlencode <file> ...
+
+	引数: <file> ... URLエンコードするテキストファイル(省略時は標準入力)
+	USAGE
+
+}
+# ===== 関数の宣言ここまで ======
+
+
+# ====== 本体 ======
+# 引数の判定
+case "${1:-}" in
+
+	-h|--help)
+		print_usage
+		exit 0
+		;;
+
+esac
+
+# 引数があればファイル,無ければ標準入力より読み込み
+if [ "${#}" -gt 0 ]; then
+
+	cat "${@}"
+
+else
+
+	cat
+
+fi |
+
+	# 各バイトを16進数へ変換
+	od -An -v -tx1 |
+	tr -s '[:space:]' '\n' |
+	tr '[:lower:]' '[:upper:]' |
+
+	while IFS= read -r byte_hex; do
+
+		# 空行の読み飛ばし
+		if [ -z "${byte_hex}" ]; then
+
+			continue
+
+		fi
+
+		case "${byte_hex}" in
+
+			# 予約されていない文字(英数字,-,.,_,~)はそのまま出力
+			2D|2E|3[0-9]|4[1-9A-F]|5[0-9A]|5F|6[1-9A-F]|7[0-9A]|7E)
+				# shellcheck disable=SC2059
+				printf "\\$(printf '%03o' "0x${byte_hex}")"
+				;;
+
+			# それ以外の文字はパーセントエンコード
+			*)
+				printf '%%%s' "${byte_hex}"
+				;;
+
+		esac
+
+	done
+# ====== 本体ここまで ======
+
+exit 0
