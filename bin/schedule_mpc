@@ -1,0 +1,504 @@
+#!/bin/sh
+
+# 予約時刻に mpc を実行する at への橋渡し
+# CGI から呼ぶ唯一の入口
+
+# e 返り値が0以外で停止
+# u 未定義の変数参照で停止
+set -eu
+
+# ====== 変数の設定 ======
+# ロケールの設定
+export LC_ALL=C
+export LANG=C
+
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
+
+# 一覧の判別用マーカー
+MARKER="# sh-mpd schedule"
+
+# MPD 接続の既定値(conf 未読込時の保険)
+MPD_HOST="${MPD_HOST:-127.0.0.1}"
+MPD_PORT="${MPD_PORT:-6600}"
+# ====== 変数の設定ここまで ======
+
+
+# ====== 関数の宣言 ======
+# 使用方法の表示
+print_usage () {
+
+	cat <<- USAGE
+	使用例: schedule_mpc add --after MINUTES --action play|pause|stop
+	        schedule_mpc add --at HH:MM --action play|pause|stop
+	        schedule_mpc list
+	        schedule_mpc cancel JOBID
+	USAGE
+
+}
+
+# エラー文の表示
+print_error () {
+
+	printf '%s\n' "schedule_mpc: ${1}" >&2
+
+}
+
+# at 実行基盤の確認
+check_backend () {
+
+	if ! command -v at > /dev/null 2>&1 ; then
+
+		print_error "at コマンドが無い"
+		return 1
+
+	fi
+
+	if ! command -v atq > /dev/null 2>&1 ; then
+
+		print_error "atq コマンドが無い"
+		return 1
+
+	fi
+
+	if ! command -v atrm > /dev/null 2>&1 ; then
+
+		print_error "atrm コマンドが無い"
+		return 1
+
+	fi
+
+	# atd 稼働の確認(pgrep 未導入環境は pidof, ps へ順に退避)
+	if command -v pgrep > /dev/null 2>&1 ; then
+
+		if ! pgrep -x atd > /dev/null 2>&1 ; then
+
+			print_error "atd が稼働していない"
+			return 1
+
+		fi
+
+	elif command -v pidof > /dev/null 2>&1 ; then
+
+		if ! pidof atd > /dev/null 2>&1 ; then
+
+			print_error "atd が稼働していない"
+			return 1
+
+		fi
+
+	elif command -v ps > /dev/null 2>&1 ; then
+
+		# pgrep 不在時の退避のため SC2009 は適用外
+		# shellcheck disable=SC2009
+		if ! ps -e 2> /dev/null | grep -F -q atd ; then
+
+			print_error "atd が稼働していない"
+			return 1
+
+		fi
+
+	else
+
+		print_error "atd の稼働を確認できない(pgrep, pidof, ps が無い)"
+		return 1
+
+	fi
+
+}
+
+# 操作名の検証
+valid_action () {
+
+	case "${1}" in
+
+		play|pause|stop)
+			return 0
+			;;
+
+		*)
+			return 1
+			;;
+
+	esac
+
+}
+
+# 相対分の検証
+valid_minutes () {
+
+	case "${1}" in
+
+		""|*[!0-9]*)
+			return 1
+			;;
+
+	esac
+
+	if [ "${1}" -lt 1 ] || [ "${1}" -gt 10080 ] ; then
+
+		return 1
+
+	fi
+
+}
+
+# 絶対時刻の検証
+valid_clock () {
+
+	case "${1}" in
+
+		[01][0-9]:[0-5][0-9]|2[0-3]:[0-5][0-9])
+			return 0
+			;;
+
+		*)
+			return 1
+			;;
+
+	esac
+
+}
+
+# ジョブ番号の検証
+valid_jobid () {
+
+	case "${1}" in
+
+		""|*[!0-9]*)
+			return 1
+			;;
+
+	esac
+
+}
+
+# MPD 接続先の検証(英数字, ドット, コロン, ハイフンのみ許可)
+valid_mpd_host () {
+
+	case "${1}" in
+
+		""|*[!A-Za-z0-9.:-]*)
+			return 1
+			;;
+
+	esac
+
+}
+
+# MPD ポート番号の検証
+valid_mpd_port () {
+
+	case "${1}" in
+
+		""|*[!0-9]*)
+			return 1
+			;;
+
+	esac
+
+	if [ "${1}" -lt 1 ] || [ "${1}" -gt 65535 ] ; then
+
+		return 1
+
+	fi
+
+}
+
+# 予約の登録
+cmd_add () {
+
+	after=""
+	clock=""
+	action=""
+
+	# 引数の読解(getopts 不使用)
+	while [ "${#}" -gt 0 ] ; do
+
+		case "${1}" in
+
+			--after)
+				if [ "${#}" -lt 2 ] ; then
+
+					print_error "--after の値が無い"
+					return 1
+
+				fi
+				after="${2}"
+				shift 2
+				;;
+
+			--after=*)
+				after="${1#--after=}"
+				shift
+				;;
+
+			--at)
+				if [ "${#}" -lt 2 ] ; then
+
+					print_error "--at の値が無い"
+					return 1
+
+				fi
+				clock="${2}"
+				shift 2
+				;;
+
+			--at=*)
+				clock="${1#--at=}"
+				shift
+				;;
+
+			--action)
+				if [ "${#}" -lt 2 ] ; then
+
+					print_error "--action の値が無い"
+					return 1
+
+				fi
+				action="${2}"
+				shift 2
+				;;
+
+			--action=*)
+				action="${1#--action=}"
+				shift
+				;;
+
+			-h|--help)
+				print_usage
+				return 0
+				;;
+
+			*)
+				print_error "未知の引数: ${1}"
+				return 1
+				;;
+
+		esac
+
+	done
+
+	# 操作名の検証(先に検証し at を呼ばない)
+	if ! valid_action "${action}" ; then
+
+		print_error "action が不正: play, pause, stop のいずれか"
+		return 1
+
+	fi
+
+	# 時刻の検証(相対と絶対のいずれか一方のみ)
+	if [ -n "${after}" ] && [ -n "${clock}" ] ; then
+
+		print_error "--after と --at の同時指定は不可"
+		return 1
+
+	fi
+
+	if [ -n "${after}" ] ; then
+
+		if ! valid_minutes "${after}" ; then
+
+			print_error "minutes が不正: 1 から 10080 の整数"
+			return 1
+
+		fi
+
+		when_label="after ${after}min"
+		at_time="now + ${after} minutes"
+
+	elif [ -n "${clock}" ] ; then
+
+		if ! valid_clock "${clock}" ; then
+
+			print_error "clock が不正: HH:MM (00:00 から 23:59)"
+			return 1
+
+		fi
+
+		when_label="at ${clock}"
+		at_time="${clock}"
+
+	else
+
+		print_error "--after か --at の指定が必要"
+		return 1
+
+	fi
+
+	# MPD 接続先の検証(ジョブへ埋め込む前の検査)
+	if ! valid_mpd_host "${MPD_HOST}" ; then
+
+		print_error "MPD_HOST が不正"
+		return 1
+
+	fi
+
+	if ! valid_mpd_port "${MPD_PORT}" ; then
+
+		print_error "MPD_PORT が不正"
+		return 1
+
+	fi
+
+	# 実行基盤の確認(検証の後に確認し無駄な失敗表示を避ける)
+	check_backend || return 1
+
+	# 実行用スクリプトの作成(ユーザ文字列は埋め込まない)
+	tmp_job=""
+	tmp_job="$(mktemp /tmp/schedule_mpc.XXXXXX)"
+	trap 'rm -f "${tmp_job}"' EXIT
+	trap 'exit 1' INT TERM
+
+	cat <<- JOB > "${tmp_job}"
+	#!/bin/sh
+	${MARKER} action=${action} when=${when_label}
+	export MPD_HOST="${MPD_HOST}"
+	export MPD_PORT="${MPD_PORT}"
+	export PATH="/usr/bin:/bin"
+	mpc ${action}
+	JOB
+
+	# at への登録(標準エラーよりジョブ番号を取り出す)
+	at_output=""
+	if ! at_output="$(at -f "${tmp_job}" "${at_time}" 2>&1)" ; then
+
+		print_error "at への登録失敗: ${at_output}"
+		return 1
+
+	fi
+
+	job_id="$(printf '%s' "${at_output}" | sed -n 's/^job \([0-9][0-9]*\) .*/\1/p' | head -n 1)"
+
+	rm -f "${tmp_job}"
+	trap - EXIT
+
+	if [ -n "${job_id}" ] ; then
+
+		printf '予約を登録: job %s action=%s when=%s\n' "${job_id}" "${action}" "${when_label}"
+
+	else
+
+		printf '%s\n' "${at_output}"
+
+	fi
+
+}
+
+# 予約の一覧(本ツール投入分のみ表示)
+cmd_list () {
+
+	check_backend || return 1
+
+	queue=""
+	queue="$(atq 2>&1)" || {
+
+		print_error "atq の実行失敗: ${queue}"
+		return 1
+
+	}
+
+	printf '%s\n' "${queue}" | while IFS= read -r line ; do
+
+		# 先頭欄よりジョブ番号を抽出
+		job_id="$(printf '%s' "${line}" | sed -n 's/^\([0-9][0-9]*\)[^0-9].*/\1/p')"
+
+		case "${job_id}" in
+
+			""|*[!0-9]*)
+				continue
+				;;
+
+		esac
+
+		job_body=""
+		job_body="$(at -c "${job_id}" 2> /dev/null)" || continue
+
+		# マーカーの無い他用途ジョブは除外
+		comment="$(printf '%s' "${job_body}" | grep -F "${MARKER}" | head -n 1)"
+
+		if [ -z "${comment}" ] ; then
+
+			continue
+
+		fi
+
+		printf '%s\t%s\n' "${line}" "${comment}"
+
+	done
+
+}
+
+# 予約の取消
+cmd_cancel () {
+
+	if [ "${#}" -ne 1 ] ; then
+
+		print_error "使用例: schedule_mpc cancel JOBID"
+		return 1
+
+	fi
+
+	if ! valid_jobid "${1}" ; then
+
+		print_error "JOBID が不正: 数字のみ"
+		return 1
+
+	fi
+
+	check_backend || return 1
+
+	if atrm "${1}" 2>&1 ; then
+
+		printf '予約を取消: job %s\n' "${1}"
+
+	else
+
+		print_error "atrm の実行失敗: job ${1}"
+		return 1
+
+	fi
+
+}
+# ====== 関数の宣言ここまで ======
+
+
+# ====== 本体 ======
+# 副命令の振分
+sub_command="${1:-}"
+
+case "${sub_command}" in
+
+	add)
+		shift
+		cmd_add "${@}"
+		;;
+
+	list)
+		shift
+		if [ "${#}" -gt 0 ] ; then
+
+			print_error "list に引数は不要"
+			exit 1
+
+		fi
+		cmd_list
+		;;
+
+	cancel)
+		shift
+		cmd_cancel "${@}"
+		;;
+
+	""|-h|--help)
+		print_usage
+		;;
+
+	*)
+		print_error "未知の副命令: ${sub_command}"
+		print_usage >&2
+		exit 1
+		;;
+
+esac
+# ====== 本体ここまで ======
