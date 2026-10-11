@@ -213,6 +213,7 @@ else
 
 	<section>
 		<h2>Reservations</h2>
+		<p>現在時刻: $(date '+%Y-%m-%d %H:%M %Z') (時刻指定はこの時刻基準)</p>
 		<pre>$(printf '%s' "${job_list}" | html_escape)</pre>
 		$(cancel_forms)
 	</section>

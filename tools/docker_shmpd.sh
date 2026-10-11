@@ -6,6 +6,7 @@
 #   イメージを省略した場合は sh-mpd-at:latest を使用する
 #
 # 予約機能(at)のスプールはnamed volumeへ保存し,コンテナの作り直しで消えないようにする
+# 時刻指定の解釈をJSTにする(未設定だとUTC扱いになり9時間ずれる)
 set -eu
 
 # ====== 変数の設定 ======
@@ -16,6 +17,7 @@ volume="shmpd-atspool"
 
 docker container run -d --name shmpd \
 	--restart unless-stopped \
+	-e TZ=Asia/Tokyo \
 	--mount "type=bind,src=${repo},dst=/home/shmpd/Documents/github/sh-mpd" \
 	-v "${volume}:/var/spool/cron" \
 	-p 80:80 \
