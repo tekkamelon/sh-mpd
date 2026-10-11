@@ -158,3 +158,43 @@ Playwright で本物の `atd` は必須にしない。テスト時は PATH 先�
 - 既存の mpc 受け渡し: `cgi-bin/index.cgi` の `mpc_post`
 - 設定: `cgi-bin/settings/shmpd.conf`
 - `at` の時刻指定: `man at`
+
+## 引き継ぎメモ(環境の実測値)
+
+本計画の前提(`at` と `atd` が入り, CGI 実行ユーザが `at` を使える)は, 実運用環境では**まだ満たされていない**。
+実装前に次のいずれかを決めること。
+
+| 環境 | `at` / `atq` / `atrm` / `atd` | 備考 |
+| --- | --- | --- |
+| 本番コンテナ(`rei` の `shmpd`) | 4 コマンドとも未導入 | Debian GNU/Linux 11 (bullseye), `apt-get` あり, Apache のワーカーは `shmpd` ユーザ, `/var/spool/cron` 無し |
+| ホスト `rei` | 未導入(`atd` は inactive / not-found) | |
+
+選択肢:
+
+1. コンテナイメージに `at` を追加し `atd` を起動する。コンテナは init を持たないため, entrypoint などで `atd` を起こす必要がある。先にイメージのビルド元を特定すること
+2. 方式を変える(ホスト側の systemd timer 等)。CGI はコンテナ内にあるため受け渡しの設計が別途必要
+3. 計画どおり「`at` が無い環境では理由を表示する」だけを実装し, 予約機能の有効化は環境整備待ちとする
+
+なお `at` のスプールはコンテナのファイルシステム層にあるため, コンテナを作り直すと予約は消える。
+
+### 踏襲する既存の流儀(実測)
+
+| 項目 | 内容 |
+| --- | --- |
+| ナビゲーション | `<h2>Menu</h2>` を持つ CGI は **10 個**。`index.cgi` のみ相対 href, 他は `/cgi-bin/...` の絶対 href。Schedule を足すなら全箇所を揃えるか判断が必要 |
+| 設定の読み込み | `index.cgi` は `settings/shmpd.conf`, サブディレクトリの CGI は `../settings/shmpd.conf`。`cgi-bin/schedule/schedule.cgi` は後者 |
+| 独自コマンド | `bin/` に置き, 各 CGI が `dirname "${0}"/../bin` を PATH の**末尾**へ追加する |
+| 接続確認 | CGI の先頭で `check_mpd_connection "../settings/shmpd.conf"` を呼ぶ |
+| 設定の既定値 | 未定義時のみ既定値を入れる `${var-default}` を使う(`:-` は空文字を潰すため使わない) |
+
+### 検証の進め方
+
+- 手順はスキル `shmpd-cgi-test-harness` に従う(Docker の Apache+CGI ハーネス。MPD は `192.168.1.145` を自由に使える)
+- 偽の `at` / `atq` / `atrm` は**ハーネスの web root の `bin/`** に置けば CGI から見つかる(コンテナに本物が無いため)。ただし PATH への追加は末尾なので, 本物が入った環境では負ける点に注意
+- web 側 `settings/shmpd.conf` の `MPD_HOST` とテストへ渡す `MPD_HOST` を必ず一致させる(不一致だと再生系テストが全滅する)
+- 既存スイート(`tests/directory.spec.js`)は `192.168.1.145` の実ライブラリを対象にすれば通る
+
+### デプロイとコミット
+
+- 作業ブランチは `develop`。`develop` → `main` の PR を作成し, オーナーがレビューしてマージする(手順はスキル `github-bot-commit`)
+- マージ後は `ssh rei` で `cd ~/Documents/github/sh-mpd && git pull origin main` のみで反映される(bind mount のためコンテナ再起動は不要)。`rei` の `cgi-bin/settings/shmpd.conf` はローカル変更のまま残すこと
