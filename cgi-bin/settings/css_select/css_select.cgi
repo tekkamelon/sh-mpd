@@ -48,6 +48,7 @@ if [ -n "${query_check}" ] ; then
 	img_server_host="${img_server_host}"
 	img_server_port="${img_server_port}"
 	stylesheet="${query_check}"
+	schedule_enabled="${schedule_enabled-yes}"
 	EOF
 
 	# "stylesheet"に"query_check"を代入
@@ -125,6 +126,7 @@ cat << EOS
 					<li><a href="/cgi-bin/directory/directory.cgi">Directory</a></li>
 					<li><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></li>
 					<li><a href="/cgi-bin/settings/settings.cgi">Settings</a></li>
+					<li><a href="/cgi-bin/schedule/schedule.cgi">Schedule</a></li>
 				</ul>
 			</nav>
 		</aside>

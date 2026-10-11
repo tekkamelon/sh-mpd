@@ -378,7 +378,11 @@ ${share_link}
 										<span class="icon">⚙️&#xfe0e;</span>
 										Settings
 									</a></li>
-				</ul>
+									<li><a href="schedule/schedule.cgi">
+										<span class="icon">⏰&#xfe0e;</span>
+										Schedule
+									</a></li>
+									</ul>
 			</nav>
 
 			<section>

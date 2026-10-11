@@ -197,6 +197,7 @@ cat << EOS
 					<li><a href="/cgi-bin/playlist/playlist.cgi">Playlist</a></li>
 					<li><a href="/cgi-bin/settings/settings.cgi">Settings</a></li>
 					<li><a href="/cgi-bin/queued/remove.cgi">Remove</a></li>
+					<li><a href="/cgi-bin/schedule/schedule.cgi">Schedule</a></li>
 				</ul>
 			</nav>
 		</aside>
