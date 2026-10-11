@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# 検証用偽 pgrep (ハーネスの web root の bin/ へ配置)
+# atd の稼働確認を素通しする
+# 本リポジトリの成果物ではなく tests/ 配下の治具
+
+# e 返り値が0以外で停止
+# u 未定義の変数参照で停止
+set -eu
+
+# ====== 変数の設定 ======
+# ロケールの設定
+export LC_ALL=C
+export LANG=C
+
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
+# ====== 変数の設定ここまで ======
+
+case "${*}" in
+
+	*atd*)
+		exit 0
+		;;
+
+	*)
+		exit 1
+		;;
+
+esac

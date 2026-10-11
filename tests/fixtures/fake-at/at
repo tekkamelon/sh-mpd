@@ -1,0 +1,81 @@
+#!/bin/sh
+
+# 検証用偽 at (ハーネスの web root の bin/ へ配置)
+# 実 at の時刻指定は受け流し, -f の脚本をスプールへ保存する
+# 本リポジトリの成果物ではなく tests/ 配下の治具
+
+# e 返り値が0以外で停止
+# u 未定義の変数参照で停止
+set -eu
+
+# ====== 変数の設定 ======
+# ロケールの設定
+export LC_ALL=C
+export LANG=C
+
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
+
+# 偽スプールの配置
+SPOOL_DIR="${FAKE_AT_SPOOL:-/tmp/fake-at-spool}"
+# ====== 変数の設定ここまで ======
+
+mkdir -p "${SPOOL_DIR}"
+
+# at -c JOBID (脚本の表示)
+if [ "${1:-}" = "-c" ] ; then
+
+	cat "${SPOOL_DIR}/${2}.sh"
+	exit 0
+
+fi
+
+# 引数全体の記録
+printf '%s\n' "at ${*}" >> "${SPOOL_DIR}/calls.log"
+
+# -f 脚本の抽出
+script_file=""
+
+while [ "${#}" -gt 0 ] ; do
+
+	case "${1}" in
+
+		-f)
+			script_file="${2}"
+			shift 2
+			;;
+
+		*)
+			shift
+			;;
+
+	esac
+
+done
+
+# 通番の発番
+if [ -f "${SPOOL_DIR}/next" ] ; then
+
+	job_id="$(cat "${SPOOL_DIR}/next")"
+
+else
+
+	job_id="1"
+
+fi
+
+printf '%s' "$((job_id + 1))" > "${SPOOL_DIR}/next"
+
+# 脚本の保存
+if [ -n "${script_file}" ] ; then
+
+	cp "${script_file}" "${SPOOL_DIR}/${job_id}.sh"
+
+else
+
+	printf '# empty\n' > "${SPOOL_DIR}/${job_id}.sh"
+
+fi
+
+# 実 at と同じく標準エラーへ行番号を出す
+printf 'job %s at 2026-01-01 00:00\n' "${job_id}" >&2
