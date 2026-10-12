@@ -37,7 +37,7 @@ fi
 # X共有設定のデフォルト値(変数が未定義の場合のみ代入,空文字は設定値として扱う)
 x_share_enabled="${x_share_enabled-yes}"
 x_share_hashtags="${x_share_hashtags-NowPlaying}"
-x_share_template="${x_share_template:-Now Playing: %artist% - %title% (%album%)}"
+x_share_template="${x_share_template:-%artist% - %title% (%album%)}"
 
 # POSTを変数に代入
 cat_post=$(cat)
