@@ -1,0 +1,22 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - name: update working tree
+        run: |
+          set -eu
+          cd ~/Documents/github/sh-mpd
+          git update-index --skip-worktree cgi-bin/settings/shmpd.conf || true
+          git fetch origin main
+          if git rev-parse --verify main >/dev/null 2>&1; then
+            git checkout main
+          else
+            git checkout -B main origin/main
+          fi
+          git reset --hard origin/main
