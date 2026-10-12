@@ -81,6 +81,45 @@ python3 -m http.server 8080 # ポート番号は例
 
 - "Server setting"で"cover art host"を設定（例: http://localhost:8080/）
 
+## X共有機能
+
+- 再生中にトップページの"Now Playing"欄へ"Share on X"リンクを表示
+- 停止中はリンクを表示しない
+- リンクを開くとXの投稿画面が開き,再生中の曲名等が本文に入る(投稿自体は手動)
+- 本文は`アーティスト名 - タイトル名 (アルバム名)`の形式,末尾にハッシュタグ`#NowPlaying`を付与
+- アーティスト名等が無い場合(Webラジオ等)は取得できたタグやストリーム名で代替
+
+### 設定(cgi-bin/settings/shmpd.conf,未設定時は既定値)
+
+```sh
+x_share_enabled="yes" # "yes"以外で無効
+x_share_hashtags="NowPlaying" # 空文字でハッシュタグ無し(`#`は付けない)
+x_share_template="%artist% - %title% (%album%)" # アーティスト名,タイトル名,アルバム名が揃っている場合の本文(`mpc current -f`の書式)
+```
+
+## スケジュール機能
+
+- 指定時刻に再生/一時停止/停止を行う予約機能
+- トップページのメニューから"Schedule"を開いて使用
+- 内部ではホストの`at`/`atd`を使用(`at`,`atq`,`atrm`コマンドと`atd`の稼働が必須)
+- `at`が無い環境では予約一覧の取得に失敗した旨を表示
+
+### 使用方法
+
+1. "Reserve"欄で次のいずれかを入力し,"Action"(`play`/`pause`/`stop`)を選んで"Reserve"を押す
+    - `Minutes (1-10080)`: 何分後に実行するか(例: `30`で30分後,上限は7日=10080分)
+    - `Time (HH:MM)`: 何時に実行するか(例: `21:30`,24時間表記)
+        - 過去の時刻は翌日の同時刻扱い(`at`の仕様)
+        - 基準時刻は"Reservations"欄の"現在時刻"(サーバー側の時刻,タイムゾーンに注意)
+2. "Reservations"欄で予約一覧を確認
+3. 取り消す場合は各予約の"Cancel"を押す
+
+### 設定(cgi-bin/settings/shmpd.conf,未設定時は有効)
+
+```sh
+schedule_enabled="yes" # "yes"以外で無効(無効時はフォームを表示しない)
+```
+
 ## トラブルシューティング
 
 ### css,ホスト名の変更が出来ない場合(apache2)
