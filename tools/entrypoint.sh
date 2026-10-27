@@ -24,6 +24,12 @@ export APACHE_CONFDIR
 # shellcheck disable=SC1091
 . /etc/apache2/envvars
 
+# Apacheのランタイムディレクトリを用意
+# (Debian 13のslimイメージでは/run/apache2等が存在せず,DefaultRuntimeDirで起動に失敗する)
+# socksはcgidが使うソケット置場(これが無いとCGIが503になる)
+install -d -m 755 "${APACHE_RUN_DIR}" "${APACHE_LOCK_DIR}"
+install -d -m 755 -o "${APACHE_RUN_USER}" -g "${APACHE_RUN_GROUP}" "${APACHE_RUN_DIR}/socks"
+
 # atdの起動(atが無い環境では予約機能が使えないだけなので続行する)
 if command -v atd > /dev/null 2>&1 ; then
 

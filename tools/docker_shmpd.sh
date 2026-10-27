@@ -4,6 +4,7 @@
 #
 # 使用例: sh docker_shmpd.sh [image]
 #   イメージを省略した場合は sh-mpd-at:latest を使用する
+#   イメージのビルド: docker build -f tools/Dockerfile -t sh-mpd-at:latest .
 #
 # 予約機能(at)のスプールはnamed volumeへ保存し,コンテナの作り直しで消えないようにする
 # 時刻指定の解釈をJSTにする(未設定だとUTC扱いになり9時間ずれる)
