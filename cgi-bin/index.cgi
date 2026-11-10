@@ -39,15 +39,8 @@ x_share_enabled="${x_share_enabled-yes}"
 x_share_hashtags="${x_share_hashtags-NowPlaying}"
 x_share_template="${x_share_template:-%artist% - %title% (%album%)}"
 
-# POSTを変数に代入
-cat_post=$(cat)
-
-# POSTを変数展開し代入
-post_check="${cat_post#*\=}"
-
-# "foo=bar"の"foo","bar"をそれぞれ抽出
-post_key="${post_check%\&*}"
-post_value="${post_check#*\&*\=}"
+# POSTボディの読み捨て
+cat > /dev/null
 
 # クエリを変数展開し代入
 query_check="${QUERY_STRING#*\=}"
@@ -60,19 +53,10 @@ url_hostname="$(cgi_host)"
 # ===== 関数の宣言 ======
 mpc_post () {
 
-    # POST値があればデコードしてmpcに渡す
-    if [ -n "${post_value}" ]; then
+	# クエリ値を加工
+	echo "${query_check}" |
 
-        echo "${post_key}" "'${post_value}'" | urldecode
-
-    else
-
-        # クエリ値を加工
-        echo "${query_check}" |
-
-		sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g"
-
-    fi |
+	sed -e "s/_\-/ \-/g" -e "s/_\%2B/ \+/g" -e "s/\%25/\%/g" |
 
 	# mpcのエラー出力ごと渡す
 	xargs mpc 2>&1 |
@@ -322,21 +306,6 @@ cat << EOS
 							Seek +
 						</button>
 					</div>
-				</form>
-			</section>
-
-			<section>
-				<h2>Search</h2>
-				<form name="search_form" method="POST" class="search-form">
-					<select name="args">
-						<option value="searchplay">Fuzzy</option>
-						<option value="searchplay artist">Artist</option>
-						<option value="searchplay album">Album</option>
-						<option value="searchplay title">Title</option>
-						<option value="searchplay filename">Filename</option>
-					</select>
-					<input type="text" placeholder="Enter search term..." name="search">
-					<button type="submit">Search</button>
 				</form>
 			</section>
 
