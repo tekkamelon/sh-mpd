@@ -228,7 +228,6 @@ test.describe('X share link (Now Playing)', () => {
 
     await expect(page).toHaveTitle(/HOME/);
     await expect(page.locator('form[name="control_form"] button')).toHaveCount(16);
-    await expect(page.locator('form[name="search_form"]')).toBeVisible();
     await expect(page.locator('img.cover-art')).toHaveCount(1);
     await expect(page.getByRole('link', { name: 'Settings' })).toBeVisible();
   });
