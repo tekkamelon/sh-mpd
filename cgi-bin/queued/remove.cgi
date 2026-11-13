@@ -31,7 +31,7 @@ else
 	export MPD_HOST="127.0.0.1"
 	export MPD_PORT="6600"
 
-	stylesheet="stylesheet.css"
+	stylesheet="modern.css"
 
 fi
 
@@ -50,13 +50,6 @@ mpc_current="$(mpc current)"
 
 
 # ===== 関数の宣言 ======
-# URLからホスト名を取得
-cgi_host () {
-
-	echo "${HTTP_REFERER}" | cut -d"/" -f3
-
-}
-
 mpc_post () {
 
 	# 複数の項目の削除に対応
@@ -107,8 +100,6 @@ cat << EOS
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/layout.css">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/search.css">
 		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
 		<title>Remove Queued Song - sh-MPD:$(cgi_host) -</title>

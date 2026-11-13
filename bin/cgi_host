@@ -2,5 +2,6 @@
 
 set -eu
 
-echo "${HTTP_REFERER}" | cut -d"/" -f3 
+# Referer が無い直接アクセスでも中断しないよう既定値で展開する
+echo "${HTTP_REFERER-}" | cut -d"/" -f3 
 
