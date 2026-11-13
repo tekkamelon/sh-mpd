@@ -31,7 +31,7 @@ else
 	export MPD_HOST="127.0.0.1"
 	export MPD_PORT="6600"
 
-	stylesheet="stylesheet.css"
+	stylesheet="modern.css"
 
 fi
 
@@ -119,8 +119,6 @@ cat << EOS
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/layout.css">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/search.css">
 		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
 		<title>Playlist - sh-MPD:${url_hostname} -</title>

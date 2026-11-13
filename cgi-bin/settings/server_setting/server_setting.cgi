@@ -29,7 +29,7 @@ else
 	export MPD_HOST="127.0.0.1"
 	export MPD_PORT="6600"
 
-	stylesheet="stylesheet.css"
+	stylesheet="modern.css"
 
 fi
 # ====== 変数の設定ここまで ======
@@ -136,8 +136,6 @@ cat << EOS
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/layout.css">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/form.css">
 		<link rel="icon" href="/cgi-bin/image/favicon.svg">
 		<title>Server Settings - sh-MPD:$(cgi_host) -</title>
 	</head>

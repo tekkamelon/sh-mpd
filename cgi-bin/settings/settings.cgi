@@ -31,7 +31,7 @@ else
 	export MPD_HOST="127.0.0.1"
 	export MPD_PORT="6600"
 
-	stylesheet="stylesheet.css"
+	stylesheet="modern.css"
 
 fi
 # ====== 変数の設定ここまで ======
@@ -52,7 +52,6 @@ cat << EOS
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
 		<link rel="icon" href="/cgi-bin/image/favicon.ico">
 		<link rel="apple-touch-icon" href="/cgi-bin/image/favicon.ico">
-		<link rel="stylesheet" href="/cgi-bin/stylesheet/settings.css">
 		<title>Settings - sh-MPD:$(cgi_host) -</title>
 	</head>
 
