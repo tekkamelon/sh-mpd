@@ -14,6 +14,9 @@ export LANG=C
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
 
+# 楽曲パスと表示名の区切り文字
+sep=$(printf '\037')
+
 # 独自コマンドへPATHを通す
 tmp_path="$(cd "$(dirname "${0}")/../../bin" && pwd)"
 export PATH="${PATH}:${tmp_path}"
@@ -52,19 +55,67 @@ mpc_current="$(mpc current)"
 # ===== 関数の宣言 ======
 mpc_post () {
 
-	# 複数の項目の削除に対応
-	# POSTの"="を" "に置換,"&del"を削除
-	echo "${cat_post}" | sed -e "s/=/ /g" -e "s/\&del//g" |
+	# 現在のキューの楽曲パス一覧
+	queue_paths=$(mpc -f '%file%' playlist)
 
-	xargs mpc 2>&1 |
+	# 選択済み位置(同じ曲が重複していても選択数だけ別々の位置を消す)
+	claimed=""
 
-	mpc_status2html -v mpc_current="${mpc_current}" 
+	# POSTの各"del=パス"をデコードし,現在のキュー位置へ変換
+	positions=$(printf '%s\n' "${cat_post}" | tr '&' '\n' | while IFS= read -r field ; do
+
+		case "${field}" in
+
+			del=*)
+				song_path=$(printf '%s' "${field#del=}" | urldecode)
+
+				# 一致する位置のうち,まだ選択済みでない先頭を1つ出力
+				for song_pos in $(printf '%s\n' "${queue_paths}" | grep -n -F -x -- "${song_path}" | cut -d: -f1) ; do
+
+					case " ${claimed} " in
+
+						*" ${song_pos} "*) ;;
+
+						*)
+							printf '%s\n' "${song_pos}"
+							claimed="${claimed} ${song_pos}"
+							break
+							;;
+
+					esac
+
+				done
+				;;
+
+		esac
+
+	done | sort -n -u)
+
+	# 位置が得られた場合のみ削除を実行
+	if [ -n "${positions}" ] ; then
+
+		# 位置の一覧を引数へ展開
+		set --
+		for song_pos in ${positions} ; do
+
+			set -- "$@" "${song_pos}"
+
+		done
+
+		mpc del "$@" 2>&1 || :
+
+	fi
 
 	# 曲の削除の結果の表示,"cat_post"があれば真
 	if [ -n "${cat_post}" ] ; then
 
 		# 真の場合,ステータスとメッセージを表示
-		mpc status 2>&1 | mpc_status2html && echo "<p>Remove selected song!</p>"
+		mpc status 2>&1 | mpc_status2html -v mpc_current="${mpc_current}"
+		echo "<p>Remove selected song!</p>"
+
+	else
+
+		mpc status 2>&1 | mpc_status2html -v mpc_current="${mpc_current}"
 
 	fi
 
@@ -76,8 +127,8 @@ queued () {
 	# 再生中の楽曲
 	mpc_current="$(mpc current)"
 
-	# キューされた曲をgrepで検索,idと区切り文字":"を付与
-	mpc playlist | grep -F -i -n "${search_str}" |
+	# キューされた曲をgrepで検索,パスと表示名を付与
+	mpc -f "%file%${sep}[[%artist% - ]%title%]" playlist | grep -F -i "${search_str}" |
 
 	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]"を付与
 	# "queued_song"にシェル変数"current",post_nameに"del"を渡す

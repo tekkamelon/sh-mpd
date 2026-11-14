@@ -14,6 +14,9 @@ export LANG=C
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
 
+# 楽曲パスと表示名の区切り文字
+sep=$(printf '\037')
+
 # 独自コマンドへPATHを通す
 tmp_path="$(cd "$(dirname "${0}")/../../bin" && pwd)"
 export PATH="${PATH}:${tmp_path}"
@@ -57,8 +60,19 @@ str_name=$(echo "${query_check#"${search_or_save}"\&input_string\=}" | urldecode
 # POSTがあれば真,無ければ偽
 if [ -n "${cat_post}" ] ; then
 	
-	# POSTがあれば選択された楽曲を再生
-	mpc_result=$(mpc "${post_key}" "${post_value}")
+	# 楽曲パスをデコードし現在のキューから位置を求めて再生
+	song_path=$(printf '%s' "${post_value}" | urldecode)
+	song_pos=$(mpc -f '%file%' playlist | grep -n -F -x -- "${song_path}" | cut -d: -f1 | head -n 1)
+
+	if [ -n "${song_pos}" ] ; then
+
+		mpc_result=$(mpc play "${song_pos}")
+
+	else
+
+		mpc_result="MPD error: ${song_path} is not in the queue"
+
+	fi
 	
 	# プレイリストの保存後に楽曲が選択された場合
 	str_name=""
@@ -111,8 +125,8 @@ queued () {
 	# プレイリストの保存時には"str_name"に空文字を代入
 	test "${search_or_save}" = "save" && str_name=""
 
-	# キューされた曲をgrepで検索,idと区切り文字":"を付与
-	mpc playlist | grep -F -i -n "${str_name}" |
+	# キューされた曲をgrepで検索,パスと表示名を付与
+	mpc -f "%file%${sep}[[%artist% - ]%title%]" playlist | grep -F -i "${str_name}" |
 
 	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]"を付与
 	# "queued_song"にシェル変数"current",post_nameに"play"を渡す

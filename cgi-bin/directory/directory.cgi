@@ -54,41 +54,52 @@ url_hostname=$(cgi_host)
 # POSTの処理し引数をmpcに渡す
 mpc_post () {
 
-	# ディレクトリ一括追加
-	if [ "${post_key}" = "addir" ] ; then
-
-		# パスをデコードし当該ディレクトリ配下をキューへ追加
-		dir_path=$(printf '%s\n' "${post_value}" | urldecode)
-		mpc add "${dir_path}" &
-
-		echo "status"
-
-	# POSTを変数展開で加工,文字列が1以上の数値であれば真,それ以外で偽
-	elif [ "${post_value}" -gt 0 ] 2>/dev/null ; then
-
-		# 楽曲の一覧から"post_value"の番号の行を抽出,結果を挿入
-		mpc listall | sed -n "${post_value}"p | mpc add
-
-		# キュー内の楽曲数を変数に代入
-		last_line=$(mpc playlist | wc -l)
-
-		echo "play ${last_line}"
-
-	# 偽の場合は"addresult"であれば真,それ以外で偽
-	elif [ "${post_key}" = "addresult" ] ; then
+	# 検索結果の一括追加
+	if [ "${post_key}" = "addresult" ] ; then
 
 		# 楽曲の一覧から"search_str"で検索,結果を挿入
 		mpc listall | grep -F -i "${search_str}" | mpc add &
 
 		echo "status"
 
-	# 偽の場合は"all"であれば真,それ以外で偽
+	# 全曲追加
 	elif [ "${post_value}" = "all" ] ; then
 
 		# すべての楽曲をキューに追加
 		mpc add / &
 
 		echo "status"
+
+	# パス指定による追加("add"は単曲,"addir"はディレクトリ)
+	elif [ "${post_key}" = "add" ] || [ "${post_key}" = "addir" ] ; then
+
+		# 楽曲パスをデコードしてキューへ追加
+		add_path=$(printf '%s' "${post_value}" | urldecode)
+
+		if [ "${post_key}" = "add" ] ; then
+
+			# 単曲追加時は追加した楽曲を再生
+			if [ -n "${add_path}" ] && mpc add -- "${add_path}" ; then
+
+				# キュー内の楽曲数を変数に代入
+				last_line=$(mpc playlist | wc -l)
+
+				echo "play ${last_line}"
+
+			else
+
+				echo "status"
+
+			fi
+
+		else
+
+			# ディレクトリはバックグラウンドで追加
+			mpc add -- "${add_path}" &
+
+			echo "status"
+
+		fi
 
 	else
 
@@ -122,9 +133,9 @@ directory_list () {
 
 	fi
 
-	# 曲の一覧を出力,行番号と区切り文字":"の付与,検索
+	# 曲の一覧を出力,検索
 	# directory_tree で details/summary のツリーHTMLへ変換
-	mpc listall | grep -F -i -n "${search_str}" |
+	mpc listall | grep -F -i "${search_str}" |
 	directory_tree -v mpc_current="${mpc_current}" -v post_name="add" -v open_all="${open_all}"
 
 }
@@ -150,16 +161,16 @@ flash_message() {
 	# 単一曲または全曲追加
 	elif [ "${post_key}" = "add" ] ; then
 
-		# 数値の場合は単一曲
-		if [ "${post_value}" -gt 0 ] 2>/dev/null ; then
-
-			fm_song=$(mpc listall | sed -n "${post_value}"p)
-			fm_msg="Added: ${fm_song}"
-
 		# "all"の場合
-		elif [ "${post_value}" = "all" ] ; then
+		if [ "${post_value}" = "all" ] ; then
 
 			fm_msg="Added all songs"
+
+		# パス指定の場合は単一曲
+		else
+
+			fm_song=$(printf '%s' "${post_value}" | urldecode)
+			fm_msg="Added: ${fm_song}"
 
 		fi
 
