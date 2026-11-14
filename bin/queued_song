@@ -1,6 +1,8 @@
 #!/usr/bin/awk -f
 
 # 引数として -v mpc_current="${mpc_current}", -v post_name="play|del" が必要
+#   mpc_current には再生中の楽曲パスを渡す("mpc current -f '%file%'")
+#   ※bin/directory_tree と同じく楽曲パス同士で一致させる
 # 入力は "楽曲パス" と "表示名" を Unit Separator(0x1F) で連結した行
 #
 # 入力例:
@@ -45,8 +47,8 @@ BEGIN {
 	esc_path = html_escape(path)
 	esc_display = html_escape(display)
 
-	# 現在再生中の楽曲
-	if (mpc_current == display) {
+	# 現在再生中の楽曲(表示名ではなく楽曲パスで一致させる)
+	if (mpc_current == path) {
 
 		if (post_name == "del") {
 

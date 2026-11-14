@@ -124,15 +124,15 @@ mpc_post () {
 # キュー内の曲の検索,チェックボックス付きで表示
 queued () {
 
-	# 再生中の楽曲
-	mpc_current="$(mpc current)"
+	# 再生中の楽曲のパス(bin/queued_song は楽曲パスで一致させる)
+	mpc_current_file="$(mpc current -f '%file%')"
 
 	# キューされた曲をgrepで検索,パスと表示名を付与
 	mpc -f "%file%${sep}[[%artist% - ]%title%]" playlist | grep -F -i "${search_str}" |
 
 	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]"を付与
 	# "queued_song"にシェル変数"current",post_nameに"del"を渡す
-	queued_song -v mpc_current="${mpc_current}" -v post_name="del" 
+	queued_song -v mpc_current="${mpc_current_file}" -v post_name="del"
 
 }
 # ===== 関数の宣言ここまで ======

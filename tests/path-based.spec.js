@@ -1,6 +1,7 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 const { execFileSync } = require('node:child_process');
+const path = require('node:path');
 
 const DIRECTORY_URL = '/cgi-bin/directory/directory.cgi';
 const QUEUED_URL = '/cgi-bin/queued/queued.cgi';
@@ -167,6 +168,65 @@ test.describe('行番号ではなく楽曲パスで指定する', () => {
       'Biosphere/Substrata/01.mp3',
       '汐海ワカ/01.mp3',
     ]);
+  });
+
+});
+
+// 再生中表示の一致判定は、bin/directory_tree と同じく楽曲パス同士で行う
+// (表示名と mpc current の既定フォーマット出力は、composer のみの曲や
+//  名前だけのストリームのように一致しないタグ構成があるため)
+test.describe('再生中の表示も楽曲パスで一致させる', () => {
+
+  /**
+   * @param {string[]} lines
+   * @param {string} mpcCurrentFile
+   * @param {string} postName
+   */
+  function renderQueuedSong(lines, mpcCurrentFile, postName) {
+    const script = path.join(__dirname, '..', 'bin', 'queued_song');
+    const input = lines.map((line) => line.replace('<US>', '\u001f')).join('\n');
+
+    return execFileSync(
+      script,
+      ['-v', `mpc_current=${mpcCurrentFile}`, '-v', `post_name=${postName}`],
+      { input, encoding: 'utf8' },
+    );
+  }
+
+  test('queued_song: 表示名が無い曲(名前だけのストリーム相当)もパス一致で再生中表示を出す', () => {
+    const html = renderQueuedSong(['radio/live.m3u<US>'], 'radio/live.m3u', 'play');
+
+    expect(html).toContain('<span id=current><button class=now_playing name="play" value="radio/live.m3u">');
+    expect(html).toContain('>radio/live.m3u</button>');
+  });
+
+  test('queued_song: composer のみの曲(表示名が再生中の既定表示と異なる)もパス一致で出す', () => {
+    const html = renderQueuedSong(
+      ['comp/01.mp3<US>Comp Title', 'plain/02.mp3<US>Normal Artist - Normal Song'],
+      'comp/01.mp3',
+      'play',
+    );
+
+    expect(html).toContain('<span id=current><button class=now_playing name="play" value="comp/01.mp3">');
+    // 非再生の行は span で囲まれない通常のボタン
+    expect(html).toContain('<p><button name="play" value="plain/02.mp3">');
+  });
+
+  test('queued_song: 違うパスを渡した曲には再生中表示を出さない', () => {
+    const html = renderQueuedSong(
+      ['plain/02.mp3<US>Normal Artist - Normal Song'],
+      'comp/01.mp3',
+      'play',
+    );
+
+    expect(html).not.toContain('id=current');
+  });
+
+  test('queued_song: 削除用チェックボックスでもパス一致で再生中表示を出す', () => {
+    const html = renderQueuedSong(['comp/01.mp3<US>Comp Title'], 'comp/01.mp3', 'del');
+
+    expect(html).toContain('<span id=current><input type=checkbox name="del" value="comp/01.mp3">');
+    expect(html).toContain('[Now Playing]');
   });
 
 });

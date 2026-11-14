@@ -125,12 +125,15 @@ queued () {
 	# プレイリストの保存時には"str_name"に空文字を代入
 	test "${search_or_save}" = "save" && str_name=""
 
+	# 再生中の楽曲のパス(bin/queued_song は楽曲パスで一致させる)
+	mpc_current_file="$(mpc current -f '%file%')"
+
 	# キューされた曲をgrepで検索,パスと表示名を付与
 	mpc -f "%file%${sep}[[%artist% - ]%title%]" playlist | grep -F -i "${str_name}" |
 
 	# キュー内の楽曲をHTMLで表示,現在再生中の楽曲は"[Now Playing]"を付与
 	# "queued_song"にシェル変数"current",post_nameに"play"を渡す
-	queued_song -v mpc_current="${mpc_current}" -v post_name="play"
+	queued_song -v mpc_current="${mpc_current_file}" -v post_name="play"
 
 }
 # ===== 関数の宣言ここまで ======
