@@ -81,7 +81,7 @@ test.describe('Directory filer UI', () => {
     await expect(page.locator('h1')).toHaveText('Directory');
   });
 
-  test('file buttons have add name and numeric value', async ({ page }) => {
+  test('file buttons carry the song path as value', async ({ page }) => {
     // ネストが深い場合でもボタンに到達できるよう open を付与して展開
     await page.evaluate(() => {
       document.querySelectorAll('form.directory-list details.dir-tree').forEach((el) => {
@@ -92,7 +92,9 @@ test.describe('Directory filer UI', () => {
     const addButtons = page.locator('form.directory-list button[name="add"]');
     await expect(addButtons.first()).toBeVisible();
     const value = await addButtons.first().getAttribute('value');
-    expect(value).toMatch(/^\d+$/);
+    // 行番号ではなく楽曲パス
+    expect(value).not.toMatch(/^\d+$/);
+    expect(value).toContain('/');
   });
 
   test('no script tags or inline event handlers', async ({ page }) => {
