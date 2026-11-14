@@ -1,61 +1,73 @@
 #!/usr/bin/awk -f
 
-# 引数として-v mpc_current="${mpc_current}",-v post_name="hoge"が必要
-BEGIN{
+# 引数として -v mpc_current="${mpc_current}", -v post_name="play|del" が必要
+# 入力は "楽曲パス" と "表示名" を Unit Separator(0x1F) で連結した行
+#
+# 入力例:
+#   Album A/01.mp3<US>Artist - Title
+#   http://radio.example/stream<US>
+#
+# ボタンの value には行番号ではなく楽曲パスを渡す
 
-	# 区切り文字を"行頭が数字の1回以上の繰り返しかつ:"に指定
-	FS = "^[0-9]*:"
+# HTML属性値と表示テキストの脱出
+function html_escape(s) {
+
+	gsub(/&/, "\\&amp;", s)
+	gsub(/</, "\\&lt;", s)
+	gsub(/>/, "\\&gt;", s)
+	gsub(/"/, "\\&quot;", s)
+
+	return s
+
+}
+
+BEGIN {
+
+	# 区切り文字をUnit Separatorに指定
+	FS = "\037"
 
 }
 
 {
 
-	# "queued.cgi"で現在再生中の楽曲かどうかを判定
-	# "mpc_current"が第2フィールドと一致かつpost_nameが"del"ではない場合に真
-	if(mpc_current == $2 && post_name != "del"){
+	# 楽曲パスと表示名,表示名が空の場合はパスをそのまま表示
+	path = $1
+	display = ($2 == "" ? path : $2)
 
-		# <sapn>タグで"mpc_status2html"で指定されたジャンプ先へと設定
-		tag = "<p><span id=current><button class=now_playing name="
+	# 空行は無視
+	if (path == "") {
 
-		button = "</button>"
-
-		marker = "</span>"
-
-	# "/queued/remove.cgi"で現在再生中の楽曲かを判定
-	# "mpc_current"が第2フィールドと一致かつpost_nameが"del"の場合に真
-	}else if(mpc_current == $2 && post_name == "del" ){
-
-		tag = "<p><span id=current><input type=checkbox name="
-
-		button = ""
-
-		marker = "<b>[Now Playing]</b></span>"
-
-	# "post_name"が"play"か"add"の場合に真
-	}else if(post_name == "play" || post_name == "add"){
-
-		tag = "<p><button name="
-
-		button = "</button>"
-
-		marker = ""
-
-	# "post_name"が"del"の場合に真
-	}else if(post_name == "del"){
-
-		tag = "<p><input type=checkbox name="
-
-		button = ""
-
-		marker = ""
+		next
 
 	}
 
-	# "ID:楽曲データ"を"ID>楽曲データ"に置換
-	sub(":" , ">")
+	# 属性値と表示名の脱出
+	esc_path = html_escape(path)
+	esc_display = html_escape(display)
 
-	# "post_name"は引数をそのまま出力
-	print tag, post_name, "value=", $0, button, marker, "</p>"
+	# 現在再生中の楽曲
+	if (mpc_current == display) {
+
+		if (post_name == "del") {
+
+			print "<p><span id=current><input type=checkbox name=\"" post_name "\" value=\"" esc_path "\">" esc_display " <b>[Now Playing]</b></span></p>"
+
+		} else {
+
+			print "<p><span id=current><button class=now_playing name=\"" post_name "\" value=\"" esc_path "\">" esc_display "</button></span></p>"
+
+		}
+
+	# 削除用チェックボックス
+	} else if (post_name == "del") {
+
+		print "<p><input type=checkbox name=\"" post_name "\" value=\"" esc_path "\">" esc_display "</p>"
+
+	# 再生用ボタン
+	} else {
+
+		print "<p><button name=\"" post_name "\" value=\"" esc_path "\">" esc_display "</button></p>"
+
+	}
 
 }
-

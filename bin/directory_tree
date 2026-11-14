@@ -1,17 +1,28 @@
 #!/usr/bin/awk -f
 
-# mpd listall の "行番号:パス" を details/summary のツリーHTMLへ変換
+# mpd listall のパスを details/summary のツリーHTMLへ変換
 # 引数: -v mpc_current="${mpc_current}" -v post_name="add" [-v open_all=1]
 #
 # 入力例:
-#   1:ASMR/foo/01.mp3
-#   2:ASMR/foo/02.mp3
-#   3:chill_out/bar.m4a
+#   ASMR/foo/01.mp3
+#   ASMR/foo/02.mp3
+#   chill_out/bar.m4a
+#
+# ボタンの value には行番号ではなく楽曲パスを渡す
+
+# HTML属性値と表示テキストの脱出
+function html_escape(s) {
+
+	gsub(/&/, "\\&amp;", s)
+	gsub(/</, "\\&lt;", s)
+	gsub(/>/, "\\&gt;", s)
+	gsub(/"/, "\\&quot;", s)
+
+	return s
+
+}
 
 BEGIN {
-
-	# 区切り文字を"行頭が数字の1回以上の繰り返しかつ:"に指定
-	FS = "^[0-9]*:"
 
 	# 直前のディレクトリ階層数
 	prev_depth = 0
@@ -20,12 +31,8 @@ BEGIN {
 
 {
 
-	# 行番号の抽出(先頭の数字部分)
-	line_no = $0
-	sub(/:.*$/, "", line_no)
-
-	# パス本体($2 は FS 除去後の残り)
-	path = $2
+	# パス本体
+	path = $0
 
 	# 空行は無視
 	if (path == "") {
@@ -98,7 +105,7 @@ BEGIN {
 		}
 
 		# ディレクトリ名と一括追加ボタン
-		print "<summary><span class=\"dir-label\">" parts[i] "</span> <button type=\"submit\" class=\"add-dir\" name=\"addir\" value=\"" dir_path "\" title=\"Add all songs in this directory\" aria-label=\"Add all songs in this directory\">➕</button></summary>"
+		print "<summary><span class=\"dir-label\">" html_escape(parts[i]) "</span> <button type=\"submit\" class=\"add-dir\" name=\"addir\" value=\"" html_escape(dir_path) "\" title=\"Add all songs in this directory\" aria-label=\"Add all songs in this directory\">➕</button></summary>"
 		prev_parts[i] = parts[i]
 		i = i + 1
 
@@ -115,26 +122,30 @@ BEGIN {
 
 	prev_depth = depth
 
+	# 属性値と表示名の脱出
+	esc_path = html_escape(path)
+	esc_name = html_escape(file_name)
+
 	# 再生中楽曲の判定とボタン出力
 	if (mpc_current == path && post_name != "del") {
 
-		print "<p><span id=\"current\"><button class=\"now_playing\" name=\"" post_name "\" value=\"" line_no "\">" file_name "</button></span></p>"
+		print "<p><span id=\"current\"><button class=\"now_playing\" name=\"" post_name "\" value=\"" esc_path "\">" esc_name "</button></span></p>"
 
 	} else if (mpc_current == path && post_name == "del") {
 
-		print "<p><span id=\"current\"><input type=\"checkbox\" name=\"" post_name "\" value=\"" line_no "\">" file_name " <b>[Now Playing]</b></span></p>"
+		print "<p><span id=\"current\"><input type=\"checkbox\" name=\"" post_name "\" value=\"" esc_path "\">" esc_name " <b>[Now Playing]</b></span></p>"
 
 	} else if (post_name == "play" || post_name == "add") {
 
-		print "<p><button name=\"" post_name "\" value=\"" line_no "\">" file_name "</button></p>"
+		print "<p><button name=\"" post_name "\" value=\"" esc_path "\">" esc_name "</button></p>"
 
 	} else if (post_name == "del") {
 
-		print "<p><input type=\"checkbox\" name=\"" post_name "\" value=\"" line_no "\">" file_name "</p>"
+		print "<p><input type=\"checkbox\" name=\"" post_name "\" value=\"" esc_path "\">" esc_name "</p>"
 
 	} else {
 
-		print "<p>" file_name "</p>"
+		print "<p>" esc_name "</p>"
 
 	}
 
