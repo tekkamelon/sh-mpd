@@ -253,7 +253,7 @@ if [ "${post_status}" -eq 0 ] && [ -n "${tweet_id}" ] ; then
 	if [ -n "${error_html}" ] ; then
 
 		result_html="${result_html}
-				<p>${error_html}</p>"
+				<p>注意: ${error_html}</p>"
 
 	fi
 
