@@ -83,13 +83,50 @@ python3 -m http.server 8080 # ポート番号は例
 
 ## X共有機能
 
-- 再生中にトップページの"Now Playing"欄へ"Share on X"リンクを表示
-- 停止中はリンクを表示しない
-- リンクを開くとXの投稿画面が開き,再生中の曲名等が本文に入る(投稿自体は手動)
+- 再生中にトップページの"Now Playing"欄へ共有用の導線を表示(停止中は表示しない)
 - 本文は`アーティスト名 - タイトル名 (アルバム名)`の形式,末尾にハッシュタグ`#NowPlaying`を付与
 - アーティスト名等が無い場合(Webラジオ等)は取得できたタグやストリーム名で代替
 
-### 設定(cgi-bin/settings/shmpd.conf,未設定時は既定値)
+### Web Intent による共有(既定)
+
+- X APIの設定が無いときは"Share on X"リンクを表示する
+- リンクを開くとXの投稿画面が開き,再生中の曲名等が本文に入る(投稿自体は手動)
+
+### API投稿とカバー画像の添付(任意)
+
+`cgi-bin/settings/x_api.conf`へOAuth 2.0アプリ資格を記入すると,"Share on X"リンクの代わりに
+"Post to X"ボタンを表示する。ボタンを押すとサーバからX API v2で投稿を行い,再生中の曲の
+カバー画像(`Folder.jpg`)を添付する。
+
+- 認証はOAuth 2.0 (Authorization Code + PKCE)。スコープは`tweet.write`と`media.write`を含む
+- トークンは`cgi-bin/settings/x_token.conf`へ自動保存され,期限切れのたびに自動更新される
+- カバー画像の取得に失敗したときは本文のみで投稿し,結果ページに注意を表示する
+- 投稿に失敗したときは結果ページにAPI応答を生で表示し,原因(401/403/429等)を隠さない
+
+設定とトークンはgit管理外。本リポジトリ同梱のApache設定(`tools/apache-shmpd.conf`)により,
+`cgi-bin/settings/`配下の`.conf`への直接アクセスは403になる。
+
+#### 初回設定手順
+
+1. [X Developer Portal](https://developer.x.com/)でプロジェクトとアプリを作成する
+2. App settings の User authentication settings を設定する
+    - App permissions: Read and write
+    - Callback URI / Redirect URL: `http://127.0.0.1:18937/callback`
+3. `cgi-bin/settings/x_api.conf.example`を`cgi-bin/settings/x_api.conf`へ複製し,
+   `x_oauth2_client_id`と`x_oauth2_client_secret`を記入する
+4. ホスト上で`bin/x_oauth2 setup`を実行し,表示されたURLをブラウザで開いて認可する
+5. 認可後のリダイレクト先URL(アドレス欄)をコピーして次へ渡す
+    ```sh
+    bin/x_oauth2 exchange '<リダイレクト先のURL>'
+    ```
+6. 再生中にトップページの"Post to X"を押して実投稿を確認する
+
+トークンの更新に失敗したとき(再認可が必要なとき)は,再度`bin/x_oauth2 setup`からやり直す。
+
+### 設定(未設定時は既定値)
+
+`shmpd.conf`と`x_api.conf`のどちらにも書ける。設定画面("Server settings")の保存は
+`shmpd.conf`を書き戻すため,これらの項目は`x_api.conf`側へ置くことを推奨する。
 
 ```sh
 x_share_enabled="yes" # "yes"以外で無効

@@ -1,0 +1,18 @@
+# X API (OAuth 2.0) のアプリ設定の例
+# 使用するときはこのファイルを x_api.conf へ複製して値を記入する
+# (x_api.conf と x_token.conf は .gitignore により管理対象外)
+
+# 表示設定の上書き(未定義なら index.cgi の既定値を使う)
+# server_setting.cgi の保存は shmpd.conf を書き戻すため,
+# これらの設定は x_api.conf 側へ置くことを推奨する
+x_share_enabled="yes"
+x_share_hashtags="NowPlaying"
+x_share_template="%artist% - %title% (%album%)"
+
+# OAuth 2.0アプリ資格(X Developer Portal より取得)
+# App settings の User authentication settings で次を設定する:
+#   App permissions : Read and write
+#   Callback URI    : http://127.0.0.1:18937/callback
+x_oauth2_client_id=""
+x_oauth2_client_secret=""
+x_redirect_uri="http://127.0.0.1:18937/callback"

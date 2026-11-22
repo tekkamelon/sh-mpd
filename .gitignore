@@ -10,3 +10,8 @@ node_modules/
 playwright-report/
 test-results/
 
+# X API の設定とトークン(機密のため管理外)
+# x_token.conf* は状態ファイル(.state)と更新用の一時ファイルも含む
+cgi-bin/settings/x_api.conf
+cgi-bin/settings/x_token.conf*
+

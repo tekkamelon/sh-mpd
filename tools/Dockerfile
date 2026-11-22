@@ -16,10 +16,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Apache と CGI が使うコマンド, 予約実行用の at
 #   psmisc : pgrep (bin/schedule_mpc が atd の稼働確認に使う)
 #   mpc    : libmpdclient2 を依存で導入する
+#   curl   : bin/x_post が X API v2 への投稿に使う
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
         apache2 \
         at \
+        curl \
         mpc \
         psmisc \
  && rm -rf /var/lib/apt/lists/*
