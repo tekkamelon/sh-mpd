@@ -5,7 +5,7 @@ const { execFileSync } = require('node:child_process');
 const INDEX_URL = '/cgi-bin/index.cgi';
 const INTENT_PREFIX = 'https://twitter.com/intent/tweet?';
 const SHARE_LINK = `a[href^="${INTENT_PREFIX}"]`;
-const DEFAULT_TEMPLATE = 'Now Playing: %artist% - %title% (%album%)';
+const DEFAULT_TEMPLATE = '%artist% - %title% (%album%)';
 
 // 予約されていない文字 + パーセントエンコードのみで構成されているか
 const STRICTLY_ENCODED = /^(?:%[0-9A-F]{2}|[A-Za-z0-9\-._~])*$/;
