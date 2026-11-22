@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# shellcheck disable=SC2154
+
+# カバーアートURLの生成(index.cgiとx_post.cgiで共用)
+# 使用例: cover_url="$(coverart_url)"
+#         環境変数 img_server_host, img_server_port で配信元を指定
+
+# e 返り値が0以外で停止
+# u 未定義の変数参照で停止
+set -eu
+
+# ====== 変数の設定 ======
+# ロケールの設定
+export LC_ALL=C
+export LANG=C
+
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
+# ====== 変数の設定ここまで ======
+
+
+# ====== 本体 ======
+# 変数img_server_host,img_server_portの有無を確認
+if [ -z "${img_server_host:-}" ] || [ -z "${img_server_port:-}" ] ; then
+
+	printf ''
+
+	exit 0
+
+fi
+
+# 現在の曲を変数に代入
+current_song="$(mpc current -f "%file%")"
+
+# 停止中は空を出力
+if [ -z "${current_song}" ] ; then
+
+	printf ''
+
+	exit 0
+
+fi
+
+# 曲のパスを変数に代入
+song_path="${current_song%/*}"
+
+# カバーアートのURLを出力
+printf 'http://%s:%s/%s/Folder.jpg' "${img_server_host}" "${img_server_port}" "${song_path}"
+# ====== 本体ここまで ======

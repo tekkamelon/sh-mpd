@@ -1,0 +1,87 @@
+#!/bin/sh
+
+# shellcheck disable=SC2154
+
+# X投稿の共有本文の生成(index.cgiとx_post.cgiで共用)
+# 使用例: share_text="$(x_share_text)"
+#         環境変数 x_share_template でテンプレートを上書き可能
+
+# e 返り値が0以外で停止
+# u 未定義の変数参照で停止
+set -eu
+
+# ====== 変数の設定 ======
+# ロケールの設定
+export LC_ALL=C
+export LANG=C
+
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
+
+# 本文テンプレートの既定値(環境変数で上書き可能)
+x_share_template="${x_share_template:-%artist% - %title% (%album%)}"
+# ====== 変数の設定ここまで ======
+
+
+# ====== 本体 ======
+# 区切り文字の定義(Unit Separator)
+sep="$(printf '\037')"
+
+# 各タグを一度で取得(file, artist, title, album, nameの順)
+share_info="$(mpc current -f "%file%${sep}%artist%${sep}%title%${sep}%album%${sep}%name%")"
+
+# 取得結果を各タグに分割(欠落時は空文字)
+share_uri="${share_info%%"${sep}"*}"
+share_rest="${share_info#*"${sep}"}"
+share_artist="${share_rest%%"${sep}"*}"
+share_rest="${share_rest#*"${sep}"}"
+share_title="${share_rest%%"${sep}"*}"
+share_rest="${share_rest#*"${sep}"}"
+share_album="${share_rest%%"${sep}"*}"
+share_stream="${share_rest#*"${sep}"}"
+
+# 再生中でない場合(URIが空)は空を出力
+if [ -z "${share_uri}" ] ; then
+
+	printf ''
+
+	exit 0
+
+fi
+
+# タグが揃っている曲はテンプレートより本文を生成
+if [ -n "${share_artist}" ] && [ -n "${share_title}" ] && [ -n "${share_album}" ] ; then
+
+	share_text="$(mpc current -f "${x_share_template}")"
+
+# アルバム名が無い曲はアーティスト名とタイトルのみ
+elif [ -n "${share_artist}" ] && [ -n "${share_title}" ] ; then
+
+	share_text="Now Playing: ${share_artist} - ${share_title}"
+
+# タイトルが無い曲はアーティスト名のみ
+elif [ -n "${share_artist}" ] ; then
+
+	share_text="Now Playing: ${share_artist}"
+
+# アーティスト名が無い曲(ラジオ等)はタイトルのみ
+elif [ -n "${share_title}" ] ; then
+
+	share_text="Now Playing: ${share_title}"
+
+# タグが全く無い場合はストリーム名,URIの順で代替
+else
+
+	if [ -z "${share_stream}" ] ; then
+
+		share_stream="${share_uri}"
+
+	fi
+
+	share_text="Now Playing: ${share_stream}"
+
+fi
+
+# 本文を出力
+printf '%s' "${share_text}"
+# ====== 本体ここまで ======

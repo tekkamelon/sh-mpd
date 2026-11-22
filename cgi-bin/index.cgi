@@ -37,7 +37,20 @@ fi
 # X共有設定のデフォルト値(変数が未定義の場合のみ代入,空文字は設定値として扱う)
 x_share_enabled="${x_share_enabled-yes}"
 x_share_hashtags="${x_share_hashtags-NowPlaying}"
-x_share_template="${x_share_template:-%artist% - %title% (%album%)}"
+
+# 本文テンプレートは bin/x_share_text 側の既定値を使うため,設定時にのみ渡す
+if [ -n "${x_share_template:-}" ] ; then
+
+	export x_share_template
+
+fi
+
+# bin/coverart_url は別プロセスのため配信元設定をexportして渡す
+if [ -n "${img_server_host:-}" ] && [ -n "${img_server_port:-}" ] ; then
+
+	export img_server_host img_server_port
+
+fi
 
 # POSTボディの読み捨て
 cat > /dev/null
@@ -65,28 +78,6 @@ mpc_post () {
 
 }
 
-# カバーアートの取得
-coverart () {
-
-	# 変数img_server_host,img_server_portの有無を確認
-    if [ -z "${img_server_host:-}" ] || [ -z "${img_server_port:-}" ]; then
-
-        echo ""
-        return
-
-    fi
-
-	# 現在の曲を変数に代入
-    current_song="$(mpc current -f "%file%")"
-
-	# 曲のパスを変数に代入
-    song_path="${current_song%/*}"
-
-	# カバーアートのURLを出力
-    echo "http://${img_server_host}:${img_server_port}/${song_path}/Folder.jpg"
-
-}
-
 # 次の曲の表示
 next_song () {
 
@@ -107,86 +98,6 @@ next_song () {
 	fi
 
 }
-
-# X(旧Twitter)の共有用Intent URLの生成
-x_share_url () {
-
-	# 共有機能が無効の場合は空を出力
-	if [ "${x_share_enabled}" != "yes" ] ; then
-
-		echo ""
-		return
-
-	fi
-
-	# 区切り文字の定義(Unit Separator)
-	sep="$(printf '\037')"
-
-	# 各タグを一度で取得(file, artist, title, album, nameの順)
-	share_info="$(mpc current -f "%file%${sep}%artist%${sep}%title%${sep}%album%${sep}%name%")"
-
-	# 取得結果を各タグに分割(欠落時は空文字)
-	share_uri="${share_info%%"${sep}"*}"
-	share_rest="${share_info#*"${sep}"}"
-	share_artist="${share_rest%%"${sep}"*}"
-	share_rest="${share_rest#*"${sep}"}"
-	share_title="${share_rest%%"${sep}"*}"
-	share_rest="${share_rest#*"${sep}"}"
-	share_album="${share_rest%%"${sep}"*}"
-	share_stream="${share_rest#*"${sep}"}"
-
-	# 再生中でない場合(URIが空)は空を出力
-	if [ -z "${share_uri}" ] ; then
-
-		echo ""
-		return
-
-	fi
-
-	# タグが揃っている曲はテンプレートより本文を生成
-	if [ -n "${share_artist}" ] && [ -n "${share_title}" ] && [ -n "${share_album}" ] ; then
-
-		share_text="$(mpc current -f "${x_share_template}")"
-
-	# アルバム名が無い曲はアーティスト名とタイトルのみ
-	elif [ -n "${share_artist}" ] && [ -n "${share_title}" ] ; then
-
-		share_text="Now Playing: ${share_artist} - ${share_title}"
-
-	# タイトルが無い曲はアーティスト名のみ
-	elif [ -n "${share_artist}" ] ; then
-
-		share_text="Now Playing: ${share_artist}"
-
-	# アーティスト名が無い曲(ラジオ等)はタイトルのみ
-	elif [ -n "${share_title}" ] ; then
-
-		share_text="Now Playing: ${share_title}"
-
-	# タグが全く無い場合はストリーム名,URIの順で代替
-	else
-
-		if [ -z "${share_stream}" ] ; then
-
-			share_stream="${share_uri}"
-
-		fi
-
-		share_text="Now Playing: ${share_stream}"
-
-	fi
-
-	# 本文をURLエンコードしてIntent URLを出力
-	printf 'https://twitter.com/intent/tweet?text=%s' "$(printf '%s' "${share_text}" | urlencode)"
-
-	# ハッシュタグの付与
-	if [ -n "${x_share_hashtags}" ] ; then
-
-		printf '&hashtags=%s' "$(printf '%s' "${x_share_hashtags}" | urlencode)"
-
-	fi
-
-}
 # ===== 関数の宣言ここまで ======
 
 
@@ -197,8 +108,28 @@ check_mpd_connection "settings/shmpd.conf"
 echo "Content-type: text/html"
 echo ""
 
-# X共有リンクの生成(停止中,無効時は空)
-share_intent_url="$(x_share_url)"
+# X共有本文の生成(停止中は空)
+share_text="$(x_share_text)"
+
+# カバーアートURLの生成(停止中,配信元未設定時は空)
+cover_url="$(coverart_url)"
+
+# X(旧Twitter)の共有用Intent URLの生成(停止中,無効時は空)
+share_intent_url=""
+
+if [ "${x_share_enabled}" = "yes" ] && [ -n "${share_text}" ] ; then
+
+	# 本文をURLエンコードしてIntent URLを生成
+	share_intent_url="https://twitter.com/intent/tweet?text=$(printf '%s' "${share_text}" | urlencode)"
+
+	# ハッシュタグの付与
+	if [ -n "${x_share_hashtags}" ] ; then
+
+		share_intent_url="${share_intent_url}&hashtags=$(printf '%s' "${x_share_hashtags}" | urlencode)"
+
+	fi
+
+fi
 
 if [ -n "${share_intent_url}" ] ; then
 
@@ -222,8 +153,8 @@ cat << EOS
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/cgi-bin/stylesheet/${stylesheet}">
-		<link rel="icon" href="$(coverart)">
-		<link rel="apple-touch-icon" href="$(coverart)">
+		<link rel="icon" href="${cover_url}">
+		<link rel="apple-touch-icon" href="${cover_url}">
 		<title>HOME - sh-MPD:${url_hostname} -</title>
 		
 	</head>
@@ -313,7 +244,7 @@ cat << EOS
 				<h2>Now Playing</h2>
 				<pre>$(mpc_post)</pre>
 ${share_link}
-				<img class="cover-art" src="$(coverart)" alt="Cover Art" onerror="this.style.display='none'">
+				<img class="cover-art" src="${cover_url}" alt="Cover Art" onerror="this.style.display='none'">
 			</section>
 
 			<section>
