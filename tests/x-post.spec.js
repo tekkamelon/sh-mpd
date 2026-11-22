@@ -594,3 +594,250 @@ test.describe('bin/x_post: トークン更新とAPI投稿', () => {
   });
 
 });
+
+// ====== index.cgi / x_post.cgi: CGI直実行によるページ検証(実MPDを使用) ======
+
+// cgi-bin/settings/shmpd.conf の接続先(CGIはこの設定を読むため,操作側も同じ接続先を使う)
+const SHMPD_CONF = fs.existsSync(path.join(CGI_BIN, 'settings', 'shmpd.conf'))
+  ? fs.readFileSync(path.join(CGI_BIN, 'settings', 'shmpd.conf'), 'utf8')
+  : '';
+const MPD_HOST = (SHMPD_CONF.match(/^\s*export\s+MPD_HOST="([^"]*)"/m) || [])[1] || '127.0.0.1';
+const MPD_PORT = (SHMPD_CONF.match(/^\s*export\s+MPD_PORT="([^"]*)"/m) || [])[1] || '6600';
+
+/**
+ * @param {string[]} args
+ */
+function mpc(args) {
+  return execFileSync('mpc', args, {
+    encoding: 'utf8',
+    env: { ...process.env, MPD_HOST, MPD_PORT },
+  }).replace(/\n$/, '');
+}
+
+function ensurePlaying() {
+  if (mpc(['current', '-f', '%file%']) === '') {
+    if (mpc(['playlist']).trim() === '') {
+      mpc(['add', '/']);
+    }
+    mpc(['play']);
+  }
+}
+
+/**
+ * CGIを直接実行し,本文(ヘッダ以降)を返す
+ * 呼び出し側の環境にX関連の変数が残っていても結果が変わらないよう掃除する
+ * @param {string} script
+ * @param {Record<string, string>} extraEnv
+ */
+function runCgi(script, extraEnv = {}) {
+  const out = spawnSync('sh', [script], {
+    cwd: CGI_BIN,
+    input: 'button=post',
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      MPD_HOST,
+      MPD_PORT,
+      REQUEST_METHOD: 'POST',
+      QUERY_STRING: '',
+      HTTP_REFERER: 'http://127.0.0.1/cgi-bin/index.cgi',
+      x_oauth2_client_id: '',
+      x_oauth2_client_secret: '',
+      x_redirect_uri: '',
+      ...extraEnv,
+    },
+  });
+  expect(out.status, out.stderr).toBe(0);
+  return out.stdout.slice(out.stdout.indexOf('\n\n') + 2);
+}
+
+test.describe('index.cgi: X共有UIの出し分け', () => {
+
+  test.beforeAll(() => {
+    workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'xpost-ui-'));
+  });
+
+  test.afterAll(() => {
+    fs.rmSync(workDir, { recursive: true, force: true });
+    mpc(['stop']);
+  });
+
+  /**
+   * ダミー資格のapi設定を書く
+   * @param {string} dir
+   * @param {string} extra
+   */
+  function writeApiConf(dir, extra = '') {
+    const conf = path.join(dir, 'x_api.conf');
+    fs.writeFileSync(conf,
+      'x_oauth2_client_id="dummy_client_id"\n' +
+      'x_oauth2_client_secret="dummy_client_secret"\n' +
+      extra);
+    return conf;
+  }
+
+  test('API未設定(従来)はIntentリンクを出し,フォームは出さない', () => {
+    ensurePlaying();
+    const dir = makeDir('ui');
+    const body = runCgi(INDEX_CGI, { x_api_conf: path.join(dir, 'nonexistent.conf') });
+
+    expect(body).toContain('Share on X');
+    expect(body).toMatch(/https:\/\/twitter\.com\/intent\/tweet\?text=/);
+    expect(body).not.toContain('x_post_form');
+    expect(body).not.toContain('Post to X');
+  });
+
+  test('API設定済みはフォームボタンを出し,Intentリンクを消す', () => {
+    ensurePlaying();
+    const dir = makeDir('ui');
+    const apiConf = writeApiConf(dir);
+
+    const body = runCgi(INDEX_CGI, { x_api_conf: apiConf });
+
+    expect(body).toContain('Post to X');
+    expect(body).toContain('<form name="x_post_form" method="POST" action="x_post.cgi">');
+    expect(body).not.toContain('intent/tweet');
+    expect(body).not.toContain('Share on X');
+  });
+
+  test('資格が空のapi設定は未設定扱いでIntentリンクを出す', () => {
+    ensurePlaying();
+    const dir = makeDir('ui');
+    const conf = path.join(dir, 'x_api.conf');
+    fs.writeFileSync(conf, 'x_oauth2_client_id=""\nx_oauth2_client_secret=""\n');
+
+    const body = runCgi(INDEX_CGI, { x_api_conf: conf });
+
+    expect(body).toContain('Share on X');
+    expect(body).not.toContain('x_post_form');
+  });
+
+  test('停止中は設定の有無に関わらず何も出さない', () => {
+    mpc(['stop']);
+    const dir = makeDir('ui');
+
+    const noApi = runCgi(INDEX_CGI, { x_api_conf: path.join(dir, 'nonexistent.conf') });
+    expect(noApi).not.toContain('Share on X');
+    expect(noApi).not.toContain('Post to X');
+
+    const withApi = runCgi(INDEX_CGI, { x_api_conf: writeApiConf(dir) });
+    expect(withApi).not.toContain('Share on X');
+    expect(withApi).not.toContain('Post to X');
+  });
+
+});
+
+test.describe('x_post.cgi: 投稿の受付と結果ページ', () => {
+
+  test.beforeAll(() => {
+    workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'xpost-page-'));
+  });
+
+  test.afterAll(() => {
+    fs.rmSync(workDir, { recursive: true, force: true });
+    mpc(['stop']);
+  });
+
+  /**
+   * x_post.cgi 実行用の環境(api設定とトークンは一時ファイル,API接続はstub curl)
+   * @param {string} dir
+   * @param {Record<string, string>} extra
+   */
+  function cgiEnv(dir, extra = {}) {
+    const apiConf = path.join(dir, 'x_api.conf');
+    if (!fs.existsSync(apiConf)) {
+      fs.writeFileSync(apiConf,
+        'x_oauth2_client_id="dummy_client_id"\n' +
+        'x_oauth2_client_secret="dummy_client_secret"\n' +
+        'x_share_hashtags="NowPlaying"\n');
+    }
+    const tokenFile = path.join(dir, 'x_token.conf');
+    if (!fs.existsSync(tokenFile)) {
+      fs.writeFileSync(tokenFile,
+        `x_oauth2_access_token="VALID_ACCESS"\n` +
+        `x_oauth2_refresh_token="VALID_REFRESH"\n` +
+        `x_oauth2_expires_at="${Math.floor(Date.now() / 1000) + 3600}"\n`);
+    }
+    return {
+      x_api_conf: apiConf,
+      x_token_file: tokenFile,
+      PATH: `${path.join(dir, 'stubbin')}:${process.env.PATH}`,
+      CURL_LOG: path.join(dir, 'curl.log'),
+      ...extra,
+    };
+  }
+
+  test('再生中は本文とカバーを添付して投稿し,結果ページへ投稿へのリンクを出す', () => {
+    ensurePlaying();
+    const dir = makeDir('page');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    const body = runCgi(X_POST_CGI, cgiEnv(dir));
+
+    expect(body).toContain('投稿しました。');
+    expect(body).toContain('https://x.com/i/web/status/1760000000000000000');
+    expect(body).toContain('ホームへ戻る');
+
+    // 本文にはハッシュタグが追記され,カバー画像がmedia_idsへ添付される
+    const log = fs.readFileSync(path.join(dir, 'curl.log'), 'utf8');
+    expect(log).toContain('#NowPlaying');
+    expect(log).toContain('media_ids');
+    expect(log).toContain('/2/media/upload');
+  });
+
+  test('カバー取得に失敗しても本文のみで投稿し,結果ページに注意を添える', () => {
+    ensurePlaying();
+    const dir = makeDir('page');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    const body = runCgi(X_POST_CGI, cgiEnv(dir, { COVER_FAIL: '1' }));
+
+    expect(body).toContain('投稿しました。');
+    expect(body).toContain('本文のみで投稿します');
+
+    const log = fs.readFileSync(path.join(dir, 'curl.log'), 'utf8');
+    expect(log).not.toContain('/2/media/upload');
+    expect(log).toContain('-d {"text":"');
+  });
+
+  test('投稿に失敗したらAPI応答を生で表示する', () => {
+    ensurePlaying();
+    const dir = makeDir('page');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    const body = runCgi(X_POST_CGI, cgiEnv(dir, { TWEET_FAIL: '1' }));
+
+    expect(body).toContain('投稿に失敗しました。');
+    expect(body).toContain('"tweet failed"');
+    expect(body).toContain('再認可');
+    expect(body).toContain('ホームへ戻る');
+  });
+
+  test('停止中は投稿を行わない', () => {
+    mpc(['stop']);
+    const dir = makeDir('page');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    const body = runCgi(X_POST_CGI, cgiEnv(dir));
+
+    expect(body).toContain('再生中の曲がないため投稿しませんでした。');
+    expect(fs.existsSync(path.join(dir, 'curl.log'))).toBe(false);
+  });
+
+  test('method=GETでは投稿を行わない', () => {
+    ensurePlaying();
+    const dir = makeDir('page');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    const body = runCgi(X_POST_CGI, { ...cgiEnv(dir), REQUEST_METHOD: 'GET' });
+
+    expect(body).toContain('method=POST');
+    expect(fs.existsSync(path.join(dir, 'curl.log'))).toBe(false);
+  });
+
+});

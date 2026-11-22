@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# shellcheck disable=SC1091,SC2154
+# shellcheck disable=SC1090,SC1091,SC2154
 
 # e 返り値が0以外で停止
 # u 未定義の変数参照で停止
@@ -34,9 +34,27 @@ else
 
 fi
 
+# X API設定ファイルの読み込み(環境変数 x_api_conf で差し替え可能)
+x_api_conf="${x_api_conf:-settings/x_api.conf}"
+
+if [ -f "${x_api_conf}" ] ; then
+
+	. "${x_api_conf}"
+
+fi
+
 # X共有設定のデフォルト値(変数が未定義の場合のみ代入,空文字は設定値として扱う)
 x_share_enabled="${x_share_enabled-yes}"
 x_share_hashtags="${x_share_hashtags-NowPlaying}"
+
+# API投稿の可否(client_idとclient_secretが揃っていれば利用可能)
+x_api_ready="no"
+
+if [ -n "${x_oauth2_client_id:-}" ] && [ -n "${x_oauth2_client_secret:-}" ] ; then
+
+	x_api_ready="yes"
+
+fi
 
 # 本文テンプレートは bin/x_share_text 側の既定値を使うため,設定時にのみ渡す
 if [ -n "${x_share_template:-}" ] ; then
@@ -114,33 +132,34 @@ share_text="$(x_share_text)"
 # カバーアートURLの生成(停止中,配信元未設定時は空)
 cover_url="$(coverart_url)"
 
-# X(旧Twitter)の共有用Intent URLの生成(停止中,無効時は空)
-share_intent_url=""
+# X共有部分のHTML組み立て(停止中,無効時は空)
+share_link=""
 
 if [ "${x_share_enabled}" = "yes" ] && [ -n "${share_text}" ] ; then
 
-	# 本文をURLエンコードしてIntent URLを生成
-	share_intent_url="https://twitter.com/intent/tweet?text=$(printf '%s' "${share_text}" | urlencode)"
+	if [ "${x_api_ready}" = "yes" ] ; then
 
-	# ハッシュタグの付与
-	if [ -n "${x_share_hashtags}" ] ; then
+		# API設定済み: x_post.cgi へのフォームボタン(投稿はトークンのアカウントから行う)
+		share_link="<form name=\"x_post_form\" method=\"POST\" action=\"x_post.cgi\"><p><button name=\"button\" value=\"post\"><span class=\"icon\">&#x1f4e4;&#xfe0e;</span> Post to X</button></p></form>"
 
-		share_intent_url="${share_intent_url}&hashtags=$(printf '%s' "${x_share_hashtags}" | urlencode)"
+	else
+
+		# 未設定: 従来のIntentリンク
+		share_intent_url="https://twitter.com/intent/tweet?text=$(printf '%s' "${share_text}" | urlencode)"
+
+		# ハッシュタグの付与
+		if [ -n "${x_share_hashtags}" ] ; then
+
+			share_intent_url="${share_intent_url}&hashtags=$(printf '%s' "${x_share_hashtags}" | urlencode)"
+
+		fi
+
+		# HTML属性用に"&"をエスケープ
+		share_intent_url_html="$(printf '%s' "${share_intent_url}" | sed -e 's/&/\&amp;/g')"
+
+		share_link="<p><a href=\"${share_intent_url_html}\" target=\"_blank\" rel=\"noopener noreferrer\"><span class=\"icon\">&#x1f4e4;&#xfe0e;</span> Share on X</a></p>"
 
 	fi
-
-fi
-
-if [ -n "${share_intent_url}" ] ; then
-
-	# HTML属性用に"&"をエスケープ
-	share_intent_url_html="$(printf '%s' "${share_intent_url}" | sed -e 's/&/\&amp;/g')"
-
-	share_link="<p><a href=\"${share_intent_url_html}\" target=\"_blank\" rel=\"noopener noreferrer\"><span class=\"icon\">&#x1f4e4;&#xfe0e;</span> Share on X</a></p>"
-
-else
-
-	share_link=""
 
 fi
 
