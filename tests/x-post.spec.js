@@ -30,6 +30,8 @@ const X_POST_CGI = path.join(CGI_BIN, 'x_post.cgi');
 const DEFAULT_TEMPLATE = '%artist% - %title% (%album%)';
 const US = '\u001f';
 
+const TWEET_OK_RESPONSE = '{"data":{"id":"1760000000000000000","text":"ok"}}';
+
 // ====== 共通のへルパ ======
 
 // stubスクリプト置き場とトークン類の一時ディレクトリ
@@ -73,40 +75,59 @@ process.stdout.write(out + '\\n');
 //   api.x.com/2/oauth2/token   -> TOKEN_RESPONSE (既定は有効なトークン応答)
 //   api.x.com/2/media/upload   -> UPLOAD_RESPONSE (既定は data.id を含む応答)
 //   api.x.com/2/tweets         -> TWEET_RESPONSE (既定は data.id を含む応答)
-//   それ以外(カバー画像の取得)  -> COVER_RESPONSE を返す(COVER_FAIL=1 なら失敗)
+//   それ以外(カバー画像の取得)  -> COVER_RESPONSE を -o 先へ書く(COVER_FAIL=1 なら失敗)
 function writeStubCurl(dir) {
   const script = `#!/bin/sh
 printf '%s\\n' "\${*}" >> "\${CURL_LOG:-/dev/null}"
 
+# -o <file> の処理(最後の-oを優先)
+out_file=""
+prev=""
+for arg in "\${@}" ; do
+  if [ "\${prev}" = "-o" ] ; then
+    out_file="\${arg}"
+  fi
+  prev="\${arg}"
+done
+
+emit () {
+  if [ -n "\${out_file}" ] ; then
+    printf '%s' "\${1}" > "\${out_file}"
+  else
+    printf '%s' "\${1}"
+  fi
+}
+
 for arg in "\${@}" ; do
   case "\${arg}" in
     https://api.x.com/2/oauth2/token)
-      printf '%s' "\${TOKEN_RESPONSE:-{\\"token_type\\":\\"bearer\\",\\"expires_in\\":7200,\\"access_token\\":\\"ROT_ACCESS\\",\\"refresh_token\\":\\"ROT_REFRESH\\"}}"
+      emit "\${TOKEN_RESPONSE:-{\\"token_type\\":\\"bearer\\",\\"expires_in\\":7200,\\"access_token\\":\\"ROT_ACCESS\\",\\"refresh_token\\":\\"ROT_REFRESH\\"}}"
       exit 0
       ;;
     https://api.x.com/2/media/upload)
       if [ -n "\${UPLOAD_FAIL:-}" ] ; then
-        printf '%s' "{\\"errors\\":[{\\"message\\":\\"upload failed\\"}]}"
+        emit "{\\"errors\\":[{\\"message\\":\\"upload failed\\"}]}"
         exit 1
       fi
-      printf '%s' "\${UPLOAD_RESPONSE:-{\\"data\\":{\\"id\\":\\"MEDIA123\\",\\"media_key\\":\\"3_123\\"}}}"
+      emit "\${UPLOAD_RESPONSE:-{\\"data\\":{\\"id\\":\\"MEDIA123\\",\\"media_key\\":\\"3_123\\"}}}"
       exit 0
       ;;
     https://api.x.com/2/tweets)
       if [ -n "\${TWEET_FAIL:-}" ] ; then
-        printf '%s' "{\\"errors\\":[{\\"message\\":\\"tweet failed\\"}]}"
+        emit "{\\"errors\\":[{\\"message\\":\\"tweet failed\\"}]}"
         exit 1
       fi
-      printf '%s' "\${TWEET_RESPONSE:-{\\"data\\":{\\"id\\":\\"1760000000000000000\\",\\"text\\":\\"ok\\"}}}"
+      emit "\${TWEET_RESPONSE:-{\\"data\\":{\\"id\\":\\"1760000000000000000\\",\\"text\\":\\"ok\\"}}}"
       exit 0
       ;;
   esac
 done
 
+# それ以外はカバー画像の取得
 if [ -n "\${COVER_FAIL:-}" ] ; then
   exit 22
 fi
-printf '%s' "\${COVER_RESPONSE:-FAKEJPEGBYTES}"
+emit "\${COVER_RESPONSE:-FAKEJPEGBYTES}"
 exit 0
 `;
   fs.writeFileSync(path.join(dir, 'curl'), script, { mode: 0o755 });
@@ -347,6 +368,229 @@ test.describe('bin/x_oauth2: 認可URL生成とコード交換', () => {
     const saved = fs.readFileSync(tokenFile, 'utf8');
     expect(saved).toContain('x_oauth2_access_token="ROT_ACCESS"');
     expect(saved).toContain('x_oauth2_refresh_token="ROT_REFRESH"');
+  });
+
+});
+
+// ====== bin/x_post: トークン更新とAPI投稿(stub curl) ======
+
+test.describe('bin/x_post: トークン更新とAPI投稿', () => {
+
+  test.beforeAll(() => {
+    workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'xpost-cli-'));
+  });
+
+  test.afterAll(() => {
+    fs.rmSync(workDir, { recursive: true, force: true });
+  });
+
+  /**
+   * x_post 実行用の環境(資格はダミー,API接続はstub curlが受ける)
+   * @param {string} dir
+   * @param {Record<string, string>} extra
+   */
+  function postEnv(dir, extra = {}) {
+    return {
+      ...process.env,
+      x_oauth2_client_id: 'dummy_client_id',
+      x_oauth2_client_secret: 'dummy_client_secret',
+      x_token_file: path.join(dir, 'x_token.conf'),
+      PATH: `${path.join(dir, 'stubbin')}:${process.env.PATH}`,
+      CURL_LOG: path.join(dir, 'curl.log'),
+      ...extra,
+    };
+  }
+
+  /**
+   * トークンファイルを書く(expiresAt 既定は1時間後 = 期限内)
+   * @param {string} dir
+   * @param {{access?: string, refresh?: string, expiresAt?: number}} opts
+   */
+  function writeToken(dir, opts = {}) {
+    const { access = 'VALID_ACCESS', refresh = 'VALID_REFRESH', expiresAt } = opts;
+    fs.writeFileSync(path.join(dir, 'x_token.conf'),
+      `x_oauth2_access_token="${access}"\n` +
+      `x_oauth2_refresh_token="${refresh}"\n` +
+      `x_oauth2_expires_at="${expiresAt ?? Math.floor(Date.now() / 1000) + 3600}"\n`);
+  }
+
+  /**
+   * @param {string} dir
+   * @param {string[]} args
+   * @param {Record<string, string>} extraEnv
+   */
+  function runPost(dir, args, extraEnv = {}) {
+    return spawnSync(X_POST, args, { encoding: 'utf8', env: postEnv(dir, extraEnv) });
+  }
+
+  /**
+   * @param {string} dir
+   */
+  function curlLog(dir) {
+    return fs.readFileSync(path.join(dir, 'curl.log'), 'utf8');
+  }
+
+  test('期限切れトークンは更新してから投稿し,ローテーションをファイルへ反映する', () => {
+    const dir = makeDir('xpost');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    writeToken(dir, { expiresAt: Math.floor(Date.now() / 1000) - 100 });
+
+    const res = runPost(dir, ['-t', 'Now Playing: A - T', '-i', 'http://127.0.0.1:8080/dir/Folder.jpg'],
+      { COVER_RESPONSE: 'IMAGEBYTES' });
+    expect(res.status, res.stderr).toBe(0);
+
+    const log = curlLog(dir);
+
+    // まず更新が呼ばれる
+    expect(log).toContain('https://api.x.com/2/oauth2/token');
+    expect(log).toContain('-d grant_type=refresh_token');
+    expect(log).toContain('-d refresh_token=VALID_REFRESH');
+
+    // 更新後のトークンでmedia uploadと投稿が行われる
+    expect((log.match(/Bearer ROT_ACCESS/g) || []).length).toBe(2);
+    expect(log).not.toContain('Bearer VALID_ACCESS');
+
+    // 新トークンが一時ファイル+mvで保存されている
+    const saved = fs.readFileSync(path.join(dir, 'x_token.conf'), 'utf8');
+    expect(saved).toContain('x_oauth2_access_token="ROT_ACCESS"');
+    expect(saved).toContain('x_oauth2_refresh_token="ROT_REFRESH"');
+    const expiresMatch = saved.match(/x_oauth2_expires_at="(\d+)"/);
+    expect(expiresMatch).not.toBeNull();
+    const expiresAt = Number(expiresMatch && expiresMatch[1]);
+    expect(expiresAt).toBeGreaterThan(Math.floor(Date.now() / 1000) + 7000);
+
+    // 成功時は投稿応答本文を標準出力へ
+    expect(res.stdout).toBe(TWEET_OK_RESPONSE);
+  });
+
+  test('有効期限内なら更新せずBearerヘッダで本文のみ投稿する', () => {
+    const dir = makeDir('xpost');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    writeToken(dir);
+
+    const res = runPost(dir, ['-t', 'plain text']);
+    expect(res.status, res.stderr).toBe(0);
+
+    const log = curlLog(dir);
+    expect(log).not.toContain('/2/oauth2/token');
+    expect(log).not.toContain('/2/media/upload');
+    expect(log).toContain('-H Authorization: Bearer VALID_ACCESS');
+    expect(log).toContain('-H Content-type: application/json');
+    expect(log).toContain('-d {"text":"plain text"}');
+  });
+
+  test('カバー画像を添付して投稿する(-F引数とmedia_ids)', () => {
+    const dir = makeDir('xpost');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    writeToken(dir);
+
+    const coverUrl = 'http://127.0.0.1:8080/dir/Folder.jpg';
+    const res = runPost(dir, ['-t', 'with cover', '-i', coverUrl], { COVER_RESPONSE: 'IMAGEBYTES' });
+    expect(res.status, res.stderr).toBe(0);
+
+    const log = curlLog(dir);
+
+    // カバー画像の取得(-f, -o, URL)
+    expect(log).toContain(`-sS -f -m 10 -o `);
+    expect(log).toContain(` ${coverUrl}`);
+
+    // media upload の引数
+    expect(log).toContain('https://api.x.com/2/media/upload');
+    expect(log).toContain('-F media_category=tweet_image');
+    expect(log).toContain('-F media=@');
+    expect(log).toContain(';type=image/jpeg');
+
+    // 投稿本文にmedia uploadの応答idが入る
+    expect(log).toContain('-d {"text":"with cover","media":{"media_ids":["MEDIA123"]}}');
+  });
+
+  test('カバー取得に失敗したら本文のみで投稿する', () => {
+    const dir = makeDir('xpost');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    writeToken(dir);
+
+    const res = runPost(dir, ['-t', 'no cover', '-i', 'http://127.0.0.1:8080/dir/Folder.jpg'],
+      { COVER_FAIL: '1' });
+
+    // 投稿自体は成功する
+    expect(res.status, res.stderr).toBe(0);
+    expect(res.stderr).toContain('本文のみで投稿します');
+
+    const log = curlLog(dir);
+    expect(log).not.toContain('/2/media/upload');
+    expect(log).toContain('-d {"text":"no cover"}');
+  });
+
+  test('media upload に失敗したら投稿を行わない', () => {
+    const dir = makeDir('xpost');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    writeToken(dir);
+
+    const res = runPost(dir, ['-t', 'upload fails', '-i', 'http://127.0.0.1:8080/dir/Folder.jpg'],
+      { UPLOAD_FAIL: '1' });
+
+    expect(res.status).not.toBe(0);
+    expect(res.stderr).toContain('media upload に失敗しました');
+    expect(res.stderr).toContain('"upload failed"');
+
+    const log = curlLog(dir);
+    expect(log).not.toContain('https://api.x.com/2/tweets');
+  });
+
+  test('client_id が未設定ならAPIを一切呼ばず失敗する', () => {
+    const dir = makeDir('xpost');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    writeToken(dir);
+
+    const res = runPost(dir, ['-t', 'no credentials'],
+      { x_oauth2_client_id: '', x_oauth2_client_secret: '' });
+
+    expect(res.status).not.toBe(0);
+    expect(res.stderr).toContain('未設定');
+    expect(fs.existsSync(path.join(dir, 'curl.log'))).toBe(false);
+  });
+
+  test('投稿に失敗したらAPI応答を標準エラーへ出す', () => {
+    const dir = makeDir('xpost');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    writeToken(dir);
+
+    const res = runPost(dir, ['-t', 'will fail'], { TWEET_FAIL: '1' });
+
+    expect(res.status).not.toBe(0);
+    expect(res.stderr).toContain('投稿に失敗しました');
+    // 原因(401/403/429等)を隠さないため応答本文を生で出す
+    expect(res.stderr).toContain('"tweet failed"');
+  });
+
+  test('本文中の引用符とバックスラッシュをエスケープし,制御文字を除去する', () => {
+    const dir = makeDir('xpost');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+
+    writeToken(dir);
+
+    // " と \ と多バイト文字を含み,タブと改行を混ぜる
+    const text = 'A "q" \\b 途\t中\nend';
+    const res = runPost(dir, ['-t', text]);
+    expect(res.status, res.stderr).toBe(0);
+
+    // タブと改行は除去され,引用符とバックスラッシュのみエスケープされる
+    expect(curlLog(dir)).toContain('-d {"text":"A \\"q\\" \\\\b 途中end"}');
   });
 
 });
