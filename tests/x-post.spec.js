@@ -595,6 +595,141 @@ test.describe('bin/x_post: トークン更新とAPI投稿', () => {
 
 });
 
+// RFC 3986 の非予約文字以外を%HHへエンコードする(独立検算用)
+/**
+ * @param {string} s
+ */
+function rfc3986(s) {
+  return [...Buffer.from(s, 'utf8')].map((b) => {
+    const c = String.fromCharCode(b);
+    return /[A-Za-z0-9\-._~]/.test(c) ? c : `%${b.toString(16).toUpperCase().padStart(2, '0')}`;
+  }).join('');
+}
+
+// ====== bin/coverart_url: パスセグメントのエンコード(stub mpc) ======
+
+test.describe('bin/coverart_url: パス区切りを保ったままセグメントをエンコードする', () => {
+
+  test.beforeAll(() => {
+    workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cover-'));
+  });
+
+  test.afterAll(() => {
+    fs.rmSync(workDir, { recursive: true, force: true });
+  });
+
+  /**
+   * stub mpc 環境で coverart_url を実行する
+   * @param {string} dir
+   * @param {string} file
+   * @param {Record<string, string>} extra
+   */
+  function coverUrl(dir, file, extra = {}) {
+    const stubJs = writeStubMpc(dir);
+    const out = spawnSync(path.join(BIN, 'coverart_url'), {
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        PATH: `${dir}:${process.env.PATH}`,
+        MPC_STUB_JS: stubJs,
+        MPC_FILE: file,
+        img_server_host: '127.0.0.1',
+        img_server_port: '8080',
+        ...extra,
+      },
+    });
+    expect(out.status, out.stderr).toBe(0);
+    return out.stdout;
+  }
+
+  test('空白と# ?を含むパスはセグメント単位でエンコードされ,区切りは保たれる', () => {
+    const dir = makeDir('cover');
+
+    expect(coverUrl(dir, 'Album A/02 second.flac'))
+      .toBe(`http://127.0.0.1:8080/${rfc3986('Album A')}/Folder.jpg`);
+
+    const tricky = 'Tag #1/Sub?dir/曲 ディレクトリ/song.flac';
+    expect(coverUrl(dir, tricky))
+      .toBe(`http://127.0.0.1:8080/${['Tag #1', 'Sub?dir', '曲 ディレクトリ'].map(rfc3986).join('/')}/Folder.jpg`);
+  });
+
+  test('予約文字を含まないパスは従来どおり素通しする', () => {
+    const dir = makeDir('cover');
+
+    expect(coverUrl(dir, 'Artist/Album_2026/song.flac'))
+      .toBe('http://127.0.0.1:8080/Artist/Album_2026/Folder.jpg');
+  });
+
+  test('img_server が未設定なら空を出力する', () => {
+    const dir = makeDir('cover');
+    const stubJs = writeStubMpc(dir);
+    const out = spawnSync(path.join(BIN, 'coverart_url'), {
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        PATH: `${dir}:${process.env.PATH}`,
+        MPC_STUB_JS: stubJs,
+        MPC_FILE: 'Album A/song.flac',
+      },
+    });
+    expect(out.status, out.stderr).toBe(0);
+    expect(out.stdout).toBe('');
+  });
+
+  test('停止中は空を出力する', () => {
+    const dir = makeDir('cover');
+
+    expect(coverUrl(dir, 'Album A/song.flac', { MPC_STOPPED: '1' })).toBe('');
+  });
+
+});
+
+// ====== bin/x_post: 空白入りカバーURLの取得(stub curl) ======
+
+test.describe('bin/x_post: エンコード済みカバーURLはそのまま取得できる', () => {
+
+  test.beforeAll(() => {
+    workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'xpost-enc-'));
+  });
+
+  test.afterAll(() => {
+    fs.rmSync(workDir, { recursive: true, force: true });
+  });
+
+  test('空白と#のパーセントエンコード済みURLは拒否されず添付される', () => {
+    const dir = makeDir('enc');
+    fs.mkdirSync(path.join(dir, 'stubbin'));
+    writeStubCurl(path.join(dir, 'stubbin'));
+    fs.writeFileSync(path.join(dir, 'x_token.conf'),
+      `x_oauth2_access_token="VALID_ACCESS"\n` +
+      `x_oauth2_refresh_token="VALID_REFRESH"\n` +
+      `x_oauth2_expires_at="${Math.floor(Date.now() / 1000) + 3600}"\n`);
+
+    // coverart_url が生成する形式(セグメント単位エンコード済み)のURL
+    const coverUrl = `http://127.0.0.1:18080/${rfc3986('Album A')}/Folder.jpg`;
+
+    const out = spawnSync(X_POST, ['-t', 'cover with space', '-i', coverUrl], {
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        x_oauth2_client_id: 'dummy_client_id',
+        x_oauth2_client_secret: 'dummy_client_secret',
+        x_token_file: path.join(dir, 'x_token.conf'),
+        PATH: `${path.join(dir, 'stubbin')}:${process.env.PATH}`,
+        CURL_LOG: path.join(dir, 'curl.log'),
+        COVER_RESPONSE: 'IMAGEBYTES',
+      },
+    });
+    expect(out.status, out.stderr).toBe(0);
+
+    const log = fs.readFileSync(path.join(dir, 'curl.log'), 'utf8');
+    expect(log).toContain(` ${coverUrl}`);
+    expect(log).toContain('/2/media/upload');
+    expect(log).toContain('media_ids');
+  });
+
+});
+
 // ====== index.cgi / x_post.cgi: CGI直実行によるページ検証(実MPDを使用) ======
 
 // cgi-bin/settings/shmpd.conf の接続先(CGIはこの設定を読むため,操作側も同じ接続先を使う)

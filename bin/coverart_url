@@ -17,6 +17,10 @@ export LANG=C
 
 # GNU coreutilsの挙動をPOSIXに準拠
 export POSIXLY_CORRECT=1
+
+# bin/urlencode へPATHを通す
+tmp_path="$(cd "$(dirname "${0}")" && pwd)"
+export PATH="${PATH}:${tmp_path}"
 # ====== 変数の設定ここまで ======
 
 
@@ -45,6 +49,38 @@ fi
 # 曲のパスを変数に代入
 song_path="${current_song%/*}"
 
+# パスのエンコード(区切りのスラッシュは保ち,セグメント単位でURLエスケープする)
+# bin/urlencode はスラッシュもエンコードするため,区切りで分割してから適用する
+# (空白や# ?を含むパスをそのままURLへ入れると,画像取得が失敗する)
+encoded_path=""
+rest_path="${song_path}"
+
+while [ -n "${rest_path}" ] ; do
+
+	segment="${rest_path%%/*}"
+
+	case "${rest_path}" in
+
+		*/*)
+
+			rest_path="${rest_path#*/}"
+			separator="/"
+
+			;;
+
+		*)
+
+			rest_path=""
+			separator=""
+
+			;;
+
+	esac
+
+	encoded_path="${encoded_path}$(printf '%s' "${segment}" | urlencode)${separator}"
+
+done
+
 # カバーアートのURLを出力
-printf 'http://%s:%s/%s/Folder.jpg' "${img_server_host}" "${img_server_port}" "${song_path}"
+printf 'http://%s:%s/%s/Folder.jpg' "${img_server_host}" "${img_server_port}" "${encoded_path}"
 # ====== 本体ここまで ======
