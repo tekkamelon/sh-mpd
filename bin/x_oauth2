@@ -1,0 +1,380 @@
+#!/bin/sh
+
+# shellcheck disable=SC1090,SC2154
+
+# X OAuth 2.0 (Authorization Code + PKCE) の初回同意とトークン取得(ホスト側ツール)
+# 使用例: bin/x_oauth2 setup
+#         bin/x_oauth2 exchange 'http://127.0.0.1:18937/callback?code=...&state=...'
+#         bin/x_oauth2 exchange '<code>'
+#         bin/x_oauth2 refresh
+
+# e 返り値が0以外で停止
+# u 未定義の変数参照で停止
+set -eu
+
+# ====== 変数の設定 ======
+# ロケールの設定
+export LC_ALL=C
+export LANG=C
+
+# GNU coreutilsの挙動をPOSIXに準拠
+export POSIXLY_CORRECT=1
+
+# bin/urlencode, bin/urldecode へPATHを通す
+tmp_path="$(cd "$(dirname "${0}")" && pwd)"
+export PATH="${PATH}:${tmp_path}"
+
+# 設定ファイル(環境変数 x_api_conf で差し替え可能)
+settings_dir="$(cd "${tmp_path}/../cgi-bin/settings" && pwd)"
+x_api_conf="${x_api_conf:-${settings_dir}/x_api.conf}"
+
+# 設定ファイルの読み込み
+if [ -f "${x_api_conf}" ] ; then
+
+	. "${x_api_conf}"
+
+fi
+
+# コールバック先の既定値
+x_redirect_uri="${x_redirect_uri:-http://127.0.0.1:18937/callback}"
+
+# トークンファイル(環境変数 x_token_file で差し替え可能)
+x_token_file="${x_token_file:-${settings_dir}/x_token.conf}"
+
+# 認可要求のスコープ(media.write は画像添付に必須)
+x_oauth2_scope="${x_oauth2_scope:-tweet.read users.read tweet.write media.write offline.access}"
+
+# トークン更新用のロック(残骸は作成時刻で期限切れ)
+lock_dir="${x_token_file}.lock"
+
+# 一時ファイルの残骸を掃除
+tmp_file="${x_token_file}.tmp.$$"
+
+cleanup () {
+
+	rm -f "${tmp_file}"
+
+}
+
+trap cleanup EXIT
+trap 'exit 1' INT TERM
+# ====== 変数の設定ここまで ======
+
+
+# ===== 関数の宣言 =====
+# 使用方法の表示
+print_usage () {
+
+	cat <<- USAGE 1>&2
+	使用例: x_oauth2 setup
+	        x_oauth2 exchange 'http://127.0.0.1:18937/callback?code=...&state=...'
+	        x_oauth2 exchange '<code>'
+	        x_oauth2 refresh
+
+	初回の同意は setup が表示するURLをブラウザで開き,認可後に
+	リダイレクト先のURL(またはcodeのみ)を exchange へ渡す。
+	設定は x_api_conf(既定は cgi-bin/settings/x_api.conf)より読む。
+	USAGE
+
+}
+
+# 資格情報の確認
+check_credentials () {
+
+	if [ -z "${x_oauth2_client_id:-}" ] || [ -z "${x_oauth2_client_secret:-}" ] ; then
+
+		printf 'x_oauth2_client_id または x_oauth2_client_secret が未設定です\n' 1>&2
+
+		exit 1
+
+	fi
+
+}
+
+# JSON応答より文字列値を抽出(標準入力より読み込み)
+# 引用符付きの値と数値のどちらにも対応する
+json_value () {
+
+	sed -n \
+		-e 's/.*"'"${1}"'"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
+		-e 's/.*"'"${1}"'"[[:space:]]*:[[:space:]]*\([^",}[:space:]]*\).*/\1/p'
+
+}
+
+# トークンを一時ファイル+mvで原子書き込み
+save_token () {
+
+	# 引数: access_token, refresh_token, expires_at
+	{
+		printf 'x_oauth2_access_token="%s"\n' "${1}"
+		printf 'x_oauth2_refresh_token="%s"\n' "${2}"
+		printf 'x_oauth2_expires_at="%s"\n' "${3}"
+	} > "${tmp_file}"
+
+	chmod 600 "${tmp_file}"
+
+	mv -f "${tmp_file}" "${x_token_file}"
+
+}
+
+# ロックの取得(60秒超の残骸は破棄,30秒で断念)
+lock_acquire () {
+
+	tries=0
+
+	while ! mkdir "${lock_dir}" 2>/dev/null ; do
+
+		if [ -n "$(find "${lock_dir}" -maxdepth 0 -mmin +1 2>/dev/null)" ] ; then
+
+			rm -rf "${lock_dir}"
+
+			continue
+
+		fi
+
+		tries=$((tries + 1))
+
+		if [ "${tries}" -ge 30 ] ; then
+
+			return 1
+
+		fi
+
+		sleep 1
+
+	done
+
+	return 0
+
+}
+
+# ロックの解放
+lock_release () {
+
+	rmdir "${lock_dir}" 2>/dev/null || true
+
+}
+
+# トークンの更新(応答はローテーションするため新しいrefresh_tokenも保存)
+refresh_token_request () {
+
+	# 引数: 現在のrefresh_token
+	token_response="$(curl -sS -m 15 -X POST https://api.x.com/2/oauth2/token \
+		-d "grant_type=refresh_token" \
+		-d "refresh_token=${1}" \
+		-d "client_id=${x_oauth2_client_id}" \
+		-d "client_secret=${x_oauth2_client_secret}")"
+
+	access_token="$(printf '%s' "${token_response}" | json_value access_token)"
+
+	# 応答に新しいrefresh_tokenが無ければ既存のものを使う
+	new_refresh_token="$(printf '%s' "${token_response}" | json_value refresh_token)"
+
+	if [ -z "${new_refresh_token}" ] ; then
+
+		new_refresh_token="${1}"
+
+	fi
+
+	expires_in="$(printf '%s' "${token_response}" | json_value expires_in)"
+
+	if [ -z "${access_token}" ] ; then
+
+		return 1
+
+	fi
+
+	expires_at="$(( $(date +%s) + ${expires_in:-0} ))"
+
+	return 0
+
+}
+# ===== 関数の宣言ここまで ======
+
+
+# ====== 本体 =====
+# 引数の判定
+case "${1:-}" in
+
+	# 認可URLの生成
+	setup)
+
+		check_credentials
+
+		# code_verifier と state の生成(乱数の16進表記)
+		code_verifier="$(od -An -N48 -tx1 /dev/urandom | tr -d ' \n')"
+		state="$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')"
+
+		# code_challenge = BASE64URL(SHA256(code_verifier))
+		code_challenge="$(printf '%s' "${code_verifier}" |
+			openssl dgst -sha256 -binary |
+			openssl base64 |
+			tr '+/' '-_' |
+			tr -d '=\n')"
+
+		# 認可URLの生成
+		authorize_url="https://x.com/i/oauth2/authorize?response_type=code&client_id=${x_oauth2_client_id}&redirect_uri=$(printf '%s' "${x_redirect_uri}" | urlencode)&state=${state}&code_challenge=${code_challenge}&code_challenge_method=S256&scope=$(printf '%s' "${x_oauth2_scope}" | urlencode)"
+
+		# 交換時に検証するため verifier と state を保存
+		state_file="${x_token_file}.state"
+
+		{
+			printf 'x_oauth2_code_verifier="%s"\n' "${code_verifier}"
+			printf 'x_oauth2_state="%s"\n' "${state}"
+			printf 'x_oauth2_redirect_uri="%s"\n' "${x_redirect_uri}"
+		} > "${state_file}.new"
+
+		chmod 600 "${state_file}.new"
+
+		mv -f "${state_file}.new" "${state_file}"
+
+		# 手順の表示
+		printf '以下のURLをブラウザで開いて認可してください:\n\n%s\n\n' "${authorize_url}"
+		printf '認可後,リダイレクト先のURL(アドレス欄)をそのまま渡してください:\n'
+		printf '  bin/x_oauth2 exchange %s<URL>%s\n' "'" "'"
+
+		;;
+
+	# 認可コードとトークンの交換
+	exchange)
+
+		callback="${2:-}"
+
+		check_credentials
+
+		# 引数より code と state を抽出(URLでもcode単体でも可)
+		code=""
+		callback_state=""
+
+		case "${callback}" in
+
+			*code=*)
+
+				code="$(printf '%s' "${callback}" | sed -n 's/.*[?&]code=\([^&]*\).*/\1/p' | urldecode)"
+				callback_state="$(printf '%s' "${callback}" | sed -n 's/.*[?&]state=\([^&]*\).*/\1/p' | urldecode)"
+
+				;;
+
+			*)
+
+				code="${callback}"
+
+				;;
+
+		esac
+
+		if [ -z "${code}" ] ; then
+
+			printf 'code が見つかりません\n' 1>&2
+
+			exit 1
+
+		fi
+
+		# 状態ファイルの読み込み
+		state_file="${x_token_file}.state"
+
+		if [ ! -f "${state_file}" ] ; then
+
+			printf '状態ファイルがありません。先に setup を実行してください\n' 1>&2
+
+			exit 1
+
+		fi
+
+		. "${state_file}"
+
+		# state の検証(URLにstateが無い場合は省略)
+		if [ -n "${callback_state}" ] && [ "${callback_state}" != "${x_oauth2_state}" ] ; then
+
+			printf 'state が一致しません。setup をやり直してください\n' 1>&2
+
+			exit 1
+
+		fi
+
+		# 認可コードとトークンの交換
+		token_response="$(curl -sS -m 15 -X POST https://api.x.com/2/oauth2/token \
+			-d "grant_type=authorization_code" \
+			-d "code=${code}" \
+			-d "redirect_uri=${x_oauth2_redirect_uri}" \
+			-d "client_id=${x_oauth2_client_id}" \
+			-d "client_secret=${x_oauth2_client_secret}" \
+			-d "code_verifier=${x_oauth2_code_verifier}")"
+
+		access_token="$(printf '%s' "${token_response}" | json_value access_token)"
+		new_refresh_token="$(printf '%s' "${token_response}" | json_value refresh_token)"
+		expires_in="$(printf '%s' "${token_response}" | json_value expires_in)"
+
+		if [ -z "${access_token}" ] || [ -z "${new_refresh_token}" ] ; then
+
+			printf 'トークン取得に失敗しました。API応答:\n%s\n' "${token_response}" 1>&2
+
+			exit 1
+
+		fi
+
+		expires_at="$(( $(date +%s) + ${expires_in:-0} ))"
+
+		# トークンの保存と状態ファイルの削除(認可コードは1回限り)
+		save_token "${access_token}" "${new_refresh_token}" "${expires_at}"
+
+		rm -f "${state_file}"
+
+		printf 'トークンを保存しました: %s\n' "${x_token_file}"
+		printf '有効期限(unix秒): %s\n' "${expires_at}"
+
+		;;
+
+	# トークンの手動更新
+	refresh)
+
+		check_credentials
+
+		if [ ! -f "${x_token_file}" ] ; then
+
+			printf 'トークンファイルがありません。先に exchange を実行してください\n' 1>&2
+
+			exit 1
+
+		fi
+
+		# ローテーションの並走を防ぐため更新全体をロック下で行う
+		if ! lock_acquire ; then
+
+			printf 'ロックの取得に失敗しました: %s\n' "${lock_dir}" 1>&2
+
+			exit 1
+
+		fi
+
+		. "${x_token_file}"
+
+		if ! refresh_token_request "${x_oauth2_refresh_token:-}" ; then
+
+			lock_release
+
+			printf 'トークン更新に失敗しました。再認可が必要です。API応答:\n%s\n' "${token_response}" 1>&2
+
+			exit 1
+
+		fi
+
+		save_token "${access_token}" "${new_refresh_token}" "${expires_at}"
+
+		lock_release
+
+		printf 'トークンを更新しました。有効期限(unix秒): %s\n' "${expires_at}"
+
+		;;
+
+	*)
+
+		print_usage
+
+		exit 1
+
+		;;
+
+esac
+# ====== 本体ここまで ======
