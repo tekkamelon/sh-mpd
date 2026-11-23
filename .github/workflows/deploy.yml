@@ -9,10 +9,13 @@ jobs:
     runs-on: [self-hosted, Linux, X64]
     steps:
       - name: update working tree
+        id: tree
         run: |
           set -eu
           cd ~/Documents/github/sh-mpd
           git update-index --skip-worktree cgi-bin/settings/shmpd.conf || true
+          # イメージ焼き込みファイルの変更有無を後段のステップで使うため、reset 前の HEAD を記録
+          OLD=$(git rev-parse HEAD 2>/dev/null || echo none)
           git fetch origin main
           if git rev-parse --verify main >/dev/null 2>&1; then
             git checkout main
@@ -20,3 +23,53 @@ jobs:
             git checkout -B main origin/main
           fi
           git reset --hard origin/main
+          NEW=$(git rev-parse HEAD)
+          echo "old=${OLD} new=${NEW}"
+          # イメージへ焼き込むファイル (Dockerfile の COPY 対象) が変わったか。
+          # 判定できないときは再ビルド側へ倒す (反映漏れよりコンテナ再作成を優先)。
+          CHANGED=$(git diff --name-only "${OLD}" "${NEW}" -- tools/Dockerfile tools/apache-shmpd.conf tools/entrypoint.sh bin/urldecode 2>/dev/null || echo FORCE)
+          if [ "${OLD}" = "none" ] || [ -n "${CHANGED}" ]; then
+            echo "image_changed=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "image_changed=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: rebuild image and recreate container
+        if: steps.tree.outputs.image_changed == 'true'
+        run: |
+          set -eu
+          cd ~/Documents/github/sh-mpd
+          # ビルドが失敗したときに稼働中のコンテナを止めてしまわないよう、ビルドを先に行う
+          docker build -f tools/Dockerfile -t sh-mpd-at:trixie -t sh-mpd-at:latest .
+          # Apache 設定はイメージへ焼き込むため、反映にはコンテナの作り直しが必要
+          # (at のスプールは named volume shmpd-atspool に入っており作り直しても消えない)
+          docker container stop shmpd || true
+          docker container rm shmpd || true
+          sh tools/docker_shmpd.sh sh-mpd-at:latest
+
+      - name: verify deployment
+        if: steps.tree.outputs.image_changed == 'true'
+        run: |
+          set -eu
+          # コンテナの起動と Apache の応答を待つ (2秒 x 10 で最大20秒)
+          i=0
+          until [ "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/cgi-bin/index.cgi)" = "200" ]; do
+            i=$((i + 1))
+            if [ "$i" -ge 10 ]; then
+              echo "deploy check failed: index.cgi did not return 200" >&2
+              exit 1
+            fi
+            sleep 2
+          done
+          # 機密 conf が配信されなくなっていることを再確認する (反映漏れの検知)
+          code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/cgi-bin/settings/shmpd.conf)
+          if [ "${code}" != "403" ]; then
+            echo "deploy check failed: shmpd.conf returned ${code} (expected 403)" >&2
+            exit 1
+          fi
+          echo "deployed: image rebuilt, container recreated (index.cgi=200, settings/shmpd.conf=403)"
+
+      - name: summary
+        if: steps.tree.outputs.image_changed != 'true'
+        run: |
+          echo "deployed: working tree only (image-baked files unchanged, container untouched)"
